@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'ProggyTinyTTSZ';
+    src: local('ProggyTinyTTSZ'),
+        url('ProggyTinyTTSZ.woff2') format('woff2'),
+        url('ProggyTinyTTSZ.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

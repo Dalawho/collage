@@ -1,0 +1,12 @@
+cache
+
+# Ignore build output
+artifacts
+lib
+node_modules
+secret.json
+types
+
+.env.*
+
+

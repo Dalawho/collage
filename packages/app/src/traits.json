@@ -1,0 +1,235 @@
+{
+    "palette": {
+        "number": 0,
+        "palettes": 
+        [
+        {
+            "color": [],
+            "type": 0,
+            "name": "None"
+        },
+        {
+            "color": [],
+            "type": 1,
+            "name": "Gray"
+        },
+        {
+            "color": ["0xf860d0"],
+            "type": 2,
+            "name": "MonoRose"
+        },
+        {
+            "color": ["0x3a86ff"],
+            "type": 2,
+            "name": "MonoBlue"
+        },
+        {
+            "color": ["0xd62828"],
+            "type": 2,
+            "name": "MonoRed"
+        },
+        {
+            "color": ["0xf77f00"],
+            "type": 2,
+            "name": "MonoOrange"
+        },
+        {
+            "color": ["0x7b2cbf"],
+            "type": 2,
+            "name": "MonoPurple"
+        },
+        {
+            "color": ["0xffd700"],
+            "type": 2,
+            "name": "MonoGold"
+        },
+        {
+            "color": ["0x55a630"],
+            "type": 2,
+            "name": "MonoGreen"
+        },
+        {
+            "color": ["0xf860d0", "0x1980e6"],
+            "type": 3,
+            "name": "HueBR"
+        },
+        {
+            "color": ["0x9b5de5", "0xf15bb5", "0xfee440", "0x00bbf9", "0x00f5d4"],
+            "type": 3,
+            "name": "HuePPYBG"
+        },
+        {
+            "color": ["0xf94144", "0xf9c74f", "0x43aa8b", "0x577590"],
+            "type": 3,
+            "name": "HueRYGB"
+        },
+        {
+            "color": ["0xff6d00", "0x7b2cbf"],
+            "type": 3,
+            "name": "HueYP"
+        },
+        {
+            "color": ["0xf17105", "0xd11149", "0x6610f2"],
+            "type": 3,
+            "name": "HueORB"
+        },
+        {
+            "color": ["0xbf0603", "0x708d81"],
+            "type": 3,
+            "name": "HueRG"
+        },
+        {
+            "color": ["0x390099", "0x9e0059", "0xff0054", "0xff5400", "0xffbd00"],
+            "type": 3,
+            "name": "HueBRROY"
+        },
+        {
+            "color": ["0xb2bd7e", "0x749c75", "0x6a5d7b"],
+            "type": 3,
+            "name": "HueREG"
+        },
+        {
+            "color": ["0x5f0f40", "0x9a031e", "0xe36414", "0x0f4c5c"],
+            "type": 3,
+            "name": "HuePROB"
+        },
+        {
+            "color": ["0x004178", "0x037848", "0xe1077e"],
+            "type": 3,
+            "name": "HueBGP"
+        },
+        {
+            "color": ["0x000000", "0x0600ff", "0xd5719e", "0xfff568"],
+            "type": 4,
+            "name": "Genesis"
+        },
+        {
+            "color": ["0xfee761", "0xff0044", "0xf77622", "0x181425"],
+            "type": 4,
+            "name": "Ikura"
+        },
+        {
+            "color": ["0x124e89", "0xf6757a", "0xe43b44", "0xffffff"],
+            "type": 4,
+            "name": "Ebi"
+        },
+        {
+            "color": ["0xfce4a8", "0xd71a21", "0x01334e", "0x71969f"],
+            "type": 4,
+            "name": "Processing"
+        },
+        {
+            "color": ["0x000000","0x00ff84", "0xff00e4", "0xffffff"],
+            "type": 4,
+            "name": "Blit"
+        },
+        {
+            "color": ["0x124e89", "0x191010", "0xf4e5d8", "0xc75b22"],
+            "type": 4,
+            "name": "SoftBoy"
+        },
+        {
+            "color": ["0x000000", "0xffe103", "0xfb00ff",  "0x00afff"],
+            "type": 4,
+            "name": "Gato"
+        },
+        {
+            "color": ["0xff0000", "0xaa0000", "0x194341", "0xdfdfff"],
+            "type": 4,
+            "name": "Caffeinate"
+        },
+        {
+            "color": ["0x000000", "0x0000ff", "0x00ff00", "0xff0000"],
+            "type": 4,
+            "name": "Logo"
+        },
+        {
+            "color": ["0x000000", "0xffffff", "0x2ce8f4", "0xe53b44"],
+            "type": 4,
+            "name": "Exe"
+        },
+        {
+            "color": [],
+            "type": 5,
+            "name": "Inverted"
+        }
+    ]
+    },
+    "animal": {
+        "animals": [
+            {
+            "name": "Croc",
+            "path": "./pics/animals/croc.png",
+            "animalLoc": [7,8],
+            "itemLoc":  [[10,8],[10,9],[5,6], [4,20]]
+        },
+        {
+            "name": "Otter",
+            "path": "./pics/animals/otter.png",
+            "animalLoc": [5,7],
+            "itemLoc":  [[10,8],[10,9],[5,6], [4,20]]
+        }
+        ]
+    },
+    "cell": {
+        "cells": [
+            {
+            "name": "1",
+            "path": "./pics/cells/cell.png",
+            "animalLoc": [6,4],
+            "itemLoc":  [[0,0],[0,0],[0,0], [0,0]]
+        },
+        {
+            "name": "1",
+            "path": "./pics/cells/cell2.png",
+            "animalLoc": [6,4],
+            "itemLoc":  [[0,0],[0,0],[0,0], [0,0]]
+        },
+        {
+            "name": "1",
+            "path": "./pics/cells/cell3.png",
+            "animalLoc": [6,4],
+            "itemLoc":  [[0,0],[0,0],[0,0], [0,0]]
+        }   
+        ]
+    },
+    "background": {
+        "number" : 1,
+        "backgrounds": [
+            {
+                "name": "Back1",
+                "path": "./pics/backgrounds/back1.png"
+            } 
+        ]
+    },
+    "hat": {
+        "number" : 2,
+        "hat": [
+            {
+                "name": "Hat1",
+                "path": "./pics/hats/hat1.png",
+                "loc": [1,1]
+            } 
+        ]
+    },
+    "head": {
+        "number" : 3,
+        "head": [
+            {
+                "name": "Head1",
+                "path": "./pics/heads/head1.png",
+                "loc": [1,0]
+            } 
+        ]
+    },
+    "ground": {
+        "number" : 4,
+        "ground": [
+            {
+                "name": "Ground1",
+                "path": "./pics/ground/Blue.png",
+                "loc": [0,0]
+            } 
+        ]
+    }
+}
