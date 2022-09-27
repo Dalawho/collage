@@ -1,5 +1,8 @@
 node_modules
 *debug.log
+.husky
+.vscode
 
 .vercel
 .DS_Store
+.nvmrc
