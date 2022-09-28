@@ -22,11 +22,11 @@ contract ExquisiteGraphics is IExquisiteGraphics {
     uint256 pixelNum;
   }
 
-  function drawPixels(bytes memory data, Palette memory palette, uint8 xOffset, uint8 yOffset, uint8 devine)
-    public view
+  function drawPixels(bytes memory data, Palette memory palette, uint8 xOffset, uint8 yOffset)
+    public pure
     returns (bytes memory)  // pure
   {
-    return _draw(data, palette, xOffset, yOffset, devine);
+    return _draw(data, palette, xOffset, yOffset);
   }
 
     /// Initializes the Draw Context from the given data
@@ -37,7 +37,7 @@ contract ExquisiteGraphics is IExquisiteGraphics {
     bytes memory data,
     HeaderType headerType,
     Palette memory palette
-  ) internal view {
+  ) internal pure {
     ctx.header = decoder._decodeHeader(data, headerType);
 
     ctx.palette = decoder._decodePalette(data, ctx.header, palette);
@@ -51,20 +51,19 @@ contract ExquisiteGraphics is IExquisiteGraphics {
     bytes memory data, 
     Palette memory palette,
     uint8 xOffset,
-    uint8 yOffset,
-    uint8 devine
-  ) internal view returns (bytes memory) {
+    uint8 yOffset
+  ) internal pure returns (bytes memory) {
     DrawContext memory ctx;
     bytes memory buffer = DynamicBuffer.allocate(2**18);
     _initDrawContext(ctx, data, HeaderType.ITEM, palette);
 
-    _writeSVGPixelsWithOffset(ctx, buffer, xOffset, yOffset, devine);
+    _writeSVGPixelsWithOffset(ctx, buffer, xOffset, yOffset);
     return (buffer);
   }
 
-  function _writeSVGPixelsWithOffset(DrawContext memory ctx, bytes memory buffer, uint256 xOffset, uint256 yOffset, uint8 devine)
+  function _writeSVGPixelsWithOffset(DrawContext memory ctx, bytes memory buffer, uint256 xOffset, uint256 yOffset)
     internal
-    view
+    pure
   {
     // uint256 colorIndex;
     // uint256 width;
@@ -124,5 +123,14 @@ contract ExquisiteGraphics is IExquisiteGraphics {
     }
     return _palette;
   }
+
+  function getDimensions(bytes memory data)
+    external
+    pure
+    returns (uint8, uint8) {
+      DrawContext memory ctx;
+      ctx.header = decoder._decodeHeader(data, HeaderType.ITEM);
+      return (uint8(ctx.header.height), uint8(ctx.header.width));
+    }
 
 }

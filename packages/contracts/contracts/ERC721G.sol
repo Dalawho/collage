@@ -42,7 +42,13 @@ abstract contract ERC721G {
     // ERC721G Structs
     struct OwnerStruct {
         address owner; // stores owner address for OwnerOf
-        uint16[4] layers;
+        LayerStruct[4] layers;
+    }
+
+    struct LayerStruct {
+        uint8 layerId;
+        uint8 xOffset;
+        uint8 yOffset;
     }
 
     struct BalanceStruct {
@@ -171,7 +177,9 @@ abstract contract ERC721G {
 
         // push the required phantom mint data to mintIndex
         //mintIndex[_startId].owner = to_;
-        _tokenData[_startId] = OwnerStruct(to_, [uint16(0),uint16(0),uint16(0),uint16(0)]);
+        //_tokenData[_startId] = OwnerStruct();
+        _tokenData[_startId].owner = to_;
+        
         // process the balance changes and do a loop to phantom-mint the tokens to to_
         unchecked { 
             _balanceData[to_].balance += uint32(amount_);
@@ -184,7 +192,7 @@ abstract contract ERC721G {
         tokenIndex = _endId;
     }
 
-    function _mintAndSet(address to_, uint256 amount_, uint16 layerId, uint8 layer) internal virtual {
+    function _mintAndSet(address to_, uint256 amount_, uint8 layer, uint8 layerId, uint8 xOffset, uint8 yOffset) internal virtual {
         // cannot mint to 0x0
         require(to_ != address(0), "ERC721G: _mintInternal to 0x0");
 
@@ -198,9 +206,10 @@ abstract contract ERC721G {
 
         // push the required phantom mint data to mintIndex
         //mintIndex[_startId].owner = to_;
-        OwnerStruct memory _owner = OwnerStruct(to_, [uint16(0),uint16(0),uint16(0),uint16(0)]);
-        _owner.layers[layer] = layerId;
-        _tokenData[_startId] = _owner;
+        //OwnerStruct memory _owner = OwnerStruct(to_, [LayerStruct(0,0,0),LayerStruct(0,0,0),LayerStruct(0,0,0)], height, width);
+        
+        _tokenData[_startId].layers[layer] = LayerStruct(layerId, xOffset, yOffset);
+        _tokenData[_startId].owner = to_;
 
         // process the balance changes and do a loop to phantom-mint the tokens to to_
         unchecked { 

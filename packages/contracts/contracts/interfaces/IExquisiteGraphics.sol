@@ -62,9 +62,14 @@ interface IExquisiteGraphics {
   error NotEnoughData();
   error NoColors();
 
-    function drawPixels(bytes memory data, Palette memory palette, uint8 xOffset, uint8 yOffset, uint8 devine)
+    function drawPixels(bytes memory data, Palette memory palette, uint8 xOffset, uint8 yOffset)
     external
     view
     returns (bytes memory);
+
+    function getDimensions(bytes memory data)
+    external
+    view
+    returns (uint8, uint8);
 
 }

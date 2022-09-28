@@ -104,7 +104,8 @@ describe("TMD tests", () => {
         await pieces.mint(owner.address, 1, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         //await collage
         await collage.mint();
-        await collage.addLayer(1,1,0);
+        //addLayer(uint256 tokenId, uint8 layer, uint8 layerId, uint8 xOffset, uint8 yOffset)
+        await collage.addLayer(1,0,1, 5, 5);
         console.log(await collage.tokenURI(1));
       
       });  
@@ -118,8 +119,8 @@ describe("TMD tests", () => {
         await pieces.mint(owner.address, 2, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         //await collage
         await collage.mint();
-        await collage.addLayer(1,1,1);
-        await collage.addLayer(1,2,0);
+        await collage.addLayer(1, 0 , 1, 0, 0);
+        await collage.addLayer(1, 1, 2, 5, 5);
         console.log(await collage.tokenURI(1));
       });  
       it("test preview function", async() => {
@@ -129,8 +130,9 @@ describe("TMD tests", () => {
         await pieces.mint(owner.address, 2, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         //await collage
         await collage.mint();
-        await collage.addLayer(1,2,0);
-        console.log(await collage.previewCollage(1, 1, 1));
+        await collage.addLayer(1, 0, 2, 0, 0);
+        //previewCollage(uint256 tokenId, uint8 layerNr, uint8 pieceId, uint8 xOffset, uint8 yOffset)
+        console.log(await collage.previewCollage(1, 1, 1, 4, 10));
       });  
     });
 });
