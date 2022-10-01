@@ -22,11 +22,11 @@ export const MintButton = ( {quant} : {quant: number} ) => {
   const {isSuccess: txSuccess} = useWaitForTransaction({hash: data?.hash});
 
   return (
-    <Button onClick={() => write?.()} disabled={(isLoading || isSuccess || txSuccess)} >
+    <Button onClick={() => write?.()} disabled={(isLoading || (isSuccess && !txSuccess) || !write)} >
       {isLoading && <div>Confirm in Wallet</div>}
       {(isSuccess && !txSuccess) && <div>Transaction submitted</div>}
-      {txSuccess && <div>Token Minted</div>}
-      {(!isLoading && !isSuccess && !txSuccess) && <div>Mint {pluralize(quant, "Token", "Tokens")} for {0.005*quant} Ξ</div>}
+      {txSuccess && <div>Mint {pluralize(quant, "Token", "Tokens")} for {0*quant} Eth</div>}
+      {(!isLoading && !isSuccess && !txSuccess) && <div>Mint {pluralize(quant, "Token", "Tokens")} for {0*quant} Eth</div>}
       
     </Button>
   );

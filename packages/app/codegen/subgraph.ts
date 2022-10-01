@@ -520,7 +520,7 @@ export type OwnedPiecesQueryVariables = Exact<{
 }>;
 
 
-export type OwnedPiecesQuery = { readonly __typename?: 'Query', readonly owners: ReadonlyArray<{ readonly __typename?: 'Owner', readonly id: any, readonly token?: ReadonlyArray<{ readonly __typename?: 'OwnerPiece', readonly amount: any, readonly piece: { readonly __typename?: 'Piece', readonly id: string } }> | null }> };
+export type OwnedPiecesQuery = { readonly __typename?: 'Query', readonly owners: ReadonlyArray<{ readonly __typename?: 'Owner', readonly id: any, readonly token?: ReadonlyArray<{ readonly __typename?: 'OwnerPiece', readonly amount: any, readonly piece: { readonly __typename?: 'Piece', readonly id: string, readonly name: string } }> | null }> };
 
 export type PiecesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -547,6 +547,7 @@ export const OwnedPiecesDocument = gql`
     token {
       piece {
         id
+        name
       }
       amount
     }

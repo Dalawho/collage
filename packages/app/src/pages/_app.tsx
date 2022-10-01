@@ -4,7 +4,6 @@ import "../global.css";
 
 import type { AppProps } from "next/app";
 import Head from "next/head";
-import { ToastContainer } from "react-toastify";
 import {
   createClient as createGraphClient,
   Provider as GraphProvider,
@@ -13,7 +12,7 @@ import {
 import { EthereumProviders } from "../EthereumProviders";
 
 export const graphClient = createGraphClient({
-  url: "https://api.thegraph.com/subgraphs/name/dalawho/collage", // change this 
+  url: "https://api.thegraph.com/subgraphs/name/dalawho/collage",  
 });
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
@@ -27,9 +26,13 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
           <Component {...pageProps} />
         </EthereumProviders>
       </GraphProvider>
-      <ToastContainer position="bottom-right" draggable={false} />
     </>
   );
 };
 
 export default MyApp;
+
+
+//<ToastContainer position="bottom-right" draggable={false} />
+
+//import { ToastContainer } from "react-toastify";

@@ -19,7 +19,7 @@ export const AddArtworkButton = ( {artName, compressed, inputLength, amount, pri
   const {isSuccess: txSuccess} = useWaitForTransaction({hash: data?.hash});
   //    {txSuccess && <div>{artName} submitted</div>}
   return (
-    <Button onClick={() => write?.()} disabled={(isLoading || isSuccess )} >
+    <Button onClick={() => write?.()} disabled={(isLoading || (isSuccess && !txSuccess) || !write)} >
     {isLoading && <div>Confirm in Wallet</div>}
     {(isSuccess && !txSuccess) && <div>Transaction submitted</div>}
     {(!isLoading && !isSuccess) && <div>Add {artName}</div>}

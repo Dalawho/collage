@@ -24,11 +24,11 @@ export const MintButton1155 = ( {quant, layer, price} : {quant: number, layer:nu
   const {isSuccess: txSuccess} = useWaitForTransaction({hash: data?.hash});
 
   return (
-    <Button onClick={() => write?.()} disabled={(isLoading || isSuccess || txSuccess)} >
+    <Button className="w-full justify-center" onClick={() => write?.()} disabled={(isLoading || (isSuccess && !txSuccess) || !write)} >
       {isLoading && <div>Confirm in Wallet</div>}
       {(isSuccess && !txSuccess) && <div>Transaction submitted</div>}
-      {txSuccess && <div>Token Minted</div>}
-      {(!isLoading && !isSuccess && !txSuccess) && <div>Mint {pluralize(quant, "Token", "Tokens")} for {ethers.utils.formatEther((price*quant).toString())} Ξ</div>}
+      {txSuccess && <div>Mint {pluralize(quant, "Token", "Tokens")} for {ethers.utils.formatEther((price*quant).toString())} Eth</div>}
+      {(!isLoading && !isSuccess && !txSuccess) && <div>Mint {pluralize(quant, "Token", "Tokens")} for {ethers.utils.formatEther((price*quant).toString())} Eth</div>}
       
     </Button>
   );

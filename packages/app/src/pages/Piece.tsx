@@ -100,18 +100,22 @@ const HomePage: NextPage = () => {
         <div>
         <Select styles={customStyles} options={pieces ? pieces : placeholder} onChange={(newValue) => handlePieceChange(newValue)}/>
         <p className="flex flex-row justify-between mx-auto">
+          Minted:{(maxSupply.data ? maxSupply.data.supplyMinted : null) ??
+            "??"}{" | "}
+          Floating tokens: 
           {(totalSupply.data ? totalSupply.data?.toNumber().toLocaleString() : null) ??
-            "??"}
-          /
+            "??"}{" | "}
+          Max Mint: 
           {(maxSupply.data ? maxSupply.data.maxSupply : null) ??
-            "??"}{" "}
-          tokens minted
+            "??"}
           </p> 
         <div className="flex flex-row justify-between">
         <Button onClick={handleDecrement} className="w-1/2 justify-center"><p className="font-extrabold">-</p> </Button>
         <Button onClick={handleIncrement} className="w-1/2 justify-center"><p className="font-extrabold">+</p> </Button>
         </div>
+        <div className="flex mx-auto content-center justify-center">
         <MintButton1155 quant={quant} layer={layer ? layer : 0} price={layer && pieces ? pieces[layer-1].price : 0} />
+        </div>
         </div>
         </div>
    </div>

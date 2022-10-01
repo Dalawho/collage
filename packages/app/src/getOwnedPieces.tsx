@@ -11,6 +11,7 @@ gql`
         token {
             piece{
                 id 
+                name
             }
             amount
         }
@@ -45,7 +46,7 @@ export const getOwnedPieces = ()  => {
   if(query.data?.owners[0]) {
     // if(query.data?.owners[0].token)tokenList = query.data?.owners[0].token?.map( (item) => { if(parseInt(item.amount) > 0) return {value: parseInt(item.piece.id), label: `${item.piece.id} - still ${item.amount} left`}}).sort( (a,b) => a.value - b.value ).filter(function( element ) {
     // return element !== undefined;});
-    if(query.data?.owners[0].token) tokenList = query.data?.owners[0].token?.map( (item) => { if(parseInt(item.amount) > 0) return {value: parseInt(item.piece.id), label: `${item.piece.id} - still ${item.amount} left`}}).filter(function( element ) {
+    if(query.data?.owners[0].token) tokenList = query.data?.owners[0].token?.map( (item) => { if(parseInt(item.amount) > 0) return {value: parseInt(item.piece.id), label: `${item.piece.id} ${item.piece.name}  - ${item.amount} left`}}).filter(function( element ) {
      return element !== undefined;});
   }
   return(tokenList ? tokenList : placeholder);
