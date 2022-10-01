@@ -23,7 +23,7 @@ contract ExquisiteGraphics is IExquisiteGraphics {
   }
 
   function drawPixels(bytes memory data, Palette memory palette, uint8 xOffset, uint8 yOffset)
-    public pure
+    public view
     returns (bytes memory)  // pure
   {
     return _draw(data, palette, xOffset, yOffset);
@@ -52,9 +52,11 @@ contract ExquisiteGraphics is IExquisiteGraphics {
     Palette memory palette,
     uint8 xOffset,
     uint8 yOffset
-  ) internal pure returns (bytes memory) {
+  ) internal view returns (bytes memory) {
     DrawContext memory ctx;
     bytes memory buffer = DynamicBuffer.allocate(2**18);
+
+    console.log("made it to draw");
     _initDrawContext(ctx, data, HeaderType.ITEM, palette);
 
     _writeSVGPixelsWithOffset(ctx, buffer, xOffset, yOffset);
@@ -63,16 +65,30 @@ contract ExquisiteGraphics is IExquisiteGraphics {
 
   function _writeSVGPixelsWithOffset(DrawContext memory ctx, bytes memory buffer, uint256 xOffset, uint256 yOffset)
     internal
-    pure
+    view
   {
     // uint256 colorIndex;
     // uint256 width;
     // uint256 pixelNum;
+    console.log("made it to the render");
     PX memory px;
     uint256[] memory numberStrings = utils._getNumberStrings(ctx.header);
     string[] memory _palette = new string[](ctx.palette.length); //define this using a function in here
     _palette = _getNormalPalette(ctx.palette);
 
+    if (ctx.header.hasBackground) {
+      buffer.appendSafe(
+        abi.encodePacked(
+          '"<rect fill="#',
+          _palette[ctx.header.backgroundColorIndex],
+          '" height="',
+          Strings.toString(numberStrings[ctx.header.height]),
+          '" width="',
+          Strings.toString(numberStrings[ctx.header.width]),
+          '"/>'
+        )
+      );
+    }
     // Write every pixel into the buffer
     while (px.pixelNum < ctx.header.totalPixels) {
       px.colorIndex = ctx.pixels[px.pixelNum];
@@ -84,7 +100,7 @@ contract ExquisiteGraphics is IExquisiteGraphics {
       }
 
       // Check whether the pixel is transparent and skip 
-      if (uint8(bytes1(ctx.palette[px.colorIndex])) == 0x00) {
+      if (uint8(bytes1(ctx.palette[px.colorIndex] << 24)) == 0x00) {
          px.pixelNum++;
          continue;
        }

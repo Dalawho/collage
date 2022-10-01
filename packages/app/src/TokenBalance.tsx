@@ -1,13 +1,14 @@
 import { gql } from "urql";
 import { useAccount } from "wagmi";
 
-import { useInventoryQuery } from "../codegen/subgraph";
+import { useCollageOwnersQuery } from "../codegen/subgraph";
 import { useIsMounted } from "./useIsMounted";
 
 gql`
-  query Inventory($owner: Bytes!) {
-    tokens(where: { owner: $owner }, first: 100) {
+  query CollageOwners($owner: Bytes!) {
+    collageTokens(where: { owner: $owner }, first: 100) {
       id
+      tokenURI
     }
   }
 `;
@@ -15,7 +16,7 @@ gql`
 export const TokenBalance = ()  => {
   const { address } = useAccount();
 
-  const [query] = useInventoryQuery({
+  const [query] = useCollageOwnersQuery({
     pause: !address,
     variables: {
       owner: address?.toLowerCase(),
@@ -36,7 +37,7 @@ export const TokenBalance = ()  => {
 
   return (
     <div className="flex flex-col">
-        You already own {query.data?.tokens.length} Animals!
+        You already own {query.data?.collageTokens.length} Collage Token!
     </div>
   );
 };

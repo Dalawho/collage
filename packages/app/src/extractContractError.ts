@@ -1,6 +1,6 @@
-import { CCZoo__factory } from "./types";
+import { Collage__factory } from "./types";
 
-const contractInterface = CCZoo__factory.createInterface();
+const contractInterface = Collage__factory.createInterface();
 
 // for (const [error, errorFragment] of Object.entries(contractInterface.errors)) {
 //   console.log(contractInterface.getSighash(errorFragment), errorFragment.name);

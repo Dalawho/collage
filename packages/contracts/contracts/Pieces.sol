@@ -1,76 +1,91 @@
 // SPDX-License-Identifier: MIT
+// Add withdraw logic for artists
+
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
-import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/ERC1155Upgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155BurnableUpgradeable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts-upgradeable/token/ERC1155/extensions/ERC1155SupplyUpgradeable.sol";
 
 interface IRender {
     function tokenURI(uint256 tokenId) external view returns(string memory); 
     function addToken(bytes memory _data, uint16 destLen, string memory name) external;
 }
 
-
-contract Pieces is ERC1155, AccessControl, ERC1155Burnable {
-    bytes32 public constant URI_SETTER_ROLE = keccak256("URI_SETTER_ROLE");
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant BURNER_ROLE = keccak256("BURNER_ROLE");
+contract Pieces is Initializable, ERC1155Upgradeable, OwnableUpgradeable, ERC1155BurnableUpgradeable, ERC1155SupplyUpgradeable {
+    
+    event ArtworkAdded(uint256 indexed id, address indexed creator, string name, uint80 price, uint16 maxSupply);
 
     error payRightAmount();
+    error notBurnAllowed();
+    error toManyTokens();
 
     struct Layer {
         address creator;
-        uint16 maxSupply;
+        uint8 maxSupply;
+        uint8 supplyMinted;
         uint80 price;
     }
 
     IRender public render;
+    address public burnerAllowed;
 
-    Layer[] layers;
+    Layer[] public layers;
 
-    constructor() ERC1155("") {
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(URI_SETTER_ROLE, msg.sender);
-        _grantRole(MINTER_ROLE, msg.sender);
-        layers.push(Layer(msg.sender,0,0));
+    function initialize() initializer public {
+        __ERC1155_init("Pieces");
+        __ERC1155Burnable_init();
+        __Ownable_init();
+        __ERC1155Supply_init();
+        layers.push(Layer(msg.sender,0,0,0));
     }
 
-    function setBurner(address newBurner) public onlyRole(DEFAULT_ADMIN_ROLE) {
-        _grantRole(BURNER_ROLE, newBurner);
+    function setBurner(address newBurner) public onlyOwner {
+        burnerAllowed = newBurner;
     }
 
-    function setURI(string memory newuri) public onlyRole(URI_SETTER_ROLE) {
+    function setURI(string memory newuri) public onlyOwner {
         _setURI(newuri);
     }
 
-    function setRender( address _newRender) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    function setRender( address _newRender) public onlyOwner {
         render = IRender(_newRender);
     }
 
-    function mint(address account, uint256 id, uint256 amount, bytes memory data)
+    function mint(address account, uint256 id, uint8 amount, bytes memory data)
         public
         payable
     {
-        if(msg.value != amount*uint256(layers[id].price)) revert payRightAmount();
+        Layer memory _layer = layers[id];
+        if(msg.value != amount*uint256(_layer.price)) revert payRightAmount();
+        if(amount + _layer.supplyMinted > _layer.maxSupply) revert toManyTokens();
+        layers[id].supplyMinted += amount;
         _mint(account, id, amount, data);
     }
 
-    function createToken(uint16 maxSupply, uint80 price, bytes memory data, uint16 destLen, string memory name)
+    function createToken(uint8 maxSupply, uint80 price, uint8 mintAmount, bytes memory data, uint16 destLen, string memory name)
         public
     {
         //check whether data is valid gfx data
         //add layer
-        layers.push(Layer(msg.sender, maxSupply, price));
+        uint256 _tokenId = layers.length; 
+        layers.push(Layer(msg.sender, maxSupply, 0, price));
         //saveData
         render.addToken(data, destLen, name);
+        emit ArtworkAdded(_tokenId, msg.sender, name, price, maxSupply);
+        if(mintAmount > 0){
+            _mint(msg.sender, _tokenId, mintAmount, bytes("0"));
+            layers[_tokenId].supplyMinted += mintAmount;
+        } 
     }
 
-    function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data)
-        public
-        onlyRole(MINTER_ROLE)
-    {
-        _mintBatch(to, ids, amounts, data);
-    }
+    // function mintBatch(address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data)
+    //     public
+    // {
+    //     _mintBatch(to, ids, amounts, data);
+    // }
 
     function tokenURI(uint256 tokenId) public view returns(string memory) {
         return render.tokenURI(tokenId);
@@ -81,7 +96,7 @@ contract Pieces is ERC1155, AccessControl, ERC1155Burnable {
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC1155, AccessControl)
+        override(ERC1155Upgradeable)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
@@ -91,8 +106,15 @@ contract Pieces is ERC1155, AccessControl, ERC1155Burnable {
         address account,
         uint256 id,
         uint256 value
-    ) public override onlyRole(BURNER_ROLE) {
-
+    ) public override  {
+        if(msg.sender != burnerAllowed) revert notBurnAllowed();
         _burn(account, id, value);
+    }
+
+    function _beforeTokenTransfer(address operator, address from, address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data)
+        internal
+        override(ERC1155Upgradeable, ERC1155SupplyUpgradeable)
+    {
+        super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
 }

@@ -4,7 +4,14 @@
 // You can also run a script with `npx hardhat run <script>`. If you do that, Hardhat
 // will compile your contracts, add the Hardhat Runtime Environment's members to the
 // global scope, and execute the script.
-const hre = require("hardhat");
+const {
+  time,
+  loadFixture,
+} = require("@nomicfoundation/hardhat-network-helpers");
+const { anyValue } = require("@nomicfoundation/hardhat-chai-matchers/withArgs");
+const { expect } = require("chai");
+const { ethers, upgrades } = require("hardhat");
+require('@openzeppelin/hardhat-upgrades');
 const fs = require('fs');
 const pako = require("pako");
 const PNG = require('pngjs');
@@ -13,11 +20,12 @@ const xqstI = require('../test/xqst/ll_api.js');
 const xqstAnimal = require('../test/xqst/ll_api_animal.js');
 const animalApi = require('../test/xqst/api_animal.js');
 const sprintf = require('sprintf-js').sprintf;
-const traitJson = require('../traits.json');
+
+const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 const fromHexString = (hexString) =>
 Uint8Array.from(hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
-const sleep = ms => new Promise(r => setTimeout(r, ms));
+
 const buff2hex = (x) => '0x' + x.toString("hex");
 
 async function pngToPixels(img, animal) {
@@ -29,19 +37,19 @@ async function pngToPixels(img, animal) {
   let offset = 0;
   for (let y = 0; y < png.height; y++) {
       for (let x = 0; x < png.width; x++) {
-        if(animal ) {
-          pixels.push({
-              x,
-              y,
-              color: `#${png.data.readUInt32BE(offset).toString(16).padStart(8, '0')}`
-          });
-      } else {
-          pixels.push({
-              x,
-              y,
-              color: `#${png.data.readUInt32BE(offset).toString(16).padStart(8, '0')}`.slice(0,-2)
-          });
-      }
+          if(animal ) {
+              pixels.push({
+                  x,
+                  y,
+                  color: `#${png.data.readUInt32BE(offset).toString(16).padStart(8, '0')}`
+              });
+          } else {
+              pixels.push({
+                  x,
+                  y,
+                  color: `#${png.data.readUInt32BE(offset).toString(16).padStart(8, '0')}`//.slice(0,-2)
+              });
+          }
           offset += 4;
       }
   }
@@ -60,180 +68,55 @@ async function pngToData(img, animal) {
   }
 };
 
-
-async function loadAnimal(name, path, loc, props, render) {
-  let buff = new xqstAnimal.PixelBuffer; 
-  const abiCoder = new ethers.utils.AbiCoder;
-  
-  let animalData = await pngToData(path, true);
-  buff.from(animalData);
-  buff.setHeader(); //really carefull about this... 
-  buff.setLoc(loc);
-  buff.setAnimalProps(props);
-  buff.setVersion(24);
-  
-  //this is the common pattern for adding stuff in this contract
-  let encoded = await abiCoder.encode(["bytes"],[buff.getPixelBuffer()] );
-  let input = fromHexString(encoded.slice(2));
-  let compressed = pako.deflateRaw(input, { level: 9 });
-  await render.addAnimal(name,compressed, input.length);
-}
-
-async function loadTrait(paths, loc, number, names, render) {
-  let buff = new xqstI.PixelBuffer; 
-  const abiCoder = new ethers.utils.AbiCoder;
-  
-  var data;
-  if(number === 1) {
-      var dataArray = [];    
-  } else {
-      var dataArray = ["0x00"];
-  }
-
-  for(let i = 0; i < paths.length; i++) {
-      data = await pngToData(paths[i], false);
-      buff.from(data);
-      buff.setHeader(); //really carefull about this... 
-      buff.setLoc(loc[i]);
-      if(number == 1) {buff.noBackground()};
-      dataArray.push(buff.getPixelBuffer());
-      //this is the common pattern for adding stuff in this contract
-  }
-  let encoded = await abiCoder.encode(["bytes[]"],[dataArray] );
-  let input = fromHexString(encoded.slice(2));
-  let compressed = pako.deflateRaw(input, { level: 9 });
-  await render.setTrait(number,compressed, input.length, names);
-}
-
-async function loadBack(paths, number, names, render) {
-  const abiCoder = new ethers.utils.AbiCoder;
-  
-  var dataArray = [];    
-
-  for(let i = 0; i < paths.length; i++) {
-       var gif = fs.readFileSync(paths[i]);
-       dataArray.push(gif);
-   }
-   let encoded = await abiCoder.encode(["bytes[]"],[dataArray] );
-   let input = fromHexString(encoded.slice(2));
-   let compressed = pako.deflateRaw(input, { level: 9 });
-  //var input = fs.readFileSync(paths[0]);
-  //var input = gif.toString('hex');
-  //var input = gif.toString('Base64');
-
-  //compressed = pako.deflateRaw(input, { level: 9 });
-  await render.setTrait(number,compressed, input.length, names);
-}
-
-async function loadPalette(pal, pnames, render) {
-
-  const abiCoder = new ethers.utils.AbiCoder;
-  let encoded = await abiCoder.encode(["tuple(bytes3[], uint8)[]"], [pal ]);//pal.map(p => p[0])[0] );
-  let input = fromHexString(encoded.slice(2));
-  let compressed = pako.deflateRaw(input, { level: 9 });
-  await render.setTrait(0,compressed, input.length, pnames);
-}
-
 async function main() {
-  //deploy everything
-//   console.log("before deploay");
-  const Zoo = await ethers.getContractFactory("CCZoo");
+  Pieces = await ethers.getContractFactory("Pieces");
+  pieces = await upgrades.deployProxy(Pieces)//, {gasPrice: 1000000000});
+  //await pieces.deployed();
+  await sleep(20000);
 
-  console.log("ready to deploay");
-  const zoo = await upgrades.deployProxy(Zoo, {gasPrice: 1000000000});
-  await zoo.deployed();
-  console.log(zoo.address);
-  console.log("done");
+   Collage = await ethers.getContractFactory("Collage");
+  collage = await upgrades.deployProxy(Collage)//, {gasPrice: 1000000000});
+  await collage.deployed();
+  await sleep(20000);
 
-  await sleep(20000);
-  Render = await ethers.getContractFactory("CCZooRender" );
-  const render = await upgrades.deployProxy(Render, {gasPrice: 1000000000});
-  await render.deployed();
- console.log("render deployed");
-  await sleep(20000);
-  const Gfx = await ethers.getContractFactory("ExquisiteGraphics" );
-  const gfx = await Gfx.deploy({gasPrice: 1000000000});
-  console.log("gfx deployed");
-  //await gfx.deployed();
-  await sleep(20000);
-  const Inflator = await hre.ethers.getContractFactory("Inflator" );
-  const inflator = await Inflator.deploy({gasPrice: 1000000000}); 
-  console.log("infl deployed");
+  Gfx = await ethers.getContractFactory("ExquisiteGraphics");
+  gfx = await Gfx.deploy();//({gasPrice: 1000000000});
+  // //await gfx.deployed();
+   await sleep(20000);
+
+  Inflator = await ethers.getContractFactory("Inflator");
+  inflator = await Inflator.deploy()//{gasPrice: 1000000000});
   //await inflator.deployed();
+  await sleep(20000);
 
+  Render = await ethers.getContractFactory("Render");
+  render = await upgrades.deployProxy(Render)//, {gasPrice: 1000000000});
   //await render.deployed();
   await sleep(20000);
-  PS = await ethers.getContractFactory("PaymentSplitter" );
 
-  await render.setGfx(gfx.address );
-  console.log("gfx set");
-  await sleep(20000)
-  await render.setInflator(inflator.address );
-  console.log("inflator set");
-  await sleep(20000)
-  await render.setCCZooMain(zoo.address );
-  console.log("zoo set");
-  await sleep(20000)
-  await zoo.setCCZooRenderer(render.address );
-  console.log("render set");
-  await sleep(20000)
-  ps = await PS.deploy("0xeF421d02f19CCBb7f22EEEd2D2Ee9584DCD2a8FF", 5);
-  console.log("ps deployed");
-  await sleep(20000)
-  await render.setPayment(ps.address);
-  console.log("payment set");
-  await sleep(20000)
-  await ps.setAllowedToAdd(render.address);
-  console.log("render set");
-  await sleep(20000)
+  await render.setGfx(gfx.address);
+  await sleep(20000);
+  await render.setInflator(inflator.address);
+  await sleep(20000);
+  await render.setPieces(pieces.address);
+  await sleep(20000);
 
-  console.log("Zoo deployed to: ", zoo.address);
+  await collage.setRender(render.address);
+  await sleep(20000);
+  await collage.setPieces(pieces.address);
+  await sleep(20000);
+  
+  await pieces.setRender(render.address);
+  await sleep(20000);
+  await pieces.setBurner(collage.address);
+  await sleep(20000);
+
+  console.log("pieces deployed to: ", pieces.address);
+  console.log("collage deployed to: ", collage.address);
+   console.log("Render deployed to: ", render.address);
+   console.log("gfx deployed to: ", gfx.address);
   console.log("inflator deployed to: ", inflator.address);
-  console.log("Render deployed to: ", render.address);
-  console.log("gfx deployed to: ", gfx.address);
-  console.log("ps deployed to: ", ps.address);
-//   //load art
 
-  // const Zoo = await ethers.getContractFactory("CCZoo");
-  // const Render = await ethers.getContractFactory("CCZooRender" );
-  // const zoo = Zoo.attach("0x7D97FBa0B9FA10Bbd128C5021bEDdcd250Bd6Af8");
-  // const render = Render.attach("0x3A9D7F4E655185aA7A333dCd7632Fa6388DDF9DF");
-
-  let pal = traitJson.palette.palettes.map((p) => [p.color, p.type]);
-  let pnames = traitJson.palette.palettes.map((p) => p.name);
-  await loadPalette(pal, pnames, render);
-  console.log("added palettes");
-  await sleep(20000);
-  await render.addAnimal("","0x00", 0);
-  console.log("added 1 animal", traitJson.animal.animals.length);
-  await sleep(20000);
-  for(let i =0; i < traitJson.animal.animals.length; i++) {
-    await loadAnimal(traitJson.animal.animals[i].name, traitJson.animal.animals[i].path, traitJson.animal.animals[i].animalLoc, traitJson.animal.animals[i].itemLoc, render);
-      await sleep(20000);
-      console.log("loaded", traitJson.animal.animals[i].name)
-  }
-  let backs = traitJson.background.backgrounds.map((p) => p.path);
-  let names = traitJson.background.backgrounds.map((p) => p.name);
-  await loadBack(backs, traitJson.background.number, names, render);
-  await sleep(20000);
-  console.log("added backs");
-  let item = ["hat", "head", "ground"];
-  for(let i =0; i < item.length; i++) {
-     let paths = traitJson[item[i]][item[i]].map((p) => p.path);
-      let locs = traitJson[item[i]][item[i]].map((p) => p.loc);
-      let names = traitJson[item[i]][item[i]].map((p) => p.name);
-      await loadTrait(paths, locs, traitJson[item[i]].number, ["None"].concat(names), render);
-      await sleep(20000);
-      console.log("added ", item[i]);
-  };
-  await zoo.setMintPhase(2);
-  await sleep(20000);
-  await zoo.mint(10, {value: ethers.utils.parseEther("0.05")});          
-  await sleep(20000);
-  await render.setAnimal(1, 1);
-  [owner, addr1,  _] = await ethers.getSigners();
-  await render.currateAnimal(1, owner.address);
-  await render.currateAnimal(2, owner.address);
 }
 
 // We recommend this pattern to be able to use async/await everywhere

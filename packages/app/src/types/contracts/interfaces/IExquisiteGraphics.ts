@@ -35,33 +35,31 @@ export declare namespace IExquisiteGraphics {
 
 export interface IExquisiteGraphicsInterface extends utils.Interface {
   functions: {
-    "drawPixelsAnimal(bytes,(bytes3[],uint8))": FunctionFragment;
-    "drawPixelsItems(bytes,uint8,uint8)": FunctionFragment;
+    "drawPixels(bytes,(bytes3[],uint8),uint8,uint8)": FunctionFragment;
+    "getDimensions(bytes)": FunctionFragment;
   };
 
   getFunction(
-    nameOrSignatureOrTopic: "drawPixelsAnimal" | "drawPixelsItems"
+    nameOrSignatureOrTopic: "drawPixels" | "getDimensions"
   ): FunctionFragment;
 
   encodeFunctionData(
-    functionFragment: "drawPixelsAnimal",
-    values: [PromiseOrValue<BytesLike>, IExquisiteGraphics.PaletteStruct]
-  ): string;
-  encodeFunctionData(
-    functionFragment: "drawPixelsItems",
+    functionFragment: "drawPixels",
     values: [
       PromiseOrValue<BytesLike>,
+      IExquisiteGraphics.PaletteStruct,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "getDimensions",
+    values: [PromiseOrValue<BytesLike>]
+  ): string;
 
+  decodeFunctionResult(functionFragment: "drawPixels", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "drawPixelsAnimal",
-    data: BytesLike
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "drawPixelsItems",
+    functionFragment: "getDimensions",
     data: BytesLike
   ): Result;
 
@@ -95,80 +93,76 @@ export interface IExquisiteGraphics extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
-    drawPixelsAnimal(
+    drawPixels(
       data: PromiseOrValue<BytesLike>,
       palette: IExquisiteGraphics.PaletteStruct,
-      overrides?: CallOverrides
-    ): Promise<
-      [[[number, number], [number, number], [number, number]], string]
-    >;
-
-    drawPixelsItems(
-      data: PromiseOrValue<BytesLike>,
       xOffset: PromiseOrValue<BigNumberish>,
       yOffset: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    getDimensions(
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[number, number]>;
   };
 
-  drawPixelsAnimal(
+  drawPixels(
     data: PromiseOrValue<BytesLike>,
     palette: IExquisiteGraphics.PaletteStruct,
-    overrides?: CallOverrides
-  ): Promise<[[[number, number], [number, number], [number, number]], string]>;
-
-  drawPixelsItems(
-    data: PromiseOrValue<BytesLike>,
     xOffset: PromiseOrValue<BigNumberish>,
     yOffset: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
+  getDimensions(
+    data: PromiseOrValue<BytesLike>,
+    overrides?: CallOverrides
+  ): Promise<[number, number]>;
+
   callStatic: {
-    drawPixelsAnimal(
+    drawPixels(
       data: PromiseOrValue<BytesLike>,
       palette: IExquisiteGraphics.PaletteStruct,
-      overrides?: CallOverrides
-    ): Promise<
-      [[[number, number], [number, number], [number, number]], string]
-    >;
-
-    drawPixelsItems(
-      data: PromiseOrValue<BytesLike>,
       xOffset: PromiseOrValue<BigNumberish>,
       yOffset: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    getDimensions(
+      data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<[number, number]>;
   };
 
   filters: {};
 
   estimateGas: {
-    drawPixelsAnimal(
+    drawPixels(
       data: PromiseOrValue<BytesLike>,
       palette: IExquisiteGraphics.PaletteStruct,
+      xOffset: PromiseOrValue<BigNumberish>,
+      yOffset: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    drawPixelsItems(
+    getDimensions(
       data: PromiseOrValue<BytesLike>,
-      xOffset: PromiseOrValue<BigNumberish>,
-      yOffset: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
-    drawPixelsAnimal(
+    drawPixels(
       data: PromiseOrValue<BytesLike>,
       palette: IExquisiteGraphics.PaletteStruct,
+      xOffset: PromiseOrValue<BigNumberish>,
+      yOffset: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    drawPixelsItems(
+    getDimensions(
       data: PromiseOrValue<BytesLike>,
-      xOffset: PromiseOrValue<BigNumberish>,
-      yOffset: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

@@ -27,12 +27,6 @@ class PixelBuffer {
             this.header = {
                 locx: 0,
                 locy: 0,
-                hatx: 0,
-                haty: 0,
-                headx: 0,
-                heady: 0, 
-                feetx: 0,
-                feety: 0,
                 version: 24,
                 width: 0,
                 height: 0,
@@ -64,7 +58,7 @@ class PixelBuffer {
         const colorChannels = header.alpha ? 4 : 3;
         this.dataBuffer = Buffer.from(data
             .replace('0x', '')
-            .substring(32 + header.numColors * colorChannels * 2), 'hex'); //should this be 32?!
+            .substring(20 + header.numColors * colorChannels * 2), 'hex'); //should this be 32?!
     }
     _initData() {
         this.dataBuffer = Buffer.from('00'.repeat(Math.ceil((this.header.width * this.header.height) / this.pixelInfo.ppb)), 'hex');
@@ -128,16 +122,6 @@ class PixelBuffer {
     setLoc(loc) {
         this.header.locx = loc[0];
         this.header.locy = loc[1];
-        this.headerBuffer = generateHeader(this.header);
-    }
-
-    setAnimalProps(loc) {
-        this.header.hatx = loc[0][0];
-        this.header.haty = loc[0][1];
-        this.header.headx = loc[1][0];
-        this.header.heady = loc[1][1];
-        this.header.feetx = loc[2][0];
-        this.header.feety = loc[2][1];
         this.headerBuffer = generateHeader(this.header);
     }
 
@@ -235,7 +219,7 @@ function generatePalette(palette) {
 }
 const readPalette = (data, header) => {
     // TODO: validate data
-    const d = data.replace('0x', '').substring(32, 24 + header.numColors * 16); //fix OK?
+    const d = data.replace('0x', '').substring(20, 16 + header.numColors * 16); //fix OK?
     const buffer = Buffer.from(d, 'hex');
     const palette = [];
     for (let i = 0; i < header.numColors; i++) {
@@ -268,36 +252,23 @@ const readHeader = (data) => {
     if (rawData.length < 16) {
         return null;
     }
-    const headerData = Buffer.from(rawData.substring(0, 32), 'hex');
+    const headerData = Buffer.from(rawData.substring(0, 20), 'hex');
 
-    let hatx = headerData.readUInt8();
-    let haty = headerData.readUInt8(1); 
-    let headx = headerData.readUInt8(2);
-    let heady = headerData.readUInt8(3); 
-    let feetx = headerData.readUInt8(4);
-    let feety = headerData.readUInt8(5); 
-    
-    let locx = headerData.readUInt8(6);
-    let locy = headerData.readUInt8(7); 
-    const version = headerData.readUInt8(8);
-    let width = headerData.readUInt8(3+6);
-    let height = headerData.readUInt8(4+6);
-    const numColors = headerData.readUInt16BE(5+6);
-    const backgroundIndex = headerData.readUInt8(7+6);
-    const scaleFactor = headerData.readUInt16BE(8+6) >> 6;
-    const alpha = ((headerData.readUInt8(9+6) >> 1) & 0x01) == 1;
-    const backgroundIncluded = (headerData.readUInt8(9+6) & 0x01) == 1;
+    let locx = headerData.readUInt8();
+    let locy = headerData.readUInt8(1); 
+    const version = headerData.readUInt8(2);
+    let width = headerData.readUInt8(3);
+    let height = headerData.readUInt8(4);
+    const numColors = headerData.readUInt16BE(5);
+    const backgroundIndex = headerData.readUInt8(7);
+    const scaleFactor = headerData.readUInt16BE(8) >> 6;
+    const alpha = ((headerData.readUInt8(9) >> 1) & 0x01) == 1;
+    const backgroundIncluded = (headerData.readUInt8(9) & 0x01) == 1;
     if (width == 0)
         width = 256;
     if (height == 0)
         height = 256;
     const header = {
-        hatx,
-        haty,
-        headx,
-        heady,
-        feetx,
-        feety,
         locx,
         locy,
         version,
@@ -326,12 +297,6 @@ const generateHeader = (header) => {
             last2Bytes |= header.scaleFactor << 6;
         }
     }
-    headerData += `${header.hatx.toString(16).padStart(2, '0')}`;
-    headerData += `${header.haty.toString(16).padStart(2, '0')}`;
-    headerData += `${header.headx.toString(16).padStart(2, '0')}`;
-    headerData += `${header.heady.toString(16).padStart(2, '0')}`;
-    headerData += `${header.feetx.toString(16).padStart(2, '0')}`;
-    headerData += `${header.feety.toString(16).padStart(2, '0')}`;
     headerData += `${header.locx.toString(16).padStart(2, '0')}`;
     headerData += `${header.locy.toString(16).padStart(2, '0')}`;
     headerData += `${header.version.toString(16).padStart(2, '0')}`;

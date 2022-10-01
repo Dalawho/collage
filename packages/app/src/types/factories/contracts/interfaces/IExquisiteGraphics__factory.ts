@@ -79,14 +79,19 @@ const _abi = [
         name: "palette",
         type: "tuple",
       },
-    ],
-    name: "drawPixelsAnimal",
-    outputs: [
       {
-        internalType: "uint8[2][3]",
-        name: "",
-        type: "uint8[2][3]",
+        internalType: "uint8",
+        name: "xOffset",
+        type: "uint8",
       },
+      {
+        internalType: "uint8",
+        name: "yOffset",
+        type: "uint8",
+      },
+    ],
+    name: "drawPixels",
+    outputs: [
       {
         internalType: "bytes",
         name: "",
@@ -103,23 +108,18 @@ const _abi = [
         name: "data",
         type: "bytes",
       },
-      {
-        internalType: "uint8",
-        name: "xOffset",
-        type: "uint8",
-      },
-      {
-        internalType: "uint8",
-        name: "yOffset",
-        type: "uint8",
-      },
     ],
-    name: "drawPixelsItems",
+    name: "getDimensions",
     outputs: [
       {
-        internalType: "bytes",
+        internalType: "uint8",
         name: "",
-        type: "bytes",
+        type: "uint8",
+      },
+      {
+        internalType: "uint8",
+        name: "",
+        type: "uint8",
       },
     ],
     stateMutability: "view",

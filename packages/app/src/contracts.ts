@@ -1,8 +1,8 @@
 import { useContractRead } from "wagmi";
 
-import CCZooGoerli from "./CCZoo.json";
-import { provider, targetChainId } from "./EthereumProviders";
-import { CCZoo__factory, CCZooRender__factory } from "./types";
+import contractAddresses from "./contracts.json";
+//import { provider, targetChainId } from "./EthereumProviders";
+import { Collage__factory, Pieces__factory, Render__factory } from "./types";
 
 // I would have used `ExampleNFT__factory.connect` to create this, but we may
 // not have a provider ready to go. Any interactions with this contract should
@@ -23,7 +23,7 @@ import { CCZoo__factory, CCZooRender__factory } from "./types";
 //   provider({ chainId: targetChainId })
 // );
 
-export const useCCZooContractRead = (
+export const usePiecesContractRead = (
   readConfig: Omit<
     Parameters<typeof useContractRead>[0],
     "addressOrName" | "contractInterface"
@@ -31,8 +31,8 @@ export const useCCZooContractRead = (
 ) =>
   useContractRead({
     ...readConfig,
-    addressOrName: CCZooGoerli.deployedTo,
-    contractInterface: CCZoo__factory.abi,
+    addressOrName: contractAddresses.pieces,
+    contractInterface: Pieces__factory.abi,
   });
 
   export const useRenderContractRead = (
@@ -43,10 +43,18 @@ export const useCCZooContractRead = (
   ) =>
     useContractRead({
       ...readConfig,
-      addressOrName: CCZooGoerli.renderDeploy,
-      contractInterface: CCZooRender__factory.abi,
+      addressOrName: contractAddresses.render,
+      contractInterface: Render__factory.abi,
     });
 
-  export const contractTest = () => {
-    console.log(CCZoo__factory.abi);
-  };
+  export const useCollageContractRead = (
+    readConfig: Omit<
+      Parameters<typeof useContractRead>[0],
+      "addressOrName" | "contractInterface"
+    >
+  ) =>
+    useContractRead({
+      ...readConfig,
+      addressOrName: contractAddresses.collage,
+      contractInterface: Collage__factory.abi,
+    });

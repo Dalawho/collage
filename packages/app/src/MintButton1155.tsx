@@ -1,21 +1,23 @@
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
 
 import { Button } from "./Button";
-import * as cczoo from './CCZoo.json';
+import contractAddresses from './contracts.json';
 import { pluralize } from "./pluralize";
-import { CCZoo__factory } from "./types";
+import { Pieces__factory } from "./types";
 
-export const MintButton1155 = ( {quant} : {quant: number} ) => {
+export const MintButton1155 = ( {quant, layer, price} : {quant: number, layer:number, price:number} ) => {
  
+   const { address } = useAccount();
   const { config } = usePrepareContractWrite({
-    addressOrName: cczoo.deployedTo,
-    contractInterface: CCZoo__factory.abi,
+    addressOrName: contractAddresses.pieces,
+    contractInterface: Pieces__factory.abi,
     functionName: 'mint',
-    args: [quant],
-    // overrides: {
-    //   value: ethers.utils.parseEther((0.005*quant).toString()),
-    // }
+    //function mint(address account, uint256 id, uint256 amount, bytes memory data)
+    args: [address, layer, quant, "0x0000"],
+    overrides: {
+       value: (price*quant).toString(),
+     }
   })
   const { data, isLoading, isSuccess , write } = useContractWrite(config);
 
@@ -26,7 +28,7 @@ export const MintButton1155 = ( {quant} : {quant: number} ) => {
       {isLoading && <div>Confirm in Wallet</div>}
       {(isSuccess && !txSuccess) && <div>Transaction submitted</div>}
       {txSuccess && <div>Token Minted</div>}
-      {(!isLoading && !isSuccess && !txSuccess) && <div>Mint {pluralize(quant, "Token", "Tokens")} for {0.005*quant} Ξ</div>}
+      {(!isLoading && !isSuccess && !txSuccess) && <div>Mint {pluralize(quant, "Token", "Tokens")} for {ethers.utils.formatEther((price*quant).toString())} Ξ</div>}
       
     </Button>
   );

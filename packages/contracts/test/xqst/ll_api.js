@@ -28,7 +28,7 @@ class PixelBuffer {
                 height: 0,
                 numColors: 0,
                 scaleFactor: 0,
-                alpha: false,
+                alpha: true,
                 backgroundIncluded: false,
                 backgroundIndex: 0
             };

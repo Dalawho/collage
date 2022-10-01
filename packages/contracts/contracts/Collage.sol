@@ -2,9 +2,9 @@ pragma solidity ^0.8.12;
 
 // SPDX-License-Identifier: MIT
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "./ERC721G.sol";
-import "hardhat/console.sol";
+//import "hardhat/console.sol";
 
 interface IRender {
      function tokenURI(uint256 tokenId, ERC721G.LayerStruct[4] memory layerIds) external view returns (string memory); 
@@ -15,7 +15,9 @@ interface IPieces {
     function burn( address account, uint256 id, uint256 value) external;
 }
 
-contract Collage is ERC721G, Ownable {
+contract Collage is ERC721G, OwnableUpgradeable {
+
+    event MetadataUpdate(uint256 _tokenId);
 
     error MaxSupplyReached();
     error mintNotStarted();
@@ -28,10 +30,10 @@ contract Collage is ERC721G, Ownable {
     IRender public render;
     IPieces public pieces;
 
-    // Set the base ERC721G Constructor
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() ERC721G("Collage", "CLG", 1, 30) {
 
+    function initialize() initializer public {
+        __ERC721G_init("Collage", "CLG", 1, 30);
+        __Ownable_init();
     }
 
     // Define the NFT Constant Params
@@ -46,6 +48,7 @@ contract Collage is ERC721G, Ownable {
         if(msg.sender != _tokenData[tokenId].owner) revert notTokenOwner();
         pieces.burn(msg.sender, layerId, 1);
         _tokenData[tokenId].layers[layer] = LayerStruct(layerId, xOffset, yOffset);
+        emit MetadataUpdate(tokenId);
     }
 
     function mintAndSet(uint8 layer, uint8 layerId, uint8 xOffset, uint8 yOffset) public payable {

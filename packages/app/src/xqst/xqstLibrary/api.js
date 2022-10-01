@@ -124,7 +124,7 @@ const getBinarySVG_Array = (pixels) => {
             bestColor = value;
         paletteArr[value.index] = value.color;
     });
-    let alpha = false;
+    let alpha = true;
     if (paletteArr.length > 1) {
         const firstColorLen = paletteArr[0].replace('#', '').length;
         if (firstColorLen == 4 || firstColorLen == 8) {

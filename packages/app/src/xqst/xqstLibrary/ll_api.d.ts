@@ -5,12 +5,6 @@ export declare type ExquisiteBitmapHeader = {
     version: number;
     locx: number;
     locy: number;
-    hatx: number;
-    haty: number;
-    headx: number;
-    heady: number; 
-    feetx: number;
-    feety: number;
     width: number;
     height: number;
     numColors: number;

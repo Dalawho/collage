@@ -2,17 +2,17 @@ import { ethers } from "ethers";
 import { useAccount, useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
 
 import { Button } from "./Button";
-import * as cczoo from './CCZoo.json';
+import contractAddresses from './contracts.json';
 import { pluralize } from "./pluralize";
-import { CCZoo__factory } from "./types";
+import { Collage__factory } from "./types";
 
 export const MintButton = ( {quant} : {quant: number} ) => {
  
   const { config } = usePrepareContractWrite({
-    addressOrName: cczoo.deployedTo,
-    contractInterface: CCZoo__factory.abi,
+    addressOrName: contractAddresses.collage,
+    contractInterface: Collage__factory.abi,
     functionName: 'mint',
-    args: [quant],
+    //args: [quant],
     // overrides: {
     //   value: ethers.utils.parseEther((0.005*quant).toString()),
     // }

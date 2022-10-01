@@ -1,6 +1,6 @@
 import "@rainbow-me/rainbowkit/styles.css";
 
-import { darkTheme,getDefaultWallets, lightTheme, RainbowKitProvider, Theme } from "@rainbow-me/rainbowkit";
+import { getDefaultWallets, lightTheme, RainbowKitProvider, Theme } from "@rainbow-me/rainbowkit";
 import merge from 'lodash.merge';
 import {
   configureChains,
@@ -35,7 +35,7 @@ export const { chains, provider, webSocketProvider } = configureChains(
 );
 
 const { connectors } = getDefaultWallets({
-  appName: "CCZ00",
+  appName: "Collage",
   chains,
 });
 

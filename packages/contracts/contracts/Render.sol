@@ -1,19 +1,21 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.12;
 
-import '@openzeppelin/contracts/access/Ownable.sol';
-import "@openzeppelin/contracts/utils/Strings.sol";
+
+import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
+import {StringsUpgradeable as Strings} from "@openzeppelin/contracts-upgradeable/utils/StringsUpgradeable.sol";
 import "./SSTORE2.sol";
-import "@openzeppelin/contracts/utils/Base64.sol";
+import {Base64Upgradeable as Base64} from "@openzeppelin/contracts-upgradeable/utils/Base64Upgradeable.sol";
 import '@divergencetech/ethier/contracts/utils/DynamicBuffer.sol';
 import './interfaces/IExquisiteGraphics.sol';
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "hardhat/console.sol";
 
 interface IInflator {
     function puff(bytes memory source, uint256 destlen) external pure returns (uint8, bytes memory);
 }
 
-contract Render is Ownable {
+contract Render is Initializable, OwnableUpgradeable {
     using Strings for uint256;
     using Strings for uint8;
     using DynamicBuffer for bytes;
@@ -39,9 +41,10 @@ contract Render is Ownable {
     error tokenDoesntExists();
     error onlyPiecesCanAddTokens();
 
-    constructor() { 
+    function initialize() initializer public {
+        __Ownable_init();
         traits.push(Trait(address(0), 0, ""));
-      }
+    }
 
     ////////////////////////  Set external contract addresses /////////////////////////////////
 
@@ -93,7 +96,7 @@ contract Render is Ownable {
         _outString = string.concat(_outString, ',"attributes":[');
         for(uint8 i = 0; i < _traits.length; i++) {
             if(_traits[i].data == address(0)) continue;
-            if(i > 1) _outString = string.concat(_outString,',');
+            if(i > 0) _outString = string.concat(_outString,',');
               _outString = string.concat(
               _outString,
              '{"trait_type":"Layer #',
@@ -107,9 +110,9 @@ contract Render is Ownable {
 
         if(numberOfLayers != 0) {
             _outString = string.concat(_outString,',"image": "data:image/svg+xml;base64,',
-                Base64.encode(_drawTraits(_traits, layerIds)));
+                Base64.encode(_drawTraits(_traits, layerIds)), '"');
         }
-        _outString = string.concat(_outString,'"}');
+        _outString = string.concat(_outString,'}');
         return _outString; 
     }
 
@@ -135,7 +138,7 @@ contract Render is Ownable {
            }
         buffer.appendSafe('</svg>');
 
-        return string.concat('<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" version="1.1" viewBox="0 0 ', Strings.toString(width), ' ', Strings.toString(height),'" width="',Strings.toString(width*10),'" height="',Strings.toString(height*10),'"> ', string(buffer));
+        return string.concat('<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" version="1.1" viewBox="0 0 ', Strings.toString(width), ' ', Strings.toString(height),'" width="',Strings.toString(uint256(width)*10),'" height="',Strings.toString(uint256(height)*10),'"> ', string(buffer));
     }
 
     ////////////////////////  Full SVG functions /////////////////////////////////
@@ -154,21 +157,25 @@ contract Render is Ownable {
                 if(tempWidth+layerIds[i].xOffset > width) width = tempWidth+layerIds[i].xOffset;
             }
             buffer.appendSafe('</svg>');
-            return abi.encodePacked('<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" version="1.1" viewBox="0 0 ', Strings.toString(width), ' ', Strings.toString(height),'" width="',Strings.toString(width*10),'" height="',Strings.toString(height*10),'"> ', buffer);
+            return abi.encodePacked('<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" version="1.1" viewBox="0 0 ', Strings.toString(width), ' ', Strings.toString(height),'" width="',Strings.toString(uint256(width)*10),'" height="',Strings.toString(uint256(height)*10),'"> ', buffer);
     }
 
     function _getOneSVG(Trait memory _currentTrait) internal view returns (bytes memory) {
         bytes memory buffer = DynamicBuffer.allocate(2**18);
         (uint8 height, uint8 width) = _renderTrait(_currentTrait, LayerStruct(0,0,0), buffer);
         buffer.appendSafe('</svg>');
-        return abi.encodePacked('<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" version="1.1" viewBox="0 0 ', Strings.toString(width), ' ', Strings.toString(height),'" width="',Strings.toString(width*10),'" height="',Strings.toString(height*10),'"> ', buffer);
+        return abi.encodePacked('<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" version="1.1" viewBox="0 0 ', Strings.toString(width), ' ', Strings.toString(height),'" width="',Strings.toString(uint256(width)*10),'" height="',Strings.toString(uint256(height)*10),'"> ', buffer);
     }
 
     function getSVGForBytes(bytes memory data) public view returns(string memory) {
         bytes memory buffer = DynamicBuffer.allocate(2**18);
         (uint8 height, uint8 width) = gfx.getDimensions(data);
-        buffer.appendSafe(bytes(string.concat('<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" version="1.1" viewBox="0 0 ', Strings.toString(width), ' ', Strings.toString(height),'" width="',Strings.toString(width*10),'" height="',Strings.toString(height*10),'"> ')));
+        console.log("made it past dimensions");
+        console.log(height);
+        console.log(width);
+        buffer.appendSafe(bytes(string.concat('<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" version="1.1" viewBox="0 0 ', Strings.toString(width), ' ', Strings.toString(height),'" width="',Strings.toString(uint256(width)*10),'" height="',Strings.toString(uint256(height)*10),'"> ')));
         bytes3[] memory out = new bytes3[](0);
+        console.log("made it past dimensions");
         buffer.appendSafe(gfx.drawPixels(data,IExquisiteGraphics.Palette(out, IExquisiteGraphics.PaletteTypes.none),0,0));   
         buffer.appendSafe('</svg>');
         return string(buffer);

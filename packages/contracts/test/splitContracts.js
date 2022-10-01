@@ -110,7 +110,7 @@ describe("TMD tests", () => {
       
       });  
       it("render test", async() => {
-        await testSVGRender("/Users/nope/exqs/lambo/pics/fire.png", render); //
+        await testSVGRender("/Users/nope/exqs/CCZoo/pics/cells2.png", render); //
       });  
     it("test the two combinations", async() => {
         await makeLayer("/Users/nope/exqs/lambo/pics/fire.png", pieces);
@@ -124,7 +124,7 @@ describe("TMD tests", () => {
         console.log(await collage.tokenURI(1));
       });  
       it("test preview function", async() => {
-        await makeLayer("/Users/nope/exqs/lambo/pics/fire.png", pieces);
+        await makeLayer("/Users/nope/exqs/CCZoo/pics/cells2.png", pieces);
         await makeLayer("/Users/nope/exqs/lambo/pics/heart.png", pieces); //1
         await pieces.mint(owner.address, 1, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         await pieces.mint(owner.address, 2, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
@@ -169,5 +169,6 @@ async function testSVGRender(path, render) {
     buff.from(data);
     buff.setHeader(); //really carefull about this... 
     buff.setLoc([0,0]);
+    console.log(buff.getPixelBuffer());
     console.log(await render.getSVGForBytes(buff.getPixelBuffer()));  //maxSupply, price,  data, uint16 destLen, string memory name)
 }

@@ -1,8 +1,8 @@
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 
-abstract contract ERC721G {
+abstract contract ERC721G is Initializable {
 
     // Standard ERC721 Events
     event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
@@ -17,10 +17,9 @@ abstract contract ERC721G {
 
     // ERC721G Global Variables
     uint256 public tokenIndex; // The running index for the next TokenId
-    /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
-    uint256 public immutable startTokenId; // Bytes Storage for the starting TokenId
-    /// @custom:oz-upgrades-unsafe-allow state-variable-immutable
-    uint256 public immutable maxBatchSize;
+
+    uint256 public startTokenId; // Bytes Storage for the starting TokenId // removed immuntable
+    uint256 public maxBatchSize;    // removed immuntable
 
     /** @dev instructions:
      *  name_ sets the token name
@@ -28,10 +27,19 @@ abstract contract ERC721G {
      *  startId_ sets the starting tokenId (recommended 0-1)
      *  maxBatchSize_ sets the maximum batch size for each mint (recommended 5-20)
      */
-    /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor(
-    string memory name_, string memory symbol_, 
-    uint256 startId_, uint256 maxBatchSize_) {
+    
+    // constructor(
+    // string memory name_, string memory symbol_, 
+    // uint256 startId_, uint256 maxBatchSize_) {
+    //     name = name_;
+    //     symbol = symbol_;
+    //     tokenIndex = startId_;
+    //     startTokenId = startId_;
+    //     maxBatchSize = maxBatchSize_;
+    // }
+
+    function __ERC721G_init(string memory name_, string memory symbol_, 
+    uint256 startId_, uint256 maxBatchSize_) internal onlyInitializing {
         name = name_;
         symbol = symbol_;
         tokenIndex = startId_;
@@ -356,7 +364,7 @@ abstract contract ERC721G {
 
     function supportsInterface(bytes4 iid_) public virtual view returns (bool) {
         ////add EIP5050
-        return iid_ == 0x01ffc9a7 || iid_ == 0x80ac58cd || iid_ == 0x5b5e139f || iid_ == 0x7f5828d0 || iid_ == 0xc8c6c9f3 || iid_ == 0x1a3f02f4; 
+        return iid_ == 0x01ffc9a7 || iid_ == 0x80ac58cd || iid_ == 0x5b5e139f || iid_ == 0x7f5828d0 || iid_ == 0x49064906; 
     }
 
     function walletOfOwner(address address_) public virtual view 
