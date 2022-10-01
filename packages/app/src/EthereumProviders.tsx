@@ -18,7 +18,7 @@ export const targetChainId =
 // filter down to just mainnet + optional target testnet chain so that rainbowkit can tell
 // the user to switch network if they're on an alternative one
 const targetChains = defaultChains.filter(
-  (chain) => chain.id === 1 || chain.id === targetChainId
+  (chain) => chain.id === targetChainId || chain.id === 1
 );
 
 const provs = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ? 
