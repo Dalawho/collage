@@ -200,7 +200,7 @@ abstract contract ERC721G is Initializable {
         tokenIndex = _endId;
     }
 
-    function _mintAndSet(address to_, uint256 amount_, uint8 layer, uint8 layerId, uint8 xOffset, uint8 yOffset) internal virtual {
+    function _mintAndSet(address to_, uint256 amount_, uint8[4] calldata layerIds, uint8[4] calldata xOffsets, uint8[4] calldata yOffsets) internal virtual {
         // cannot mint to 0x0
         require(to_ != address(0), "ERC721G: _mintInternal to 0x0");
 
@@ -214,9 +214,13 @@ abstract contract ERC721G is Initializable {
 
         // push the required phantom mint data to mintIndex
         //mintIndex[_startId].owner = to_;
-        //OwnerStruct memory _owner = OwnerStruct(to_, [LayerStruct(0,0,0),LayerStruct(0,0,0),LayerStruct(0,0,0)], height, width);
-        
-        _tokenData[_startId].layers[layer] = LayerStruct(layerId, xOffset, yOffset);
+        // _tokenData[_startId] = OwnerStruct(to_, [LayerStruct(layerIds[0], xOffsets[0], yOffsets[0]),LayerStruct(layerIds[1], xOffsets[1], yOffsets[1]),LayerStruct(layerIds[2], xOffsets[2], yOffsets[2]), LayerStruct(layerIds[3], xOffsets[3], yOffsets[3])]);
+        // _owner;
+
+        //this is not great because of all the storage write, I guess to avoid this need to change the way layers are stored
+        for(uint8 i; i < 4; i++) {
+            if(layerIds[i] > 0) _tokenData[_startId].layers[i] = LayerStruct(layerIds[i], xOffsets[i], yOffsets[i]);
+        }
         _tokenData[_startId].owner = to_;
 
         // process the balance changes and do a loop to phantom-mint the tokens to to_

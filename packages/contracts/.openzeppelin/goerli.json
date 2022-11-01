@@ -1519,7 +1519,7 @@
             "label": "_tokenData",
             "offset": 0,
             "slot": "6",
-            "type": "t_mapping(t_uint256,t_struct(OwnerStruct)4101_storage)",
+            "type": "t_mapping(t_uint256,t_struct(OwnerStruct)986_storage)",
             "contract": "ERC721G",
             "src": "contracts/ERC721G.sol:70"
           },
@@ -1527,7 +1527,7 @@
             "label": "_balanceData",
             "offset": 0,
             "slot": "7",
-            "type": "t_mapping(t_address,t_struct(BalanceStruct)4115_storage)",
+            "type": "t_mapping(t_address,t_struct(BalanceStruct)1000_storage)",
             "contract": "ERC721G",
             "src": "contracts/ERC721G.sol:71"
           },
@@ -1535,7 +1535,7 @@
             "label": "mintIndex",
             "offset": 0,
             "slot": "8",
-            "type": "t_mapping(t_uint256,t_struct(OwnerStruct)4101_storage)",
+            "type": "t_mapping(t_uint256,t_struct(OwnerStruct)986_storage)",
             "contract": "ERC721G",
             "src": "contracts/ERC721G.sol:72"
           },
@@ -1583,7 +1583,7 @@
             "label": "render",
             "offset": 0,
             "slot": "111",
-            "type": "t_contract(IRender)3773",
+            "type": "t_contract(IRender)658",
             "contract": "Collage",
             "src": "contracts/Collage.sol:30"
           },
@@ -1591,7 +1591,7 @@
             "label": "pieces",
             "offset": 0,
             "slot": "112",
-            "type": "t_contract(IPieces)3783",
+            "type": "t_contract(IPieces)668",
             "contract": "Collage",
             "src": "contracts/Collage.sol:31"
           }
@@ -1601,7 +1601,7 @@
             "label": "address",
             "numberOfBytes": "20"
           },
-          "t_array(t_struct(LayerStruct)4108_storage)4_storage": {
+          "t_array(t_struct(LayerStruct)993_storage)4_storage": {
             "label": "struct ERC721G.LayerStruct[4]",
             "numberOfBytes": "128"
           },
@@ -1617,11 +1617,11 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IPieces)3783": {
+          "t_contract(IPieces)668": {
             "label": "contract IPieces",
             "numberOfBytes": "20"
           },
-          "t_contract(IRender)3773": {
+          "t_contract(IRender)658": {
             "label": "contract IRender",
             "numberOfBytes": "20"
           },
@@ -1633,7 +1633,7 @@
             "label": "mapping(address => mapping(address => bool))",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_address,t_struct(BalanceStruct)4115_storage)": {
+          "t_mapping(t_address,t_struct(BalanceStruct)1000_storage)": {
             "label": "mapping(address => struct ERC721G.BalanceStruct)",
             "numberOfBytes": "32"
           },
@@ -1641,7 +1641,7 @@
             "label": "mapping(uint256 => address)",
             "numberOfBytes": "32"
           },
-          "t_mapping(t_uint256,t_struct(OwnerStruct)4101_storage)": {
+          "t_mapping(t_uint256,t_struct(OwnerStruct)986_storage)": {
             "label": "mapping(uint256 => struct ERC721G.OwnerStruct)",
             "numberOfBytes": "32"
           },
@@ -1649,7 +1649,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(BalanceStruct)4115_storage": {
+          "t_struct(BalanceStruct)1000_storage": {
             "label": "struct ERC721G.BalanceStruct",
             "members": [
               {
@@ -1673,7 +1673,7 @@
             ],
             "numberOfBytes": "32"
           },
-          "t_struct(LayerStruct)4108_storage": {
+          "t_struct(LayerStruct)993_storage": {
             "label": "struct ERC721G.LayerStruct",
             "members": [
               {
@@ -1697,7 +1697,7 @@
             ],
             "numberOfBytes": "32"
           },
-          "t_struct(OwnerStruct)4101_storage": {
+          "t_struct(OwnerStruct)986_storage": {
             "label": "struct ERC721G.OwnerStruct",
             "members": [
               {
@@ -1708,7 +1708,7 @@
               },
               {
                 "label": "layers",
-                "type": "t_array(t_struct(LayerStruct)4108_storage)4_storage",
+                "type": "t_array(t_struct(LayerStruct)993_storage)4_storage",
                 "offset": 0,
                 "slot": "1"
               }
@@ -2464,7 +2464,7 @@
             "label": "gfx",
             "offset": 0,
             "slot": "101",
-            "type": "t_contract(IExquisiteGraphics)7016",
+            "type": "t_contract(IExquisiteGraphics)7236",
             "contract": "Render",
             "src": "contracts/Render.sol:23"
           },
@@ -2472,7 +2472,7 @@
             "label": "inflateLib",
             "offset": 0,
             "slot": "102",
-            "type": "t_contract(IInflator)5785",
+            "type": "t_contract(IInflator)6005",
             "contract": "Render",
             "src": "contracts/Render.sol:24"
           },
@@ -2488,7 +2488,7 @@
             "label": "traits",
             "offset": 0,
             "slot": "104",
-            "type": "t_array(t_struct(Trait)5813_storage)dyn_storage",
+            "type": "t_array(t_struct(Trait)6033_storage)dyn_storage",
             "contract": "Render",
             "src": "contracts/Render.sol:39"
           }
@@ -2498,7 +2498,7 @@
             "label": "address",
             "numberOfBytes": "20"
           },
-          "t_array(t_struct(Trait)5813_storage)dyn_storage": {
+          "t_array(t_struct(Trait)6033_storage)dyn_storage": {
             "label": "struct Render.Trait[]",
             "numberOfBytes": "32"
           },
@@ -2514,11 +2514,11 @@
             "label": "bool",
             "numberOfBytes": "1"
           },
-          "t_contract(IExquisiteGraphics)7016": {
+          "t_contract(IExquisiteGraphics)7236": {
             "label": "contract IExquisiteGraphics",
             "numberOfBytes": "20"
           },
-          "t_contract(IInflator)5785": {
+          "t_contract(IInflator)6005": {
             "label": "contract IInflator",
             "numberOfBytes": "20"
           },
@@ -2526,7 +2526,7 @@
             "label": "string",
             "numberOfBytes": "32"
           },
-          "t_struct(Trait)5813_storage": {
+          "t_struct(Trait)6033_storage": {
             "label": "struct Render.Trait",
             "members": [
               {
@@ -3025,6 +3025,434 @@
           "t_uint80": {
             "label": "uint80",
             "numberOfBytes": "10"
+          }
+        }
+      }
+    },
+    "2e009b6cce713db1b1a2159bafe294d5583d56fdd21890f1330933bef9a24d8f": {
+      "address": "0xCd7c88f0695594f8F1ED84bdef6911f0487267E8",
+      "txHash": "0xb41045a158ec0e92ce1ac2a1cb925f055e6bfb2348efa642acd6df04e9942d9f",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "name",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_string_storage",
+            "contract": "ERC721G",
+            "src": "contracts/ERC721G.sol:15"
+          },
+          {
+            "label": "symbol",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_string_storage",
+            "contract": "ERC721G",
+            "src": "contracts/ERC721G.sol:16"
+          },
+          {
+            "label": "tokenIndex",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_uint256",
+            "contract": "ERC721G",
+            "src": "contracts/ERC721G.sol:19"
+          },
+          {
+            "label": "startTokenId",
+            "offset": 0,
+            "slot": "4",
+            "type": "t_uint256",
+            "contract": "ERC721G",
+            "src": "contracts/ERC721G.sol:21"
+          },
+          {
+            "label": "maxBatchSize",
+            "offset": 0,
+            "slot": "5",
+            "type": "t_uint256",
+            "contract": "ERC721G",
+            "src": "contracts/ERC721G.sol:22"
+          },
+          {
+            "label": "_tokenData",
+            "offset": 0,
+            "slot": "6",
+            "type": "t_mapping(t_uint256,t_struct(OwnerStruct)4197_storage)",
+            "contract": "ERC721G",
+            "src": "contracts/ERC721G.sol:70"
+          },
+          {
+            "label": "_balanceData",
+            "offset": 0,
+            "slot": "7",
+            "type": "t_mapping(t_address,t_struct(BalanceStruct)4211_storage)",
+            "contract": "ERC721G",
+            "src": "contracts/ERC721G.sol:71"
+          },
+          {
+            "label": "mintIndex",
+            "offset": 0,
+            "slot": "8",
+            "type": "t_mapping(t_uint256,t_struct(OwnerStruct)4197_storage)",
+            "contract": "ERC721G",
+            "src": "contracts/ERC721G.sol:72"
+          },
+          {
+            "label": "getApproved",
+            "offset": 0,
+            "slot": "9",
+            "type": "t_mapping(t_uint256,t_address)",
+            "contract": "ERC721G",
+            "src": "contracts/ERC721G.sol:75"
+          },
+          {
+            "label": "isApprovedForAll",
+            "offset": 0,
+            "slot": "10",
+            "type": "t_mapping(t_address,t_mapping(t_address,t_bool))",
+            "contract": "ERC721G",
+            "src": "contracts/ERC721G.sol:76"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "11",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "61",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "62",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "render",
+            "offset": 0,
+            "slot": "111",
+            "type": "t_contract(IRender)3768",
+            "contract": "Collage",
+            "src": "contracts/Collage.sol:30"
+          },
+          {
+            "label": "pieces",
+            "offset": 0,
+            "slot": "112",
+            "type": "t_contract(IPieces)3778",
+            "contract": "Collage",
+            "src": "contracts/Collage.sol:31"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_struct(LayerStruct)4204_storage)4_storage": {
+            "label": "struct ERC721G.LayerStruct[4]",
+            "numberOfBytes": "128"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IPieces)3778": {
+            "label": "contract IPieces",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IRender)3768": {
+            "label": "contract IRender",
+            "numberOfBytes": "20"
+          },
+          "t_mapping(t_address,t_bool)": {
+            "label": "mapping(address => bool)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_mapping(t_address,t_bool))": {
+            "label": "mapping(address => mapping(address => bool))",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_address,t_struct(BalanceStruct)4211_storage)": {
+            "label": "mapping(address => struct ERC721G.BalanceStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_address)": {
+            "label": "mapping(uint256 => address)",
+            "numberOfBytes": "32"
+          },
+          "t_mapping(t_uint256,t_struct(OwnerStruct)4197_storage)": {
+            "label": "mapping(uint256 => struct ERC721G.OwnerStruct)",
+            "numberOfBytes": "32"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(BalanceStruct)4211_storage": {
+            "label": "struct ERC721G.BalanceStruct",
+            "members": [
+              {
+                "label": "balance",
+                "type": "t_uint32",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "mintedAmount",
+                "type": "t_uint32",
+                "offset": 4,
+                "slot": "0"
+              },
+              {
+                "label": "allowListMinted",
+                "type": "t_uint32",
+                "offset": 8,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(LayerStruct)4204_storage": {
+            "label": "struct ERC721G.LayerStruct",
+            "members": [
+              {
+                "label": "layerId",
+                "type": "t_uint8",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "xOffset",
+                "type": "t_uint8",
+                "offset": 1,
+                "slot": "0"
+              },
+              {
+                "label": "yOffset",
+                "type": "t_uint8",
+                "offset": 2,
+                "slot": "0"
+              }
+            ],
+            "numberOfBytes": "32"
+          },
+          "t_struct(OwnerStruct)4197_storage": {
+            "label": "struct ERC721G.OwnerStruct",
+            "members": [
+              {
+                "label": "owner",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "layers",
+                "type": "t_array(t_struct(LayerStruct)4204_storage)4_storage",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "160"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint32": {
+            "label": "uint32",
+            "numberOfBytes": "4"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
+          }
+        }
+      }
+    },
+    "ee9aa1d897ab23eb884043c3775ee5a51e8d9dc5b2caa3f7ff61d11a65ccea85": {
+      "address": "0xa2b22a4F90B240A4A0D6f1AE63bD2752cf62149e",
+      "txHash": "0x7ea00384b3649f7f1ece273a41ff65466531e2b254b5c502578bf0ddddf5d54d",
+      "layout": {
+        "storage": [
+          {
+            "label": "_initialized",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_uint8",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:62",
+            "retypedFrom": "bool"
+          },
+          {
+            "label": "_initializing",
+            "offset": 1,
+            "slot": "0",
+            "type": "t_bool",
+            "contract": "Initializable",
+            "src": "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol:67"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_array(t_uint256)50_storage",
+            "contract": "ContextUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/utils/ContextUpgradeable.sol:36"
+          },
+          {
+            "label": "_owner",
+            "offset": 0,
+            "slot": "51",
+            "type": "t_address",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:22"
+          },
+          {
+            "label": "__gap",
+            "offset": 0,
+            "slot": "52",
+            "type": "t_array(t_uint256)49_storage",
+            "contract": "OwnableUpgradeable",
+            "src": "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol:94"
+          },
+          {
+            "label": "gfx",
+            "offset": 0,
+            "slot": "101",
+            "type": "t_contract(IExquisiteGraphics)7144",
+            "contract": "Render",
+            "src": "contracts/Render.sol:23"
+          },
+          {
+            "label": "inflateLib",
+            "offset": 0,
+            "slot": "102",
+            "type": "t_contract(IInflator)5924",
+            "contract": "Render",
+            "src": "contracts/Render.sol:24"
+          },
+          {
+            "label": "pieces",
+            "offset": 0,
+            "slot": "103",
+            "type": "t_address",
+            "contract": "Render",
+            "src": "contracts/Render.sol:25"
+          },
+          {
+            "label": "traits",
+            "offset": 0,
+            "slot": "104",
+            "type": "t_array(t_struct(Trait)5952_storage)dyn_storage",
+            "contract": "Render",
+            "src": "contracts/Render.sol:39"
+          }
+        ],
+        "types": {
+          "t_address": {
+            "label": "address",
+            "numberOfBytes": "20"
+          },
+          "t_array(t_struct(Trait)5952_storage)dyn_storage": {
+            "label": "struct Render.Trait[]",
+            "numberOfBytes": "32"
+          },
+          "t_array(t_uint256)49_storage": {
+            "label": "uint256[49]",
+            "numberOfBytes": "1568"
+          },
+          "t_array(t_uint256)50_storage": {
+            "label": "uint256[50]",
+            "numberOfBytes": "1600"
+          },
+          "t_bool": {
+            "label": "bool",
+            "numberOfBytes": "1"
+          },
+          "t_contract(IExquisiteGraphics)7144": {
+            "label": "contract IExquisiteGraphics",
+            "numberOfBytes": "20"
+          },
+          "t_contract(IInflator)5924": {
+            "label": "contract IInflator",
+            "numberOfBytes": "20"
+          },
+          "t_string_storage": {
+            "label": "string",
+            "numberOfBytes": "32"
+          },
+          "t_struct(Trait)5952_storage": {
+            "label": "struct Render.Trait",
+            "members": [
+              {
+                "label": "data",
+                "type": "t_address",
+                "offset": 0,
+                "slot": "0"
+              },
+              {
+                "label": "destLen",
+                "type": "t_uint16",
+                "offset": 20,
+                "slot": "0"
+              },
+              {
+                "label": "name",
+                "type": "t_string_storage",
+                "offset": 0,
+                "slot": "1"
+              }
+            ],
+            "numberOfBytes": "64"
+          },
+          "t_uint16": {
+            "label": "uint16",
+            "numberOfBytes": "2"
+          },
+          "t_uint256": {
+            "label": "uint256",
+            "numberOfBytes": "32"
+          },
+          "t_uint8": {
+            "label": "uint8",
+            "numberOfBytes": "1"
           }
         }
       }

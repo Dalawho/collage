@@ -98,51 +98,55 @@ describe("TMD tests", () => {
     });
 
     describe("minting", () => {
-
-    it("normal mint", async() => {
-        await makeLayer("./pics/fire.png", pieces);
+    it("mintAndSet", async() => {
+        //mintAndSet(uint8[4] calldata layerIds, uint8[4] calldata xOffsets, uint8[4] calldata yOffsets)
         await makeLayer("./pics/heart.png", pieces); //1
         await pieces.mint(owner.address, 1, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
-        //await collage
-        await collage.mint();
-        //addLayer(uint256 tokenId, uint8 layer, uint8 layerId, uint8 xOffset, uint8 yOffset)
-        await collage.addLayer(1,0,1, 5, 5);
-        console.log(await collage.tokenURI(1));
-      
-      });  
-      it("render test", async() => {
-        await testSVGRender("./pics/fire.png", render); //
-      });  
-    it("test the two combinations", async() => {
-        await makeLayer("./pics/fire.png", pieces);
         await makeLayer("./pics/heart.png", pieces); //1
-        await pieces.mint(owner.address, 1, 5, 0x0000, { value: ethers.utils.parseEther("0.05") });
         await pieces.mint(owner.address, 2, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
-        await pieces.tokenURI(1);
-        //await collage
-        await collage.mint();
-        await collage.addLayer(1, 0 , 1, 0, 0);
-        await collage.addLayer(1, 1, 2, 5, 5);
-        console.log(await collage.tokenURI(1));
-      });  
-      it("test preview function", async() => {
-        await makeLayer("./pics/fire.png", pieces);
         await makeLayer("./pics/heart.png", pieces); //1
-        await pieces.mint(owner.address, 1, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
-        await pieces.mint(owner.address, 2, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
-        //await collage
-        await collage.mint();
-        await collage.addLayer(1, 0, 2, 0, 0);
-        //previewCollage(uint256 tokenId, uint8 layerNr, uint8 pieceId, uint8 xOffset, uint8 yOffset)
-        console.log(await collage.previewTokenCollage(1, 1, 1, 4, 10));
-      });  
-      it("test normal preview function", async() => {
-        await makeLayer("./pics/fire.png", pieces);
-        await makeLayer("./pics/heart.png", pieces); //1
-        //previewCollage(uint256 tokenId, uint8 layerNr, uint8 pieceId, uint8 xOffset, uint8 yOffset)
-        console.log(await collage.previewCollage([0,0,0,0],[0,0,0,5],[0,0,0,5] ));
+        await pieces.mint(owner.address, 3, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
+        await collage.mintAndSet([1,2,3,2], [0,0,0,0], [0,0,0,0]);      
       });  
     });
+
+    describe("comparison", () => {
+        it("mint", async() => {
+            //mintAndSet(uint8[4] calldata layerIds, uint8[4] calldata xOffsets, uint8[4] calldata yOffsets)
+            await collage.mint();      
+          });  
+
+        it("altmint", async() => {
+            //mintAndSet(uint8[4] calldata layerIds, uint8[4] calldata xOffsets, uint8[4] calldata yOffsets)
+            await collage.altMint();      
+          });  
+        });
+        it("altMintAndSet", async() => {
+            //mintAndSet(uint8[4] calldata layerIds, uint8[4] calldata xOffsets, uint8[4] calldata yOffsets)
+            await makeLayer("./pics/heart.png", pieces); //1
+            await pieces.mint(owner.address, 1, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
+            await makeLayer("./pics/heart.png", pieces); //1
+            await pieces.mint(owner.address, 2, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
+            await makeLayer("./pics/heart.png", pieces); //1
+            await pieces.mint(owner.address, 3, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
+            await collage.altMintAndSet([1,2,3,2], [0,0,0,0], [0,0,0,0]);      
+          });  
+          it("altAdd", async() => {
+            //mintAndSet(uint8[4] calldata layerIds, uint8[4] calldata xOffsets, uint8[4] calldata yOffsets)
+            await makeLayer("./pics/heart.png", pieces); //1
+            await pieces.mint(owner.address, 1, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
+            await collage.altMint();
+            // altAddLayer(uint256 tokenId, uint8 layer, uint8 layerId, uint8 xOffset, uint8 yOffset) 
+            await collage.altAddLayer(1, 1, 1, 2, 2);
+          });  
+          it("Add", async() => {
+            //mintAndSet(uint8[4] calldata layerIds, uint8[4] calldata xOffsets, uint8[4] calldata yOffsets)
+            await makeLayer("./pics/heart.png", pieces); //1
+            await pieces.mint(owner.address, 1, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
+            await collage.mint();
+            // altAddLayer(uint256 tokenId, uint8 layer, uint8 layerId, uint8 xOffset, uint8 yOffset) 
+            await collage.addLayer(1, 1, 1, 2, 2);
+          });  
 });
 
 async function writeSVG(tokenNr, fileName, tmd) {

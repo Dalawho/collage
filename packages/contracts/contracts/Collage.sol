@@ -8,7 +8,7 @@ import "./ERC721G.sol";
 
 interface IRender {
      function tokenURI(uint256 tokenId, ERC721G.LayerStruct[4] memory layerIds) external view returns (string memory); 
-    function previewCollage(ERC721G.LayerStruct[4] memory layerIds, uint8 layerNr, ERC721G.LayerStruct memory newLayer) external view returns(string memory);
+    function previewCollage(ERC721G.LayerStruct[4] memory layerIds) external view returns(string memory);
 }
 
 interface IPieces {
@@ -30,7 +30,6 @@ contract Collage is ERC721G, OwnableUpgradeable {
     IRender public render;
     IPieces public pieces;
 
-
     function initialize() initializer public {
         __ERC721G_init("Collage", "CLG", 1, 30);
         __Ownable_init();
@@ -51,13 +50,14 @@ contract Collage is ERC721G, OwnableUpgradeable {
         emit MetadataUpdate(tokenId);
     }
 
-    function mintAndSet(uint8 layer, uint8 layerId, uint8 xOffset, uint8 yOffset) public payable {
+    function mintAndSet(uint8[4] calldata layerIds, uint8[4] calldata xOffsets, uint8[4] calldata yOffsets) public payable {
         if(totalSupply() + 1 > maxSupply) revert MaxSupplyReached();
         //if(ERC721G._balanceData[msg.sender].mintedAmount + amount_ > maxPerWallet) revert maxMintsPerWallet();
         //check mint amount
-        //addLayer(ERC721G.tokenIndex, layerId, layer);
-        _mintAndSet(msg.sender, 1, layer, layerId, xOffset, yOffset);
-        pieces.burn(msg.sender, layerId, 1);
+        for(uint8 i; i < 4; i++) {
+            if(layerIds[i] > 0) pieces.burn(msg.sender, layerIds[i], 1);
+        }
+        _mintAndSet(msg.sender, 1, layerIds, xOffsets, yOffsets);
     }
 
         ////////////////////////  Set external contract addresses /////////////////////////////////
@@ -76,7 +76,13 @@ contract Collage is ERC721G, OwnableUpgradeable {
         return render.tokenURI(tokenId, _getTokenDataOf(tokenId).layers);
     }
 
-    function previewCollage(uint256 tokenId, uint8 layerNr, uint8 pieceId, uint8 xOffset, uint8 yOffset) public view returns (string memory) { 
-        return render.previewCollage(_getTokenDataOf(tokenId).layers, layerNr, LayerStruct(pieceId, xOffset, yOffset));
+    function previewTokenCollage(uint256 tokenId, uint8 layerNr, uint8 pieceId, uint8 xOffset, uint8 yOffset) public view returns (string memory) { 
+        LayerStruct[4] memory _tokenLayers = _getTokenDataOf(tokenId).layers;
+        _tokenLayers[layerNr] = LayerStruct(pieceId, xOffset, yOffset);
+        return render.previewCollage(_tokenLayers);
+    }
+
+    function previewCollage(uint8[4] memory pieceIds, uint8[4] memory xOffsets, uint8[4] memory yOffsets) public view returns (string memory) { 
+        return render.previewCollage([LayerStruct(pieceIds[0], xOffsets[0], yOffsets[0]), LayerStruct(pieceIds[1], xOffsets[1], yOffsets[1]), LayerStruct(pieceIds[2], xOffsets[2], yOffsets[2]), LayerStruct(pieceIds[3], xOffsets[3], yOffsets[3])]);
     }
 }

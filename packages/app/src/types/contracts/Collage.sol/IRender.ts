@@ -37,7 +37,7 @@ export declare namespace ERC721G {
 
 export interface IRenderInterface extends utils.Interface {
   functions: {
-    "previewCollage(tuple[4],uint8,(uint8,uint8,uint8))": FunctionFragment;
+    "previewCollage(tuple[4])": FunctionFragment;
     "tokenURI(uint256,tuple[4])": FunctionFragment;
   };
 
@@ -53,9 +53,7 @@ export interface IRenderInterface extends utils.Interface {
         ERC721G.LayerStructStruct,
         ERC721G.LayerStructStruct,
         ERC721G.LayerStructStruct
-      ],
-      PromiseOrValue<BigNumberish>,
-      ERC721G.LayerStructStruct
+      ]
     ]
   ): string;
   encodeFunctionData(
@@ -114,8 +112,6 @@ export interface IRender extends BaseContract {
         ERC721G.LayerStructStruct,
         ERC721G.LayerStructStruct
       ],
-      layerNr: PromiseOrValue<BigNumberish>,
-      newLayer: ERC721G.LayerStructStruct,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -138,8 +134,6 @@ export interface IRender extends BaseContract {
       ERC721G.LayerStructStruct,
       ERC721G.LayerStructStruct
     ],
-    layerNr: PromiseOrValue<BigNumberish>,
-    newLayer: ERC721G.LayerStructStruct,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -162,8 +156,6 @@ export interface IRender extends BaseContract {
         ERC721G.LayerStructStruct,
         ERC721G.LayerStructStruct
       ],
-      layerNr: PromiseOrValue<BigNumberish>,
-      newLayer: ERC721G.LayerStructStruct,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -189,8 +181,6 @@ export interface IRender extends BaseContract {
         ERC721G.LayerStructStruct,
         ERC721G.LayerStructStruct
       ],
-      layerNr: PromiseOrValue<BigNumberish>,
-      newLayer: ERC721G.LayerStructStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -214,8 +204,6 @@ export interface IRender extends BaseContract {
         ERC721G.LayerStructStruct,
         ERC721G.LayerStructStruct
       ],
-      layerNr: PromiseOrValue<BigNumberish>,
-      newLayer: ERC721G.LayerStructStruct,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

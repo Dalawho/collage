@@ -21,7 +21,8 @@
     "pngjs": "^6.0.0",
     "solidity-coverage": "^0.7.21",
     "sprintf-js": "^1.1.2",
-    "typechain": "^8.1.0"
+    "typechain": "^8.1.0",
+    "chai": "^4.2.0"
   },
   "dependencies": {
     "@divergencetech/ethier": "^0.33.0",

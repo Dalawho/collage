@@ -34,33 +34,6 @@ const _abi = [
         name: "layerIds",
         type: "tuple[4]",
       },
-      {
-        internalType: "uint8",
-        name: "layerNr",
-        type: "uint8",
-      },
-      {
-        components: [
-          {
-            internalType: "uint8",
-            name: "layerId",
-            type: "uint8",
-          },
-          {
-            internalType: "uint8",
-            name: "xOffset",
-            type: "uint8",
-          },
-          {
-            internalType: "uint8",
-            name: "yOffset",
-            type: "uint8",
-          },
-        ],
-        internalType: "struct ERC721G.LayerStruct",
-        name: "newLayer",
-        type: "tuple",
-      },
     ],
     name: "previewCollage",
     outputs: [

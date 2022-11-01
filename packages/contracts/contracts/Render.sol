@@ -116,10 +116,9 @@ contract Render is Initializable, OwnableUpgradeable {
         return _outString; 
     }
 
-    function previewCollage(LayerStruct[4] memory layerIds, uint8 layerNr, LayerStruct memory newLayer) external view returns(string memory) {
+    function previewCollage(LayerStruct[4] memory layerIds) external view returns(string memory) {
         uint8 numberOfLayers = 0;
         Trait[] memory _traits = new Trait[](layerIds.length);
-        layerIds[layerNr] = newLayer;
         for(uint256 i = 0; i < layerIds.length; i++) {
             _traits[i] = traits[layerIds[i].layerId];
             if(layerIds[i].layerId != 0) numberOfLayers++; 

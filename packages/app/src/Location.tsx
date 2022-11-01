@@ -1,6 +1,11 @@
 
+    interface Locations {
+      x: number;
+      y: number;
+  }
+
 type LocProps = {
-  loc: {[key: string]: number};
+  loc: Locations;
   onChange: (trait: string, value: string) => void;
 }
 

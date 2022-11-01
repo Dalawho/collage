@@ -65,17 +65,16 @@ describe("TMD tests", () => {
     beforeEach( async () => {
         //deploy everything
         Pieces = await ethers.getContractFactory("Pieces");
-        pieces = await Pieces.deploy();
+        pieces = await upgrades.deployProxy(Pieces);
         Collage = await ethers.getContractFactory("Collage");
-        collage = await Collage.deploy();
+        collage = await upgrades.deployProxy(Collage);
         Gfx = await ethers.getContractFactory("ExquisiteGraphics");
         gfx = await Gfx.deploy();
         Inflator = await ethers.getContractFactory("Inflator");
         inflator = await Inflator.attach("0xa2acee85Cd81c42BcAa1FeFA8eD2516b68872Dbe");
         Render = await ethers.getContractFactory("Render");
-        render = await Render.deploy();
-
-        //set addresses for contracts
+        render = await upgrades.deployProxy(Render);
+        
         await render.setGfx(gfx.address);
         await render.setInflator(inflator.address);
         await render.setPieces(pieces.address);
@@ -83,6 +82,7 @@ describe("TMD tests", () => {
         await collage.setPieces(pieces.address);
         await pieces.setRender(render.address);
         await pieces.setBurner(collage.address);
+
 
         //get signers -> where do I use this? 
         [owner, addr1, _] = await ethers.getSigners();
@@ -100,7 +100,7 @@ describe("TMD tests", () => {
     describe("minting", () => {
 
     it("normal mint", async() => {
-        await makeLayer("/Users/nope/exqs/lambo/pics/fire.png", pieces); //1
+        await makeLayer("./pics/fire.png", pieces); //1
         await pieces.mint(owner.address, 1, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         //await collage
         await collage.mint();
@@ -110,11 +110,11 @@ describe("TMD tests", () => {
       
       });  
       it("render test", async() => {
-        await testSVGRender("/Users/nope/exqs/CCZoo/pics/cells2.png", render); //
+        await testSVGRender("./pics/heart.png", render); //
       });  
     it("test the two combinations", async() => {
-        await makeLayer("/Users/nope/exqs/lambo/pics/fire.png", pieces);
-        await makeLayer("/Users/nope/exqs/lambo/pics/heart.png", pieces); //1
+        await makeLayer("./pics/fire.png", pieces);
+        await makeLayer("./pics/heart.png", pieces); //1
         await pieces.mint(owner.address, 1, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         await pieces.mint(owner.address, 2, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         //await collage
@@ -123,16 +123,22 @@ describe("TMD tests", () => {
         await collage.addLayer(1, 1, 2, 5, 5);
         console.log(await collage.tokenURI(1));
       });  
-      it("test preview function", async() => {
-        await makeLayer("/Users/nope/exqs/CCZoo/pics/cells2.png", pieces);
-        await makeLayer("/Users/nope/exqs/lambo/pics/heart.png", pieces); //1
+      it("test Token preview function", async() => {
+        await makeLayer("./pics/fire.png", pieces);
+        await makeLayer("./pics/heart.png", pieces); //1
         await pieces.mint(owner.address, 1, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         await pieces.mint(owner.address, 2, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         //await collage
         await collage.mint();
         await collage.addLayer(1, 0, 2, 0, 0);
         //previewCollage(uint256 tokenId, uint8 layerNr, uint8 pieceId, uint8 xOffset, uint8 yOffset)
-        console.log(await collage.previewCollage(1, 1, 1, 4, 10));
+        console.log(await collage.previewTokenCollage(1, 1, 1, 4, 10));
+      });  
+      it("test normal preview function", async() => {
+        await makeLayer("./pics/fire.png", pieces);
+        await makeLayer("./pics/heart.png", pieces); //1
+        //previewCollage(uint256 tokenId, uint8 layerNr, uint8 pieceId, uint8 xOffset, uint8 yOffset)
+        console.log(await collage.previewTokenCollage([1,2,0,1],[0,0,0,5],[0,0,0,5] ));
       });  
     });
 });

@@ -8,20 +8,19 @@ import React, { useState} from "react";
 
 import { AddArtworkButton } from "../AddArtworkButton";
 import contractAddresses from "../contracts.json";
+//import { useRenderContractRead } from "../contracts";
+import { Artwork } from "../IArtwork";
 import { Nav } from "../Nav";
 import { Render__factory } from "../types";
 import {getBinarySVG_Array} from '../xqst/xqstLibrary/api';
 import {PixelBuffer} from '../xqst/xqstLibrary/ll_api';
-//import { useRenderContractRead } from "../contracts";
 
 const Add:NextPage = () => {
     
     //const [image, setImage] = useState("0x0a080a0905060708180b0a00040000030000000037946eff6abe30ffffffffff01550005980015554055550168cc05a0001590015a00555400041000");
     const [animalSVG, setAnimalSVG] = useState<string | null>(null);
-    const [artName, setArtName] = useState("Bob");
-    const [price, setPrice] = useState("0.1");
-    const [amount, setAmount] = useState(10);
-    const [mint, setMint] = useState(1);
+
+    const [artwork, setArtwork] = useState<Artwork>({name:"Bob", price: "0.01", amount: 10, mint: 1, compressed: Uint8Array.from([0]), inputLength: 1});
 
     const fromHexString = (hexString:string) => {
       if(hexString.match(/.{1,2}/g)) {
@@ -30,9 +29,6 @@ const Add:NextPage = () => {
         const i: Uint8Array = new Uint8Array();
         return i;
       }}
-  
-      const [compressed, setCompressed] = useState<Uint8Array>(Uint8Array.from([0]));
-      const [inputLength, setInputLength] = useState<number>(1);
   
     interface pixel {
         x: number,
@@ -68,16 +64,12 @@ const Add:NextPage = () => {
         buff.setHeader(); 
         buff.setLoc([0,0]);
         buff.setVersion(1);
-        //buff.noBackground();
-        
-        //setImage(buff.getPixelBuffer());
-        //console.log(buff.getPixelBuffer());
 
         const encoded = abiCoder.encode(["bytes"],[buff.getPixelBuffer()] );
         const input = fromHexString(encoded.slice(2));
-        if(input?.length > 0) setInputLength(input.length);
+        if(input?.length > 0) setArtwork({...artwork, inputLength: input.length});
         const comp = pako.deflateRaw(input, { level: 9 });
-        if(comp?.length > 0) setCompressed(comp);
+        if(comp?.length > 0) setArtwork({...artwork, compressed: comp});
 
         const callData = async (pixelData:string) => {
           const data = await renderContract.getSVGForBytes( pixelData);
@@ -96,21 +88,9 @@ const Add:NextPage = () => {
     const provider = new ethers.providers.AlchemyProvider("goerli", process.env.NEXT_PUBLIC_ALCHEMY_API_KEY);
     const renderContract = new ethers.Contract(contractAddresses.render, Render__factory.abi, provider);
 
-    // useEffect( () => {
-    //   const callData = async () => {
-    //     //console.log("use Effect called");
-    //     const buff = new PixelBuffer;
-    //     await buff.from(image);
-    //     buff.setHeader(); 
-    //     buff.setLoc([7,8]);
-    //     buff.setAnimalProps([[10,8],[10,9],[5,6], [4,20]]);
-    //     buff.setVersion(1);
-    //     await setImage(buff.getPixelBuffer());
-    //     const data = await renderContract.getSVGForBytes( buff.getPixelBuffer());
-    //     setAnimalSVG(data)
-    //   }
-    //   callData();
-    // });
+    const handleArtworkChange = (coord:string,e: number | string) => {
+      setArtwork({...artwork, [coord]: e});
+    }
 
     return(
       <div className="bg-amber-100">
@@ -127,21 +107,21 @@ const Add:NextPage = () => {
                               
               <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-72">
                 <h2 className=" pr-2">Name:</h2>
-                <input className="bg-amber-100 border-none focus:outline-none focus:border-none" type="text" value={artName} onChange={(e) => setArtName(e.target.value)} />
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none" type="text" value={artwork.name} onChange={(e) => handleArtworkChange("name", e.target.value)} />
               </div>
               <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-72">
                 <h2 className=" pr-2">Amount:</h2>
-                <input className="bg-amber-100 border-none focus:outline-none focus:border-none" type="text" value={amount} onChange={(e) => setAmount(parseInt(e.target.value))} />
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none" type="text" value={artwork.amount} onChange={(e) => handleArtworkChange("amount", parseInt(e.target.value) ? parseInt(e.target.value) : 0 )} />
               </div>
               <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-72">
                 <h2 className=" pr-2">Eth:</h2>
-                <input className="bg-amber-100 border-none focus:outline-none focus:border-none" type="text" value={price} onChange={(e) => setPrice(e.target.value)} />
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none" type="text" value={artwork.price} onChange={(e) => handleArtworkChange("price", e.target.value)} />
               </div>
               <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-72">
                 <h2 className=" pr-2">Mint:</h2>
-                <input className="bg-amber-100 border-none focus:outline-none focus:border-none" type="number" value={mint} onChange={(e) => setMint(parseInt(e.target.value))} />
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none" type="text" value={artwork.mint} onChange={(e) => handleArtworkChange("mint", parseInt(e.target.value) ? parseInt(e.target.value) : 0)} />
               </div>
-              <AddArtworkButton artName={artName} compressed={compressed} inputLength={inputLength} amount={amount} price={price} mint={mint} />
+              <AddArtworkButton artwork={artwork} />
                 </div>
                 </div>
                 </div>

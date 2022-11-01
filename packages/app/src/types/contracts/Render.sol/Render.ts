@@ -50,7 +50,7 @@ export interface RenderInterface extends utils.Interface {
     "initialize()": FunctionFragment;
     "owner()": FunctionFragment;
     "pieces()": FunctionFragment;
-    "previewCollage(tuple[4],uint8,(uint8,uint8,uint8))": FunctionFragment;
+    "previewCollage(tuple[4])": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setGfx(address)": FunctionFragment;
     "setInflator(address)": FunctionFragment;
@@ -110,9 +110,7 @@ export interface RenderInterface extends utils.Interface {
         Render.LayerStructStruct,
         Render.LayerStructStruct,
         Render.LayerStructStruct
-      ],
-      PromiseOrValue<BigNumberish>,
-      Render.LayerStructStruct
+      ]
     ]
   ): string;
   encodeFunctionData(
@@ -275,8 +273,6 @@ export interface Render extends BaseContract {
         Render.LayerStructStruct,
         Render.LayerStructStruct
       ],
-      layerNr: PromiseOrValue<BigNumberish>,
-      newLayer: Render.LayerStructStruct,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -352,8 +348,6 @@ export interface Render extends BaseContract {
       Render.LayerStructStruct,
       Render.LayerStructStruct
     ],
-    layerNr: PromiseOrValue<BigNumberish>,
-    newLayer: Render.LayerStructStruct,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -427,8 +421,6 @@ export interface Render extends BaseContract {
         Render.LayerStructStruct,
         Render.LayerStructStruct
       ],
-      layerNr: PromiseOrValue<BigNumberish>,
-      newLayer: Render.LayerStructStruct,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -517,8 +509,6 @@ export interface Render extends BaseContract {
         Render.LayerStructStruct,
         Render.LayerStructStruct
       ],
-      layerNr: PromiseOrValue<BigNumberish>,
-      newLayer: Render.LayerStructStruct,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -595,8 +585,6 @@ export interface Render extends BaseContract {
         Render.LayerStructStruct,
         Render.LayerStructStruct
       ],
-      layerNr: PromiseOrValue<BigNumberish>,
-      newLayer: Render.LayerStructStruct,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
