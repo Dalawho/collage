@@ -37,6 +37,8 @@ export interface PiecesInterface extends utils.Interface {
     "burnerAllowed()": FunctionFragment;
     "createToken(uint8,uint80,uint8,bytes,uint16,string)": FunctionFragment;
     "exists(uint256)": FunctionFragment;
+    "getPrice(uint8[4])": FunctionFragment;
+    "getPriceAndBurn(uint8[4])": FunctionFragment;
     "initialize()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "layers(uint256)": FunctionFragment;
@@ -66,6 +68,8 @@ export interface PiecesInterface extends utils.Interface {
       | "burnerAllowed"
       | "createToken"
       | "exists"
+      | "getPrice"
+      | "getPriceAndBurn"
       | "initialize"
       | "isApprovedForAll"
       | "layers"
@@ -128,6 +132,28 @@ export interface PiecesInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "exists",
     values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getPrice",
+    values: [
+      [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ]
+    ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "getPriceAndBurn",
+    values: [
+      [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ]
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -229,6 +255,11 @@ export interface PiecesInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "exists", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "getPrice", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getPriceAndBurn",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "initialize", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "isApprovedForAll",
@@ -442,6 +473,26 @@ export interface Pieces extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    getPrice(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: CallOverrides
+    ): Promise<[BigNumber] & { totalPrice: BigNumber }>;
+
+    getPriceAndBurn(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     initialize(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -588,6 +639,26 @@ export interface Pieces extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  getPrice(
+    layerIds: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ],
+    overrides?: CallOverrides
+  ): Promise<BigNumber>;
+
+  getPriceAndBurn(
+    layerIds: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ],
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   initialize(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -733,6 +804,26 @@ export interface Pieces extends BaseContract {
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<boolean>;
+
+    getPrice(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getPriceAndBurn(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     initialize(overrides?: CallOverrides): Promise<void>;
 
@@ -953,6 +1044,26 @@ export interface Pieces extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getPrice(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    getPriceAndBurn(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     initialize(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -1091,6 +1202,26 @@ export interface Pieces extends BaseContract {
     exists(
       id: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPrice(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    getPriceAndBurn(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     initialize(

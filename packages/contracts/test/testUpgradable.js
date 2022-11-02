@@ -142,6 +142,12 @@ describe("TMD tests", () => {
         //previewCollage(uint256 tokenId, uint8 layerNr, uint8 pieceId, uint8 xOffset, uint8 yOffset)
         console.log(await collage.previewCollage([0,0,0,0],[0,0,0,5],[0,0,0,5] ));
       });  
+      it("getPriceandBurn", async() => {
+        await makeLayer("./pics/heart.png", pieces); //1
+        await makeLayer("./pics/heart.png", pieces); //1
+        await makeLayer("./pics/heart.png", pieces); //1
+        await collage.mintAndBuy([1,2,3,0], [0,0,0,0], [0,0,0,0], { value: ethers.utils.parseEther("0.03") });  
+      });  
     });
 });
 

@@ -13,6 +13,7 @@ interface IRender {
 
 interface IPieces {
     function burn( address account, uint256 id, uint256 value) external;
+    function getPriceAndBurn(uint8[4] calldata layerIds) external returns (uint256 totalPrice);
 }
 
 contract Collage is ERC721G, OwnableUpgradeable {
@@ -26,6 +27,7 @@ contract Collage is ERC721G, OwnableUpgradeable {
     error maxFreeClaimed();
     error notTokenOwner();
     error onlyMinter();
+    error payRightAmount();
 
     IRender public render;
     IPieces public pieces;
@@ -57,6 +59,18 @@ contract Collage is ERC721G, OwnableUpgradeable {
         for(uint8 i; i < 4; i++) {
             if(layerIds[i] > 0) pieces.burn(msg.sender, layerIds[i], 1);
         }
+        _mintAndSet(msg.sender, 1, layerIds, xOffsets, yOffsets);
+    }
+
+    function mintAndBuy(uint8[4] calldata layerIds, uint8[4] calldata xOffsets, uint8[4] calldata yOffsets) public payable {
+        if(totalSupply() + 1 > maxSupply) revert MaxSupplyReached();
+        //if(ERC721G._balanceData[msg.sender].mintedAmount + amount_ > maxPerWallet) revert maxMintsPerWallet();
+        //check mint amount
+
+        //get total price for pieces and increase mint counter without minting them to an addr
+        uint256 totalPrice = pieces.getPriceAndBurn(layerIds);
+        if(msg.value != totalPrice) revert payRightAmount();
+        
         _mintAndSet(msg.sender, 1, layerIds, xOffsets, yOffsets);
     }
 

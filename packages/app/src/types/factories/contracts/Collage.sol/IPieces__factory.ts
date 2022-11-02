@@ -33,6 +33,25 @@ const _abi = [
     stateMutability: "nonpayable",
     type: "function",
   },
+  {
+    inputs: [
+      {
+        internalType: "uint8[4]",
+        name: "layerIds",
+        type: "uint8[4]",
+      },
+    ],
+    name: "getPriceAndBurn",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "totalPrice",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
 ];
 
 export class IPieces__factory {

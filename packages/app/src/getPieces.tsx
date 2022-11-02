@@ -39,5 +39,5 @@ export const getPieces = ()  => {
   //       You already own {query.data?.spellsTokens.length} Animals!
   //   </div>
   // );
-  return(query.data?.pieces.map((item, index) => { return {value: parseInt(item.id), label: `${item.id} - ${item.name}`, price: item.price, tokenURI: item.tokenURI}}).sort( (a,b) => a.value - b.value ));
+  return(query.data?.pieces.map((item, index) => { return {value: parseInt(item.id), label: `${item.id} - ${item.name}`, price: parseInt(item.price), tokenURI: item.tokenURI}}).sort( (a,b) => a.value - b.value ));
 };

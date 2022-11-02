@@ -65,6 +65,30 @@ contract Pieces is Initializable, ERC1155Upgradeable, OwnableUpgradeable, ERC115
         _mint(account, id, amount, data);
     }
 
+    function getPriceAndBurn(uint8[4] calldata layerIds)
+        public
+        returns (uint256 totalPrice)
+    {
+        for(uint id; id < 4; id++) {
+            if(layerIds[id] == 0) continue;
+            Layer memory _layer = layers[layerIds[id]];
+            if(_layer.supplyMinted + 1 > _layer.maxSupply) revert toManyTokens();
+            layers[layerIds[id]].supplyMinted += 1;
+            totalPrice += uint256(_layer.price);
+        }
+    }
+
+    function getPrice(uint8[4] calldata layerIds)
+        public view
+        returns (uint256 totalPrice)
+    {
+        for(uint id; id < 4; id++) {
+            if(layerIds[id] == 0) continue;
+            Layer memory _layer = layers[layerIds[id]];
+            totalPrice += uint256(_layer.price);
+        }
+    }
+
     function createToken(uint8 maxSupply, uint80 price, uint8 mintAmount, bytes memory data, uint16 destLen, string memory name)
         public
     {

@@ -26,9 +26,12 @@ import type {
 export interface IPiecesInterface extends utils.Interface {
   functions: {
     "burn(address,uint256,uint256)": FunctionFragment;
+    "getPriceAndBurn(uint8[4])": FunctionFragment;
   };
 
-  getFunction(nameOrSignatureOrTopic: "burn"): FunctionFragment;
+  getFunction(
+    nameOrSignatureOrTopic: "burn" | "getPriceAndBurn"
+  ): FunctionFragment;
 
   encodeFunctionData(
     functionFragment: "burn",
@@ -38,8 +41,23 @@ export interface IPiecesInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "getPriceAndBurn",
+    values: [
+      [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ]
+    ]
+  ): string;
 
   decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getPriceAndBurn",
+    data: BytesLike
+  ): Result;
 
   events: {};
 }
@@ -77,12 +95,32 @@ export interface IPieces extends BaseContract {
       value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    getPriceAndBurn(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
 
   burn(
     account: PromiseOrValue<string>,
     id: PromiseOrValue<BigNumberish>,
     value: PromiseOrValue<BigNumberish>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  getPriceAndBurn(
+    layerIds: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -93,6 +131,16 @@ export interface IPieces extends BaseContract {
       value: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    getPriceAndBurn(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
   };
 
   filters: {};
@@ -104,6 +152,16 @@ export interface IPieces extends BaseContract {
       value: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
+
+    getPriceAndBurn(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
@@ -111,6 +169,16 @@ export interface IPieces extends BaseContract {
       account: PromiseOrValue<string>,
       id: PromiseOrValue<BigNumberish>,
       value: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    getPriceAndBurn(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };

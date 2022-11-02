@@ -85,6 +85,7 @@ export interface CollageInterface extends utils.Interface {
     "maxBatchSize()": FunctionFragment;
     "maxSupply()": FunctionFragment;
     "mint()": FunctionFragment;
+    "mintAndBuy(uint8[4],uint8[4],uint8[4])": FunctionFragment;
     "mintAndSet(uint8[4],uint8[4],uint8[4])": FunctionFragment;
     "mintIndex(uint256)": FunctionFragment;
     "name()": FunctionFragment;
@@ -128,6 +129,7 @@ export interface CollageInterface extends utils.Interface {
       | "maxBatchSize"
       | "maxSupply"
       | "mint"
+      | "mintAndBuy"
       | "mintAndSet"
       | "mintIndex"
       | "name"
@@ -208,6 +210,29 @@ export interface CollageInterface extends utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "maxSupply", values?: undefined): string;
   encodeFunctionData(functionFragment: "mint", values?: undefined): string;
+  encodeFunctionData(
+    functionFragment: "mintAndBuy",
+    values: [
+      [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ]
+    ]
+  ): string;
   encodeFunctionData(
     functionFragment: "mintAndSet",
     values: [
@@ -386,6 +411,7 @@ export interface CollageInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "maxSupply", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "mintAndBuy", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintAndSet", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mintIndex", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
@@ -633,6 +659,28 @@ export interface Collage extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    mintAndBuy(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      xOffsets: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      yOffsets: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
     mintAndSet(
       layerIds: [
         PromiseOrValue<BigNumberish>,
@@ -854,6 +902,28 @@ export interface Collage extends BaseContract {
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  mintAndBuy(
+    layerIds: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ],
+    xOffsets: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ],
+    yOffsets: [
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ],
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   mintAndSet(
     layerIds: [
       PromiseOrValue<BigNumberish>,
@@ -1070,6 +1140,28 @@ export interface Collage extends BaseContract {
     maxSupply(overrides?: CallOverrides): Promise<BigNumber>;
 
     mint(overrides?: CallOverrides): Promise<void>;
+
+    mintAndBuy(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      xOffsets: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      yOffsets: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: CallOverrides
+    ): Promise<void>;
 
     mintAndSet(
       layerIds: [
@@ -1335,6 +1427,28 @@ export interface Collage extends BaseContract {
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    mintAndBuy(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      xOffsets: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      yOffsets: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     mintAndSet(
       layerIds: [
         PromiseOrValue<BigNumberish>,
@@ -1548,6 +1662,28 @@ export interface Collage extends BaseContract {
     maxSupply(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     mint(
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    mintAndBuy(
+      layerIds: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      xOffsets: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
+      yOffsets: [
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>,
+        PromiseOrValue<BigNumberish>
+      ],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
