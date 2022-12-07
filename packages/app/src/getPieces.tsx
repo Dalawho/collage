@@ -15,7 +15,7 @@ gql`
   }
 `;
 
-export const getPieces = ()  => {
+export const GetPieces = ()  => {
   const { address } = useAccount();
 
   const [query] = usePiecesQuery({
@@ -39,5 +39,15 @@ export const getPieces = ()  => {
   //       You already own {query.data?.spellsTokens.length} Animals!
   //   </div>
   // );
-  return(query.data?.pieces.map((item, index) => { return {value: parseInt(item.id), label: `${item.id} - ${item.name}`, price: parseInt(item.price), tokenURI: item.tokenURI}}).sort( (a,b) => a.value - b.value ));
+    const getImageFromTokenURI = (tokenURI: string) => {
+        if(tokenURI.length > 20) {
+        const processed = JSON.parse(tokenURI.slice(22));
+        const base64Image = processed.image.replace("data:image/svg+xml;base64,", "");
+        const imageResp = new Buffer(base64Image, "base64");
+        return(imageResp.toString().replace(/width="\d+"/, 'width="90%"').replace(/height="\d+"/, 'height="90%"'));
+      }
+      return("no Image found");
+    }
+  const returnData = query.data?.pieces.map((item, index) => { return {value: parseInt(item.id), label: `${item.id} - ${item.name}`, price: parseInt(item.price), tokenURI: getImageFromTokenURI(item.tokenURI)}}).sort( (a,b) => a.value - b.value );
+  return(returnData);
 };

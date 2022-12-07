@@ -13,7 +13,7 @@ gql`
   }
 `;
 
-export const getCollages = ()  => {
+export const GetCollages = ()  => {
   const { address } = useAccount();
 
   const [query] = useCollageOwnersQuery({

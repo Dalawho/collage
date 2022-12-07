@@ -5,9 +5,11 @@ import Select, { StylesConfig } from 'react-select';
 
 import { Button } from "../Button";
 import { usePiecesContractRead } from "../contracts";
-import { getPieces } from "../getPieces";
+import { customStyles } from '../formStyles';
+import { GetPieces } from "../GetPieces";
 import { MintButton1155 } from "../MintButton1155";
 import { Nav } from "../Nav";
+import SimplePanel from '../SimplePanel';
 
 const HomePage: NextPage = () => {
   const [quant, setQuant] = useState(1);
@@ -42,52 +44,12 @@ const HomePage: NextPage = () => {
     setQuant(quant - 1);
   }
 
-  const customStyles: StylesConfig = {
-    menu: (provided) => {
-         return({
-      ...provided,
-      //width: 200,
-      color: "#121234",
-      padding: 0,
-      backgroundColor: "#18181b",
-      textColor: "white"
-    })},
-    
-    option: (provided, { isFocused }) => {
-        return({
-            ...provided,
-            color: "#d4d4d8",
-            backgroundColor: isFocused ? "#27272a" :"#18181b"
-        });
-    },
+  const pieces = GetPieces();
 
-    singleValue: (styles) => {
-        return(
-            {...styles,
-                color: "#d4d4d8"
-            });
-    },
-    control: (styles) => ({
-        ...styles,
-         //width: 200,
-         backgroundColor: "#fef2c9",
-         padding: 0
-       })
-  }
-
-  const placeholder = [{value: 0, label: "Getting Data" }]
-  const pieces = getPieces();
-
-  const handlePieceChange = (e?: SelectTrait | unknown | null ) => {
-    if(e)  {
-        const i: SelectTrait = e as SelectTrait;
-        setLayer(i.value);
-        if(pieces) {
-        const processed = JSON.parse(pieces[i.value - 1].tokenURI.slice(22));
-        const base64Image = processed.image.replace("data:image/svg+xml;base64,", "");
-        const imageResp = new Buffer(base64Image, "base64");
-        setLayerSVG(imageResp.toString());
-      }
+  const handlePieceChange = (id:number ) => {
+    if(pieces) {
+      setLayerSVG(pieces[id].tokenURI)
+      setLayer(id)
     }
   }
 
@@ -96,9 +58,9 @@ const HomePage: NextPage = () => {
        <Nav width={0}/>
       <div className="flex-grow flex flex-col gap-4 items-center justify-center p-8 pb-[25vh]">
         <h1>Mint an ERC1155 piece</h1>
+        
         {layerSVG ? parse(layerSVG) : "No Token selected, or Token has no image yet."}
         <div>
-        <Select styles={customStyles} options={pieces ? pieces : placeholder} onChange={(newValue) => handlePieceChange(newValue)}/>
         <p className="flex flex-row justify-between mx-auto">
           Minted:{(maxSupply.data ? maxSupply.data.supplyMinted : null) ??
             "??"}{" | "}
@@ -116,6 +78,17 @@ const HomePage: NextPage = () => {
         <div className="flex mx-auto content-center justify-center">
         <MintButton1155 quant={quant} layer={layer ? layer : 0} price={layer && pieces ? pieces[layer-1].price : 0} />
         </div>
+        <div className="grid grid-cols-3">
+                {pieces?.map(panel => (
+                    <SimplePanel
+                    key={panel.value}
+                    id={panel.value}
+                    picture={panel.tokenURI}
+                    description={panel.label}
+                    onClick={handlePieceChange}
+                    />
+                ))}
+              </div>
         </div>
         </div>
    </div>

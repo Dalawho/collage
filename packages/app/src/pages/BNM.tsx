@@ -2,16 +2,18 @@ import {ethers } from "ethers";
 import parse from 'html-react-parser';
 import type { NextPage } from "next";
 import React, { useEffect,useState} from "react";
-import Select, { StylesConfig } from 'react-select';
+import Select from 'react-select';
 
 import { BuyAndMintButton } from "../BuyAndMintButton";
 import contractAddresses from "../contracts.json";
-import { getPieces } from "../getPieces";
+import { customStyles } from "../formStyles";
+import { GetPieces } from "../GetPieces";
 import { LocationForm } from "../Location";
 import { Nav } from "../Nav";
+import Panel from "../Panel";
 import { Collage__factory } from "../types";
 
-const BuyAndMint:NextPage = () => {
+const BNM:NextPage = () => {
     
     const [locations, setLocations] = useState<Locations[]>([{x:0, y:0},{x:0, y:0},{x:0, y:0},{x:0, y:0} ]);
     const [animalSVG, setAnimalSVG] = useState<string | null>(null);
@@ -27,12 +29,14 @@ const BuyAndMint:NextPage = () => {
         y: number;
     }
 
-  const handlePiecesId = (index: number, e?: SelectTrait | unknown | null) => {
-    if(e)  {
-        const i: SelectTrait = e as SelectTrait;
-        const next_arr = [...pieceIds.slice(0, index), i.value , ...pieceIds.slice(index + 1)]
-        setPieceIds(next_arr);
-    }
+  const handlePiecesId = (id: number, layer: number) => {
+    const next_arr = [...pieceIds.slice(0, layer-1), id , ...pieceIds.slice(layer)]
+    setPieceIds(next_arr);
+  }
+
+  const handleLocationChange = (coord:string,e:number, index:number) => {
+    const nextLocs = [...locations.slice(0, index), {...locations[index], [coord]: e} , ...locations.slice(index + 1)];
+    setLocations(nextLocs);
   }
     
     //Somehow wagmi always tells me the function "getTokenSVGForBytes" does not exists, while it is clearly in the abi. 
@@ -57,51 +61,15 @@ const BuyAndMint:NextPage = () => {
             for(let i = 0; i < 4; i++) {
                 //doublecheck this
                 if(pieceIds[i] == 0) continue 
+                console.log(pieceIds[i]-1);
                 tempPrice += pieces[pieceIds[i]-1].price;
             }
             setPrice(tempPrice);
         }
     }, [pieceIds, locations]);
 
-    const handleLocationChange = (coord:string,e:number, index:number) => {
-      const nextLocs = [...locations.slice(0, index), {...locations[index], [coord]: e} , ...locations.slice(index + 1)];
-      setLocations(nextLocs);
-    }
-
-    const customStyles: StylesConfig = {
-        menu: (provided) => {
-             return({
-          ...provided,
-          width: 200,
-          color: "#121234",
-          padding: 0,
-          backgroundColor: "#18181b",
-          textColor: "white"
-        })},
-        
-        option: (provided, { isFocused }) => {
-            return({
-                ...provided,
-                color: "#d4d4d8",
-                backgroundColor: isFocused ? "#27272a" :"#18181b"
-            });
-        },
-
-        singleValue: (styles) => {
-            return(
-                {...styles,
-                    color: "#d4d4d8"
-                });
-        },
-        control: (styles) => ({
-            ...styles,
-             width: 200,
-             backgroundColor: "#fef2c9",
-             padding: 0
-           })
-      }
-
-    const pieces = getPieces();
+    const pieces = GetPieces();
+    console.log(pieces);
 
     const placeholder = [{value: 0, label: "nothing to show"}]
 
@@ -113,21 +81,31 @@ const BuyAndMint:NextPage = () => {
               <div>
                 <h1>Mint and Set</h1>
               </div>
-                <div>
+                <div className="flex flex-row space-x-2">
               {animalSVG ? parse(animalSVG) : "No Layers added yet."}
-              </div>
-              
-              <div className="flex flex-col">
-                <h2>Select layers</h2>
-                {[0,1,2,3].map( (layerNr: number) => (
+              <div>
+                <h1>Set location for</h1>
+              {[1,2,3,4].map( (layerNr: number) => (
                   <div key={layerNr}>
-                  <h1>Set {layerNr}</h1> 
-                  <Select styles={customStyles} options={pieces ? pieces : placeholder } onChange={(newValue) => handlePiecesId(layerNr, newValue)}/>
-                  <LocationForm loc={locations[layerNr]} onChange={(coord:string,e:string) => handleLocationChange(coord, Number(e), layerNr)} />
+                  <LocationForm loc={locations[layerNr-1]} layerNr={layerNr} onChange={(coord:string,e:string) => handleLocationChange(coord, Number(e), layerNr-1)} />
                   </div>
                 ))}
+                <BuyAndMintButton pieceIds={pieceIds} locations={locations} price={price} />
               </div>
-              <BuyAndMintButton pieceIds={pieceIds} locations={locations} price={price} />
+              </div>
+              <h2>Select layers</h2>
+              <div className="grid grid-cols-5">
+                {pieces?.map(panel => (
+                    <Panel
+                    key={panel.value}
+                    id={panel.value}
+                    picture={panel.tokenURI}
+                    description={panel.label}
+                    onClick={handlePiecesId}
+                    />
+                ))}
+              </div>
+              
                 </div>
                 </div>
                 </div>
@@ -135,4 +113,14 @@ const BuyAndMint:NextPage = () => {
     );
 };
 
-export default BuyAndMint;
+export default BNM;
+
+/*
+                {[0,1,2,3].map( (layerNr: number) => (
+                  <div key={layerNr}>
+                  <h1>Set {layerNr}</h1> 
+                  <Select styles={customStyles} options={pieces ? pieces : placeholder } onChange={(newValue) => handlePiecesId(layerNr, newValue)}/>
+                  <LocationForm loc={locations[layerNr]} onChange={(coord:string,e:string) => handleLocationChange(coord, Number(e), layerNr)} />
+                  </div>
+                ))}
+*/

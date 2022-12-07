@@ -103,23 +103,23 @@ const Add:NextPage = () => {
                 <div>
               {animalSVG ? parse(animalSVG.replaceAll("320", "240")) : ""}
               </div>
-              <input type="file" className="file:font-proggy w-72 pl-2 pr-1 file:bg-amber-100 file:border-none border-2 border-solid border-slate-800 rounded-lg text-slate-800 cursor-pointer" onChange={(e) => handleImage(e)} /> 
+              <input type="file" className="file:font-proggy w-96 pl-2 pr-1 file:bg-amber-100 file:border-none border-2 border-solid border-slate-800 rounded-lg text-slate-800 cursor-pointer" onChange={(e) => handleImage(e)} /> 
                               
-              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-72">
+              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-96 justify-between">
                 <h2 className=" pr-2">Name:</h2>
-                <input className="bg-amber-100 border-none focus:outline-none focus:border-none" type="text" value={artwork.name} onChange={(e) => handleArtworkChange("name", e.target.value)} />
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none w-36" type="text" value={artwork.name} onChange={(e) => handleArtworkChange("name", e.target.value)} />
               </div>
-              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-72">
-                <h2 className=" pr-2">Amount:</h2>
-                <input className="bg-amber-100 border-none focus:outline-none focus:border-none" type="text" value={artwork.amount} onChange={(e) => handleArtworkChange("amount", parseInt(e.target.value) ? parseInt(e.target.value) : 0 )} />
+              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-96 justify-between">
+                <h2 className=" pr-2">Total Supply:</h2>
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none w-36" type="text" value={artwork.amount} onChange={(e) => handleArtworkChange("amount", parseInt(e.target.value) ? parseInt(e.target.value) : 0 )} />
               </div>
-              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-72">
-                <h2 className=" pr-2">Eth:</h2>
-                <input className="bg-amber-100 border-none focus:outline-none focus:border-none" type="text" value={artwork.price} onChange={(e) => handleArtworkChange("price", e.target.value)} />
+              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-96 justify-between">
+                <h2 className=" pr-2">Price [Eth]:</h2>
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none w-36" type="text" value={artwork.price} onChange={(e) => handleArtworkChange("price", e.target.value)} />
               </div>
-              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-72">
-                <h2 className=" pr-2">Mint:</h2>
-                <input className="bg-amber-100 border-none focus:outline-none focus:border-none" type="text" value={artwork.mint} onChange={(e) => handleArtworkChange("mint", parseInt(e.target.value) ? parseInt(e.target.value) : 0)} />
+              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-96 justify-between">
+                <h2 className=" pr-2">Mint to creator wallet:</h2>
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none w-36" type="text" value={artwork.mint} onChange={(e) => handleArtworkChange("mint", parseInt(e.target.value) ? parseInt(e.target.value) : 0)} />
               </div>
               <AddArtworkButton artwork={artwork} />
                 </div>

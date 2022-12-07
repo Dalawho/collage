@@ -15,11 +15,6 @@ export const graphClient = createGraphClient({
   url: "https://api.thegraph.com/subgraphs/name/dalawho/collage",  
 });
 
-//3 states
-//pieces
-//owned collages
-//owned pieces
-
 const MyApp = ({ Component, pageProps }: AppProps) => {
   return (
     <>
@@ -36,8 +31,3 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 };
 
 export default MyApp;
-
-
-//<ToastContainer position="bottom-right" draggable={false} />
-
-//import { ToastContainer } from "react-toastify";

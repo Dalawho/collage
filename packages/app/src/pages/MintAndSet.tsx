@@ -2,10 +2,11 @@ import {ethers } from "ethers";
 import parse from 'html-react-parser';
 import type { NextPage } from "next";
 import React, { useEffect,useState} from "react";
-import Select, { StylesConfig } from 'react-select';
+import Select from 'react-select';
 
 import contractAddresses from "../contracts.json";
-import { getOwnedPieces } from "../getOwnedPieces";
+import { customStyles } from "../formStyles";
+import { GetOwnedPieces } from "../GetOwnedPieces";
 import { LocationForm } from "../Location";
 import { MintAndSetButton } from "../MintAndSetButton";
 import { Nav } from "../Nav";
@@ -33,6 +34,11 @@ const MintAndSet:NextPage = () => {
         setPieceIds(next_arr);
     }
   }
+
+  const handleLocationChange = (coord:string,e:number, index:number) => {
+    const nextLocs = [...locations.slice(0, index), {...locations[index], [coord]: e} , ...locations.slice(index + 1)];
+    setLocations(nextLocs);
+  }
     
     //Somehow wagmi always tells me the function "getTokenSVGForBytes" does not exists, while it is clearly in the abi. 
     //It only throws the error when there is valid data, no idea what's going on... 
@@ -53,51 +59,13 @@ const MintAndSet:NextPage = () => {
         callData();
     });
 
-    const handleLocationChange = (coord:string,e:number, index:number) => {
-      const nextLocs = [...locations.slice(0, index), {...locations[index], [coord]: e} , ...locations.slice(index + 1)];
-      setLocations(nextLocs);
-    }
-
-    const customStyles: StylesConfig = {
-        menu: (provided) => {
-             return({
-          ...provided,
-          width: 200,
-          color: "#121234",
-          padding: 0,
-          backgroundColor: "#18181b",
-          textColor: "white"
-        })},
-        
-        option: (provided, { isFocused }) => {
-            return({
-                ...provided,
-                color: "#d4d4d8",
-                backgroundColor: isFocused ? "#27272a" :"#18181b"
-            });
-        },
-
-        singleValue: (styles) => {
-            return(
-                {...styles,
-                    color: "#d4d4d8"
-                });
-        },
-        control: (styles) => ({
-            ...styles,
-             width: 200,
-             backgroundColor: "#fef2c9",
-             padding: 0
-           })
-      }
-
-    const ownedPieces = getOwnedPieces();
+    const ownedPieces = GetOwnedPieces();
 
     const placeholder = [{value: 0, label: "nothing to show"}]
 
     return(
       <div className="bg-amber-100">
-        <div className="flex flex-col bg-amber-100 text-slate-800 text-2xl font-proggy" >
+        <div className="bg-amber-100 text-slate-800 text-2xl font-proggy" >
           <Nav width={0} />
             <div className="flex flex-col gap-4 items-center p-8 mx-auto">
               <div>
@@ -113,11 +81,12 @@ const MintAndSet:NextPage = () => {
                   <div key={layerNr}>
                   <h1>Set {layerNr}</h1> 
                   <Select styles={customStyles} options={ownedPieces ? ownedPieces : placeholder } onChange={(newValue) => handlePiecesId(layerNr, newValue)}/>
-                  <LocationForm loc={locations[layerNr]} onChange={(coord:string,e:string) => handleLocationChange(coord, Number(e), layerNr)} />
+                  <LocationForm loc={locations[layerNr]} layerNr={0} onChange={(coord:string,e:string) => handleLocationChange(coord, Number(e), layerNr)} />
                   </div>
                 ))}
+                <MintAndSetButton pieceIds={pieceIds} locations={locations}  />
               </div>
-              <MintAndSetButton pieceIds={pieceIds} locations={locations}  />
+              
                 </div>
                 </div>
                 </div>
@@ -126,9 +95,3 @@ const MintAndSet:NextPage = () => {
 };
 
 export default MintAndSet;
-
-
-{/* <div className="flex">
-<h2 className="my-auto">Pieces tokenId:</h2>
-<Select styles={customStyles} options={ownedPieces ? ownedPieces : placeholder } onChange={(newValue) => handlePiecesId(newValue)}/>
-</div> */}

@@ -19,7 +19,7 @@ gql`
   }
 `;
 
-export const getOwnedPieces = ()  => {
+export const GetOwnedPieces = ()  => {
   const { address } = useAccount();
 
   const [query] = useOwnedPiecesQuery({

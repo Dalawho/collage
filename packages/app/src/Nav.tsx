@@ -7,26 +7,20 @@ export const Nav = ( {width} : {width: number}) => {
         minWidth: width};
 
     return(
-        <nav className=" text-slate-800 border-gray-200 px-4 sm:px-1 py-2.5" style={width == 0 ? {}: divStyle}>
-            <div className="container flex justify-between items-center mx-auto px-6 sm:px-2">
+        <nav className=" text-slate-800 border-gray-200 px-4 sm:px-4 py-2.5" style={width == 0 ? {}: divStyle}>
+            <div className="flex justify-between items-center mx-auto px-6 sm:px-2">
             <ul className="font-semibold p-3 mt-2 border-gray-100 flex space-x-5 border-0 dark:border-gray-200">
                 <li className="hover:text-amber-600">
-                    <Link href='/' >Collage</Link>
+                    <Link href='/BNM'>Combine and Mint</Link>
                 </li>
                 <li className="hover:text-amber-600">
-                    <Link href='/Piece'>Piece</Link>
+                    <Link href='/Piece'>Buy A Piece</Link>
                 </li>
                 <li className="hover:text-amber-600">
-                    <Link href='/Add'>Add</Link>
+                    <Link href='/Add'>Add New Art</Link>
                 </li>
                 <li className="hover:text-amber-600">
-                    <Link href='/Create'>Create</Link>
-                </li>
-                <li className="hover:text-amber-600">
-                    <Link href='/MintAndSet'>MintAndSet</Link>
-                </li>
-                <li className="hover:text-amber-600">
-                    <Link href='/BuyAndMint'>BuyAndMint</Link>
+                    <Link href='/Create'>Change Layer</Link>
                 </li>
             </ul>
             <div className="text-2xl sm:text-2xl">
