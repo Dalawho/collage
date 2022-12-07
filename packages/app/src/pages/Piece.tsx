@@ -1,12 +1,10 @@
 import parse from 'html-react-parser';
 import type { NextPage } from "next";
 import { useState } from "react";
-import Select, { StylesConfig } from 'react-select';
 
 import { Button } from "../Button";
 import { usePiecesContractRead } from "../contracts";
-import { customStyles } from '../formStyles';
-import { GetPieces } from "../GetPieces";
+import GetPieces from "../GetPieces";
 import { MintButton1155 } from "../MintButton1155";
 import { Nav } from "../Nav";
 import SimplePanel from '../SimplePanel';
