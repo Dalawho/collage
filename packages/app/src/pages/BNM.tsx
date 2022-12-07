@@ -6,8 +6,7 @@ import Select from 'react-select';
 
 import { BuyAndMintButton } from "../BuyAndMintButton";
 import contractAddresses from "../contracts.json";
-import { customStyles } from "../formStyles";
-import { GetPieces } from "../GetPieces";
+import GetPieces from "../GetPieces";
 import { LocationForm } from "../Location";
 import { Nav } from "../Nav";
 import Panel from "../Panel";
