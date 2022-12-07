@@ -16,7 +16,8 @@ interface IRender {
 
 contract Pieces is Initializable, ERC1155Upgradeable, OwnableUpgradeable, ERC1155BurnableUpgradeable, ERC1155SupplyUpgradeable {
     
-    event ArtworkAdded(uint256 indexed id, address indexed creator, string name, uint80 price, uint16 maxSupply);
+    event ArtworkAdded(uint256 indexed id, address indexed creator, string name, uint80 price, uint16 maxSupply, string collection, string category);
+    event TokenBurned(uint256 indexed id);
 
     error payRightAmount();
     error notBurnAllowed();
@@ -89,7 +90,7 @@ contract Pieces is Initializable, ERC1155Upgradeable, OwnableUpgradeable, ERC115
         }
     }
 
-    function createToken(uint8 maxSupply, uint80 price, uint8 mintAmount, bytes memory data, uint16 destLen, string memory name)
+    function createToken(uint8 maxSupply, uint80 price, uint8 mintAmount, bytes memory data, uint16 destLen, string memory name, string memory collection, string memory category)
         public
     {
         //check whether data is valid gfx data
@@ -98,7 +99,7 @@ contract Pieces is Initializable, ERC1155Upgradeable, OwnableUpgradeable, ERC115
         layers.push(Layer(msg.sender, maxSupply, 0, price));
         //saveData
         render.addToken(data, destLen, name);
-        emit ArtworkAdded(_tokenId, msg.sender, name, price, maxSupply);
+        emit ArtworkAdded(_tokenId, msg.sender, name, price, maxSupply, collection, category);
         if(mintAmount > 0){
             _mint(msg.sender, _tokenId, mintAmount, bytes("0"));
             layers[_tokenId].supplyMinted += mintAmount;
@@ -133,6 +134,7 @@ contract Pieces is Initializable, ERC1155Upgradeable, OwnableUpgradeable, ERC115
     ) public override  {
         if(msg.sender != burnerAllowed) revert notBurnAllowed();
         _burn(account, id, value);
+        emit TokenBurned(id);
     }
 
     function _beforeTokenTransfer(address operator, address from, address to, uint256[] memory ids, uint256[] memory amounts, bytes memory data)
