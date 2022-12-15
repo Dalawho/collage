@@ -19,7 +19,8 @@ export const AddArtworkButton = ( {artwork} : {artwork: Artwork} ) => {
     args: [debArtwork.amount, utils.parseEther(parseFloat(debArtwork.price) ? debArtwork.price : "0"), debArtwork.mint, debArtwork.compressed, debArtwork.inputLength, debArtwork.name]
   })
   const { data, isLoading, isSuccess , write } = useContractWrite(config);
-  //console.log(config)
+  console.log(config)
+  console.log(artwork.inputLength);
   const {isSuccess: txSuccess} = useWaitForTransaction({hash: data?.hash});
   //    {txSuccess && <div>{artName} submitted</div>}
   return (

@@ -46,8 +46,8 @@ const HomePage: NextPage = () => {
 
   const handlePieceChange = (id:number ) => {
     if(pieces) {
-      setLayerSVG(pieces[id].tokenURI)
-      setLayer(id)
+      setLayerSVG(pieces[id-1].tokenURI)
+      setLayer(id-1)
     }
   }
 
@@ -57,7 +57,7 @@ const HomePage: NextPage = () => {
       <div className="flex-grow flex flex-col gap-4 items-center justify-center p-8 pb-[25vh]">
         <h1>Mint an ERC1155 piece</h1>
         
-        {layerSVG ? parse(layerSVG) : "No Token selected, or Token has no image yet."}
+        {layerSVG ? parse(layerSVG.replace(/width="\d+%"/, 'width="100"').replace(/height="\d+%"/, 'height="100"')) : "No Token selected, or Token has no image yet."}
         <div>
         <p className="flex flex-row justify-between mx-auto">
           Minted:{(maxSupply.data ? maxSupply.data.supplyMinted : null) ??

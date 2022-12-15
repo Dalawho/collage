@@ -19,7 +19,7 @@ export const AddLayerButton = ( {tokenId, layerNr, pieceId, locations} : {tokenI
     args: [tokenId, layerNr, pieceId, locations.x, locations.y]
   })
   const { data, isLoading, isSuccess , write } = useContractWrite(config);
-  //console.log(config)
+  console.log(config)
   const {isSuccess: txSuccess} = useWaitForTransaction({hash: data?.hash});
   //    {txSuccess && <div>{artName} submitted</div>}
   return (

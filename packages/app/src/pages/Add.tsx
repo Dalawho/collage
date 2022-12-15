@@ -67,9 +67,14 @@ const Add:NextPage = () => {
 
         const encoded = abiCoder.encode(["bytes"],[buff.getPixelBuffer()] );
         const input = fromHexString(encoded.slice(2));
-        if(input?.length > 0) setArtwork({...artwork, inputLength: input.length});
         const comp = pako.deflateRaw(input, { level: 9 });
-        if(comp?.length > 0) setArtwork({...artwork, compressed: comp});
+        if(comp?.length > 0) {
+          //console.log("got hre");
+          setArtwork({...artwork, compressed: comp, inputLength: input.length});
+          //setArtwork({...artwork, inputLength: input.length});
+        } 
+        //if(comp?.length > 0) setArtwork({...artwork, compressed: comp});
+        console.log(input.length);
 
         const callData = async (pixelData:string) => {
           const data = await renderContract.getSVGForBytes( pixelData);

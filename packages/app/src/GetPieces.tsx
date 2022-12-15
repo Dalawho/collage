@@ -49,6 +49,7 @@ const GetPieces = ()  => {
       return("no Image found");
     }
   const returnData = query.data?.pieces.map((item, index) => { return {value: parseInt(item.id), label: `${item.id} - ${item.name}`, price: parseInt(item.price), tokenURI: getImageFromTokenURI(item.tokenURI)}}).sort( (a,b) => a.value - b.value );
+  console.log(returnData);
   return(returnData);
 };
 
