@@ -15,6 +15,10 @@ interface IInflator {
     function puff(bytes memory source, uint256 destlen) external pure returns (uint8, bytes memory);
 }
 
+interface IPieces {
+    function getLayerData(uint256 tokenId) external view returns(Render.LayerInfo memory, address);
+}
+
 contract Render is Initializable, OwnableUpgradeable {
     using Strings for uint256;
     using Strings for uint8;
@@ -23,17 +27,28 @@ contract Render is Initializable, OwnableUpgradeable {
     IExquisiteGraphics public gfx;
     IInflator public inflateLib;
     address public pieces;
+    uint256 public constant MAX_LAYERS = 8; 
 
     struct Trait {
         address data;
         uint16 destLen;
         string name;
     }
-
+    
     struct LayerStruct {
-        uint8 layerId;
+        uint8 scale;
         uint8 xOffset;
         uint8 yOffset;
+        uint16 layerId;
+    }
+
+    struct LayerInfo {
+        address creator;
+        uint8 maxSupply;
+        uint8 supplyMinted;
+        uint8 royalties;
+        uint8 maxPerWallet;
+        uint64 price;
     }
 
     Trait[] traits;
@@ -82,9 +97,10 @@ contract Render is Initializable, OwnableUpgradeable {
         return _outString; 
     }
 
-    function tokenURI(uint256 tokenId, LayerStruct[4] memory layerIds) external view returns (string memory) { 
+    function tokenURI(uint256 tokenId, LayerStruct[MAX_LAYERS] memory layerIds) external view returns (string memory) { 
         uint8 numberOfLayers = 0;
         Trait[] memory _traits = new Trait[](layerIds.length);
+        LayerInfo[] memory _layerInfos = new LayerInfo[](layerIds.length);
         for(uint256 i = 0; i < layerIds.length; i++) {
             _traits[i] = traits[layerIds[i].layerId];
             if(layerIds[i].layerId != 0) numberOfLayers++; 
@@ -116,7 +132,7 @@ contract Render is Initializable, OwnableUpgradeable {
         return _outString; 
     }
 
-    function previewCollage(LayerStruct[4] memory layerIds) external view returns(string memory) {
+    function previewCollage(LayerStruct[MAX_LAYERS] memory layerIds) external view returns(string memory) {
         uint8 numberOfLayers = 0;
         Trait[] memory _traits = new Trait[](layerIds.length);
         for(uint256 i = 0; i < layerIds.length; i++) {
@@ -142,7 +158,7 @@ contract Render is Initializable, OwnableUpgradeable {
 
     ////////////////////////  Full SVG functions /////////////////////////////////
 
-    function _drawTraits(Trait[] memory _traits, LayerStruct[4] memory layerIds) internal view returns(bytes memory) {
+    function _drawTraits(Trait[] memory _traits, LayerStruct[MAX_LAYERS] memory layerIds) internal view returns(bytes memory) {
             bytes memory buffer = DynamicBuffer.allocate(2**18);
             //buffer.appendSafe(bytes(string.concat('<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" version="1.1" viewBox="0 0 ', Strings.toString(height), ' ', Strings.toString(width),'" width="',Strings.toString(height*5),'" height="',Strings.toString(width*5),'"> ')));
             uint8 height;
@@ -161,7 +177,7 @@ contract Render is Initializable, OwnableUpgradeable {
 
     function _getOneSVG(Trait memory _currentTrait) internal view returns (bytes memory) {
         bytes memory buffer = DynamicBuffer.allocate(2**18);
-        (uint8 height, uint8 width) = _renderTrait(_currentTrait, LayerStruct(0,0,0), buffer);
+        (uint8 height, uint8 width) = _renderTrait(_currentTrait, LayerStruct(0,0,0,0), buffer);
         buffer.appendSafe('</svg>');
         return abi.encodePacked('<svg xmlns="http://www.w3.org/2000/svg" shape-rendering="crispEdges" version="1.1" viewBox="0 0 ', Strings.toString(width), ' ', Strings.toString(height),'" width="',Strings.toString(uint256(width)*10),'" height="',Strings.toString(uint256(height)*10),'"> ', buffer);
     }

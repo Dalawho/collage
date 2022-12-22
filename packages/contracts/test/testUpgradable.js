@@ -104,9 +104,9 @@ describe("TMD tests", () => {
         await makeLayer("./pics/heart.png", pieces); //1
         await pieces.mint(owner.address, 1, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         //await collage
-        await collage.mint();
-        //addLayer(uint256 tokenId, uint8 layer, uint8 layerId, uint8 xOffset, uint8 yOffset)
-        await collage.addLayer(1,0,1, 5, 5);
+        await collage.mint({ value: ethers.utils.parseEther("0.03") });
+        //addLayer(int256 tokenId, uint8 layer, uint8 scale, uint8 xOffset, uint8 yOffset, uint16 layerId)
+        await collage.addLayer(1,0,1, 5, 5, 1);
         console.log(await collage.tokenURI(1));
       
       });  
@@ -120,9 +120,9 @@ describe("TMD tests", () => {
         await pieces.mint(owner.address, 2, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         await pieces.tokenURI(1);
         //await collage
-        await collage.mint();
-        await collage.addLayer(1, 0 , 1, 0, 0);
-        await collage.addLayer(1, 1, 2, 5, 5);
+        await collage.mint({ value: ethers.utils.parseEther("0.03") });
+        await collage.addLayer(1, 0 , 1, 0, 0, 1);
+        await collage.addLayer(1, 1, 1, 5, 5, 2);
         console.log(await collage.tokenURI(1));
       });  
       it("test preview function", async() => {
@@ -131,22 +131,22 @@ describe("TMD tests", () => {
         await pieces.mint(owner.address, 1, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         await pieces.mint(owner.address, 2, 2, 0x0000, { value: ethers.utils.parseEther("0.02") });
         //await collage
-        await collage.mint();
-        await collage.addLayer(1, 0, 2, 0, 0);
-        //previewCollage(uint256 tokenId, uint8 layerNr, uint8 pieceId, uint8 xOffset, uint8 yOffset)
-        console.log(await collage.previewTokenCollage(1, 1, 1, 4, 10));
+        await collage.mint({ value: ethers.utils.parseEther("0.03") });
+        await collage.addLayer(1, 0, 2, 0, 0, 2);
+        //previewCollage(uint256 tokenId, uint8 layerNr, uint8 scale, uint8 xOffset, uint8 yOffset, uint8 pieceId)
+        console.log(await collage.previewTokenCollage(1, 1, 1, 4, 10, 1));
       });  
       it("test normal preview function", async() => {
         await makeLayer("./pics/fire.png", pieces);
         await makeLayer("./pics/heart.png", pieces); //1
-        //previewCollage(uint256 tokenId, uint8 layerNr, uint8 pieceId, uint8 xOffset, uint8 yOffset)
-        console.log(await collage.previewCollage([0,0,0,0],[0,0,0,5],[0,0,0,5] ));
+        //previewCollage(uint16[MAX_LAYERS] memory pieceIds, uint8[MAX_LAYERS] memory scale, uint8[MAX_LAYERS] memory xOffsets, uint8[MAX_LAYERS] memory yOffsets)
+        console.log(await collage.previewCollage([0,0,0,0,0,0,0,1], [0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,5],[0,0,0,0,0,0,0,5] ));
       });  
       it("getPriceandBurn", async() => {
         await makeLayer("./pics/heart.png", pieces); //1
         await makeLayer("./pics/heart.png", pieces); //1
         await makeLayer("./pics/heart.png", pieces); //1
-        await collage.mintAndBuy([1,2,3,0], [0,0,0,0], [0,0,0,0], { value: ethers.utils.parseEther("0.03") });  
+        await collage.mintAndBuy([1,2,3,0,0,0,0,0],[0,0,0,0,0,0,0,0] , [0,0,0,0,0,0,0,0], [0,0,0,0,0,0,0,0], { value: ethers.utils.parseEther("0.03") });  
       });  
     });
 });
@@ -173,7 +173,8 @@ async function makeLayer(path, pieces) {
     let input = fromHexString(encoded.slice(2));
     //console.log(input)
     let compressed = pako.deflateRaw(input, { level: 9 });
-    await pieces.createToken(10, ethers.utils.parseEther("0.01"), 0, compressed, input.length, "firstOne");  //maxSupply, price,  data, uint16 destLen, string memory name)
+    //maxSupply, _maxPerWallet, price, mintAmount, data, destLen,  name,  royalties, _royaltyReciever, _mintTo, collection, category)
+    await pieces.createToken(10, 5, ethers.utils.parseEther("0.01"), 0, compressed, input.length, "firstOne", 2, ethers.constants.AddressZero, ethers.constants.AddressZero, "Fire collection", "No Category", { value: ethers.utils.parseEther("0.01") }); 
 }
 
 async function testSVGRender(path, render) {
@@ -186,5 +187,5 @@ async function testSVGRender(path, render) {
 
     console.log("buffer:", buff);
     console.log("buffer:", buff.getPixelBuffer());
-    console.log(await render.getSVGForBytes(buff.getPixelBuffer()));  //maxSupply, price,  data, uint16 destLen, string memory name)
+    console.log(await render.getSVGForBytes(buff.getPixelBuffer())); 
 }

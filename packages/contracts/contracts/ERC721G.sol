@@ -49,14 +49,19 @@ abstract contract ERC721G is Initializable {
 
     // ERC721G Structs
     struct OwnerStruct {
-        address owner; // stores owner address for OwnerOf
-        LayerStruct[4] layers;
+        address owner; // stores owner address for OwnerOf 
+    }
+
+    struct TokenInfoStruct {
+        address creator;
+        LayerStruct[8] layers; //could change this into seperate layers... 
     }
 
     struct LayerStruct {
-        uint8 layerId;
+        uint8 scale;
         uint8 xOffset;
         uint8 yOffset;
+        uint16 layerId;
     }
 
     struct BalanceStruct {
@@ -70,6 +75,10 @@ abstract contract ERC721G is Initializable {
     mapping(uint256 => OwnerStruct) public _tokenData; // ownerOf replacement
     mapping(address => BalanceStruct) public _balanceData; // balanceOf replacement
     mapping(uint256 => OwnerStruct) public mintIndex; // uninitialized ownerOf pointer
+
+    //tokenInfo mappings
+    mapping(uint256 => address) public royaltyReciever; // ownerOf replacement
+    mapping(uint256 => TokenInfoStruct) public tokenInfo; // balanceOf replacement
 
     // ERC721 Mappings
     mapping(uint256 => address) public getApproved; // for single token approvals
@@ -200,7 +209,7 @@ abstract contract ERC721G is Initializable {
         tokenIndex = _endId;
     }
 
-    function _mintAndSet(address to_, uint256 amount_, uint8[4] calldata layerIds, uint8[4] calldata xOffsets, uint8[4] calldata yOffsets) internal virtual {
+    function _mintAndSet(address to_, uint256 amount_, uint8[8] calldata layerIds, uint8[8] calldata scales, uint8[8] calldata xOffsets, uint8[8] calldata yOffsets) internal virtual {
         // cannot mint to 0x0
         require(to_ != address(0), "ERC721G: _mintInternal to 0x0");
 
@@ -218,10 +227,11 @@ abstract contract ERC721G is Initializable {
         // _owner;
 
         //this is not great because of all the storage write, I guess to avoid this need to change the way layers are stored
-        for(uint8 i; i < 4; i++) {
-            if(layerIds[i] > 0) _tokenData[_startId].layers[i] = LayerStruct(layerIds[i], xOffsets[i], yOffsets[i]);
+        for(uint8 i; i < 8; i++) {
+            if(layerIds[i] > 0) tokenInfo[_startId].layers[i] = LayerStruct(scales[i] , xOffsets[i], yOffsets[i], layerIds[i]);
         }
         _tokenData[_startId].owner = to_;
+        tokenInfo[_startId].creator = to_;
 
         // process the balance changes and do a loop to phantom-mint the tokens to to_
         unchecked { 
@@ -368,7 +378,7 @@ abstract contract ERC721G is Initializable {
 
     function supportsInterface(bytes4 iid_) public virtual view returns (bool) {
         ////add EIP5050
-        return iid_ == 0x01ffc9a7 || iid_ == 0x80ac58cd || iid_ == 0x5b5e139f || iid_ == 0x7f5828d0 || iid_ == 0x49064906; 
+        return iid_ == 0x01ffc9a7 || iid_ == 0x80ac58cd || iid_ == 0x5b5e139f || iid_ == 0x7f5828d0 || iid_ == 0x49064906 || iid_ == 0x2a55205a; 
     }
 
     function walletOfOwner(address address_) public virtual view 
