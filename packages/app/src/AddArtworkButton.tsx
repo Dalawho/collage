@@ -1,4 +1,4 @@
-import { utils } from "ethers";
+import { constants,utils } from "ethers";
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
 
 import { Button } from "./Button";
@@ -16,11 +16,12 @@ export const AddArtworkButton = ( {artwork} : {artwork: Artwork} ) => {
     contractInterface: Pieces__factory.abi,
     //createToken(uint16 maxSupply, uint80 price, uint256 mintAmount, bytes memory data, uint16 destLen, string memory name)
     functionName: 'createToken',
-    args: [debArtwork.amount, utils.parseEther(parseFloat(debArtwork.price) ? debArtwork.price : "0"), debArtwork.mint, debArtwork.compressed, debArtwork.inputLength, debArtwork.name]
+    args: [[constants.AddressZero, debArtwork.amount, debArtwork.mint, debArtwork.royalties, debArtwork.maxPerWallet, utils.parseEther(parseFloat(debArtwork.price) ? debArtwork.price : "0")], debArtwork.compressed, debArtwork.inputLength, debArtwork.imageType, debArtwork.xSize, debArtwork.ySize, debArtwork.name, debArtwork.royaltyReciever, debArtwork.mintTo, debArtwork.collection, debArtwork.category],
+    overrides: {value: utils.parseEther('0.01')}
   })
   const { data, isLoading, isSuccess , write } = useContractWrite(config);
   console.log(config)
-  console.log(artwork.inputLength);
+  console.log(debArtwork);
   const {isSuccess: txSuccess} = useWaitForTransaction({hash: data?.hash});
   //    {txSuccess && <div>{artName} submitted</div>}
   return (
@@ -32,3 +33,14 @@ export const AddArtworkButton = ( {artwork} : {artwork: Artwork} ) => {
     </Button>
   );
 };
+//FLIGHT_MANIFEST
+//createToken(LayerInfo memory _layer, bytes memory _data, uint16 destLen, uint8 imageType, uint8 xSize, uint8 ySize, string memory _name, address _royaltyReciever, address _mintTo, string memory _collection, string memory _category)
+
+// struct LayerInfo {
+//   address creator;
+//   uint8 maxSupply;
+//   uint8 supplyMinted;
+//   uint8 royalties;
+//   uint8 maxPerWallet;
+//   uint64 price;
+// }

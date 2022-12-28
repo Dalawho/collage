@@ -16,7 +16,7 @@ const _abi = [
         components: [
           {
             internalType: "uint8",
-            name: "layerId",
+            name: "scale",
             type: "uint8",
           },
           {
@@ -29,10 +29,15 @@ const _abi = [
             name: "yOffset",
             type: "uint8",
           },
+          {
+            internalType: "uint16",
+            name: "layerId",
+            type: "uint16",
+          },
         ],
-        internalType: "struct ERC721G.LayerStruct[4]",
+        internalType: "struct SharedStructs.LayerStruct[16]",
         name: "layerIds",
-        type: "tuple[4]",
+        type: "tuple[16]",
       },
     ],
     name: "previewCollage",
@@ -57,7 +62,7 @@ const _abi = [
         components: [
           {
             internalType: "uint8",
-            name: "layerId",
+            name: "scale",
             type: "uint8",
           },
           {
@@ -70,10 +75,20 @@ const _abi = [
             name: "yOffset",
             type: "uint8",
           },
+          {
+            internalType: "uint16",
+            name: "layerId",
+            type: "uint16",
+          },
         ],
-        internalType: "struct ERC721G.LayerStruct[4]",
+        internalType: "struct SharedStructs.LayerStruct[16]",
         name: "layerIds",
-        type: "tuple[4]",
+        type: "tuple[16]",
+      },
+      {
+        internalType: "address",
+        name: "creator",
+        type: "address",
       },
     ],
     name: "tokenURI",

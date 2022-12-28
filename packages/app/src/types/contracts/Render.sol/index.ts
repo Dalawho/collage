@@ -2,4 +2,5 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { IInflator } from "./IInflator";
+export type { IPieces } from "./IPieces";
 export type { Render } from "./Render";

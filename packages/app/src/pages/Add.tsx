@@ -1,6 +1,7 @@
-import {ethers } from "ethers";
+import {constants,ethers } from "ethers";
 import { AbiCoder } from "ethers/lib/utils";
 import parse from 'html-react-parser';
+//import imageSize from "image-size";
 import type { NextPage } from "next";
 import pako from "pako";
 import {PNG} from "pngjs";
@@ -12,15 +13,13 @@ import contractAddresses from "../contracts.json";
 import { Artwork } from "../IArtwork";
 import { Nav } from "../Nav";
 import { Render__factory } from "../types";
-import {getBinarySVG_Array} from '../xqst/xqstLibrary/api';
-import {PixelBuffer} from '../xqst/xqstLibrary/ll_api';
 
 const Add:NextPage = () => {
     
     //const [image, setImage] = useState("0x0a080a0905060708180b0a00040000030000000037946eff6abe30ffffffffff01550005980015554055550168cc05a0001590015a00555400041000");
     const [animalSVG, setAnimalSVG] = useState<string | null>(null);
 
-    const [artwork, setArtwork] = useState<Artwork>({name:"Bob", price: "0.01", amount: 10, mint: 1, compressed: Uint8Array.from([0]), inputLength: 1});
+    const [artwork, setArtwork] = useState<Artwork>({name:"Bob", price: "0.01", amount: 10, mint: 1, compressed: Uint8Array.from([0]), inputLength: 1, xSize: 1, ySize: 1, royaltyReciever: constants.AddressZero, mintTo: constants.AddressZero, collection: "No collection set", category: "No collection set", royalties: 0, maxPerWallet: 1, imageType: 0 });
 
     const fromHexString = (hexString:string) => {
       if(hexString.match(/.{1,2}/g)) {
@@ -41,49 +40,41 @@ const Add:NextPage = () => {
         if(!e.target.files) {
             return "";
         }
+        const callData = async (pixelData:string, width: number, height: number, imageType: number) => {
+          //getSVGForBytes(bytes memory data, uint256 xSize, uint256 ySize, ImageType imageType)
+          const data = await renderContract.getSVGForBytes(pixelData, width, height, imageType);
+          setAnimalSVG(data)
+        }
       const file = e.target.files[0];
       const fileReader = new FileReader();
-      const pixels:pixel[] = [];
       fileReader.onload = function(e: ProgressEvent<FileReader>) {
         //console.log(e.target?.result);
         if((typeof e.target?.result === "undefined") || (e.target?.result === null) || (typeof e.target?.result === "string") ) return "";
-        const png = new PNG({filterType: 4}).parse(new Buffer(e.target?.result), () => {
-          let offset = 0;
-          for (let y = 0; y < png.height; y++) {
-              for (let x = 0; x < png.width; x++) {
-                  pixels.push({
-                      x,
-                      y,
-                      color: `#${png.data.readUInt32BE(offset).toString(16).padStart(8, '0')}`
-                  });
-                  offset += 4;
-              }
-          }
-        const buff = getBinarySVG_Array(pixels);
-        if(!(buff instanceof PixelBuffer)) return ""; // this might be wrong
-        buff.setHeader(); 
-        buff.setLoc([0,0]);
-        buff.setVersion(1);
-
-        const encoded = abiCoder.encode(["bytes"],[buff.getPixelBuffer()] );
+        const buff = new Buffer(e.target?.result);
+        const encoded = abiCoder.encode(["bytes"],["0x" + buff.toString('hex')] );
         const input = fromHexString(encoded.slice(2));
         const comp = pako.deflateRaw(input, { level: 9 });
-        if(comp?.length > 0) {
-          //console.log("got hre");
-          setArtwork({...artwork, compressed: comp, inputLength: input.length});
-          //setArtwork({...artwork, inputLength: input.length});
-        } 
-        //if(comp?.length > 0) setArtwork({...artwork, compressed: comp});
-        console.log(input.length);
-
-        const callData = async (pixelData:string) => {
-          const data = await renderContract.getSVGForBytes( pixelData);
-          setAnimalSVG(data)
+        if(file.name.endsWith("png")) {
+          const png = new PNG({filterType: 4}).parse( buff, () => {        
+          if(comp?.length > 0) {
+            setArtwork({...artwork, compressed: comp, inputLength: input.length, xSize: png.width, ySize: png.height});
+          } 
+          callData("0x" + buff.toString('hex'), png.width, png.height, 0);
+        })}
+        if(file.name.endsWith("gif")) {
+          console.log("got a gif")
+          const img = new Image();
+          img.src = URL.createObjectURL(new Blob([buff]));
+          img.onload = () => {
+            if(comp?.length > 0) {
+              setArtwork({...artwork, compressed: comp, inputLength: input.length, xSize: img.width, ySize: img.height});
+            }
+            callData("0x" + buff.toString('hex'), img.width, img.height, 0);
+            URL.revokeObjectURL(img.src);
+          };
+          }
         }
-        callData(buff.getPixelBuffer());
-  
-        });
-      }
+        
       fileReader.readAsArrayBuffer(file);
     }
     
@@ -123,8 +114,32 @@ const Add:NextPage = () => {
                 <input className="bg-amber-100 border-none focus:outline-none focus:border-none w-36" type="text" value={artwork.price} onChange={(e) => handleArtworkChange("price", e.target.value)} />
               </div>
               <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-96 justify-between">
+                <h2 className=" pr-2">Mint To:</h2>
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none w-36" type="text" value={artwork.mintTo} onChange={(e) => handleArtworkChange("mintTo", e.target.value)} />
+              </div>
+              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-96 justify-between">
+                <h2 className=" pr-2">royaltyReciever:</h2>
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none w-36" type="text" value={artwork.royaltyReciever} onChange={(e) => handleArtworkChange("royaltyReciever", e.target.value)} />
+              </div>
+              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-96 justify-between">
+                <h2 className=" pr-2">Collection:</h2>
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none w-36" type="text" value={artwork.collection} onChange={(e) => handleArtworkChange("collection", e.target.value)} />
+              </div>
+              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-96 justify-between">
+                <h2 className=" pr-2">Category:</h2>
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none w-36" type="text" value={artwork.category} onChange={(e) => handleArtworkChange("category", e.target.value)} />
+              </div>
+              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-96 justify-between">
                 <h2 className=" pr-2">Mint to creator wallet:</h2>
                 <input className="bg-amber-100 border-none focus:outline-none focus:border-none w-36" type="text" value={artwork.mint} onChange={(e) => handleArtworkChange("mint", parseInt(e.target.value) ? parseInt(e.target.value) : 0)} />
+              </div>
+              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-96 justify-between">
+                <h2 className=" pr-2">MaxPerWallet:</h2>
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none w-36" type="text" value={artwork.maxPerWallet} onChange={(e) => handleArtworkChange("maxPerWallet", parseInt(e.target.value) ? parseInt(e.target.value) : 0)} />
+              </div>
+              <div className="flex border-2 border-slate-800 rounded-lg pl-3 pr-1 w-96 justify-between">
+                <h2 className=" pr-2">Royalties:</h2>
+                <input className="bg-amber-100 border-none focus:outline-none focus:border-none w-36" type="text" value={artwork.royalties} onChange={(e) => handleArtworkChange("royalties", parseInt(e.target.value) ? parseInt(e.target.value) : 0)} />
               </div>
               <AddArtworkButton artwork={artwork} />
                 </div>

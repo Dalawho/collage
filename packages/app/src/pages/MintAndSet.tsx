@@ -14,7 +14,7 @@ import { Collage__factory } from "../types";
 
 const MintAndSet:NextPage = () => {
     
-    const [locations, setLocations] = useState<Locations[]>([{x:0, y:0},{x:0, y:0},{x:0, y:0},{x:0, y:0} ]);
+    const [locations, setLocations] = useState<Locations[]>(Array.from({length: 16}, () => ({x: 0, y: 0, scale: 1})));
     const [animalSVG, setAnimalSVG] = useState<string | null>(null);
     const [pieceIds, setPieceIds] = useState([0,0,0,0]);
 
@@ -25,6 +25,7 @@ const MintAndSet:NextPage = () => {
     interface Locations {
         x: number;
         y: number;
+        scale: number;
     }
 
   const handlePiecesId = (index: number, e?: SelectTrait | unknown | null) => {

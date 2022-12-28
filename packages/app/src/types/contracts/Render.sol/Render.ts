@@ -27,41 +27,45 @@ import type {
   PromiseOrValue,
 } from "../../common";
 
-export declare namespace Render {
+export declare namespace SharedStructs {
   export type LayerStructStruct = {
-    layerId: PromiseOrValue<BigNumberish>;
+    scale: PromiseOrValue<BigNumberish>;
     xOffset: PromiseOrValue<BigNumberish>;
     yOffset: PromiseOrValue<BigNumberish>;
+    layerId: PromiseOrValue<BigNumberish>;
   };
 
-  export type LayerStructStructOutput = [number, number, number] & {
-    layerId: number;
+  export type LayerStructStructOutput = [number, number, number, number] & {
+    scale: number;
     xOffset: number;
     yOffset: number;
+    layerId: number;
   };
 }
 
 export interface RenderInterface extends utils.Interface {
   functions: {
-    "addToken(bytes,uint16,string)": FunctionFragment;
-    "getSVGForBytes(bytes)": FunctionFragment;
+    "MAX_LAYERS()": FunctionFragment;
+    "addToken(bytes,uint16,uint8,uint8,uint8,string)": FunctionFragment;
+    "getSVGForBytes(bytes,uint256,uint256,uint8)": FunctionFragment;
     "gfx()": FunctionFragment;
     "inflateLib()": FunctionFragment;
     "initialize()": FunctionFragment;
     "owner()": FunctionFragment;
     "pieces()": FunctionFragment;
-    "previewCollage(tuple[4])": FunctionFragment;
+    "previewCollage(tuple[16])": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
     "setGfx(address)": FunctionFragment;
     "setInflator(address)": FunctionFragment;
     "setPieces(address)": FunctionFragment;
-    "tokenURI(uint256,tuple[4])": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
+    "tokenURI(uint256,tuple[16],address)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "MAX_LAYERS"
       | "addToken"
       | "getSVGForBytes"
       | "gfx"
@@ -74,22 +78,34 @@ export interface RenderInterface extends utils.Interface {
       | "setGfx"
       | "setInflator"
       | "setPieces"
-      | "tokenURI(uint256,tuple[4])"
       | "tokenURI(uint256)"
+      | "tokenURI(uint256,tuple[16],address)"
       | "transferOwnership"
   ): FunctionFragment;
 
   encodeFunctionData(
+    functionFragment: "MAX_LAYERS",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
     functionFragment: "addToken",
     values: [
       PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>
     ]
   ): string;
   encodeFunctionData(
     functionFragment: "getSVGForBytes",
-    values: [PromiseOrValue<BytesLike>]
+    values: [
+      PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>
+    ]
   ): string;
   encodeFunctionData(functionFragment: "gfx", values?: undefined): string;
   encodeFunctionData(
@@ -104,14 +120,7 @@ export interface RenderInterface extends utils.Interface {
   encodeFunctionData(functionFragment: "pieces", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "previewCollage",
-    values: [
-      [
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct
-      ]
-    ]
+    values: [SharedStructs.LayerStructStruct[]]
   ): string;
   encodeFunctionData(
     functionFragment: "renounceOwnership",
@@ -130,26 +139,23 @@ export interface RenderInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
-    functionFragment: "tokenURI(uint256,tuple[4])",
-    values: [
-      PromiseOrValue<BigNumberish>,
-      [
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct
-      ]
-    ]
-  ): string;
-  encodeFunctionData(
     functionFragment: "tokenURI(uint256)",
     values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenURI(uint256,tuple[16],address)",
+    values: [
+      PromiseOrValue<BigNumberish>,
+      SharedStructs.LayerStructStruct[],
+      PromiseOrValue<string>
+    ]
   ): string;
   encodeFunctionData(
     functionFragment: "transferOwnership",
     values: [PromiseOrValue<string>]
   ): string;
 
+  decodeFunctionResult(functionFragment: "MAX_LAYERS", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "addToken", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getSVGForBytes",
@@ -175,11 +181,11 @@ export interface RenderInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "setPieces", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "tokenURI(uint256,tuple[4])",
+    functionFragment: "tokenURI(uint256)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
-    functionFragment: "tokenURI(uint256)",
+    functionFragment: "tokenURI(uint256,tuple[16],address)",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -242,15 +248,23 @@ export interface Render extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    MAX_LAYERS(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     addToken(
       _data: PromiseOrValue<BytesLike>,
       destLen: PromiseOrValue<BigNumberish>,
+      imageType: PromiseOrValue<BigNumberish>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
       name: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     getSVGForBytes(
       data: PromiseOrValue<BytesLike>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
+      imageType: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -267,12 +281,7 @@ export interface Render extends BaseContract {
     pieces(overrides?: CallOverrides): Promise<[string]>;
 
     previewCollage(
-      layerIds: [
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct
-      ],
+      layerIds: SharedStructs.LayerStructStruct[],
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -295,19 +304,15 @@ export interface Render extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
-    "tokenURI(uint256,tuple[4])"(
+    "tokenURI(uint256)"(
       tokenId: PromiseOrValue<BigNumberish>,
-      layerIds: [
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct
-      ],
       overrides?: CallOverrides
     ): Promise<[string]>;
 
-    "tokenURI(uint256)"(
+    "tokenURI(uint256,tuple[16],address)"(
       tokenId: PromiseOrValue<BigNumberish>,
+      layerIds: SharedStructs.LayerStructStruct[],
+      creator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -317,15 +322,23 @@ export interface Render extends BaseContract {
     ): Promise<ContractTransaction>;
   };
 
+  MAX_LAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
   addToken(
     _data: PromiseOrValue<BytesLike>,
     destLen: PromiseOrValue<BigNumberish>,
+    imageType: PromiseOrValue<BigNumberish>,
+    xSize: PromiseOrValue<BigNumberish>,
+    ySize: PromiseOrValue<BigNumberish>,
     name: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   getSVGForBytes(
     data: PromiseOrValue<BytesLike>,
+    xSize: PromiseOrValue<BigNumberish>,
+    ySize: PromiseOrValue<BigNumberish>,
+    imageType: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -342,12 +355,7 @@ export interface Render extends BaseContract {
   pieces(overrides?: CallOverrides): Promise<string>;
 
   previewCollage(
-    layerIds: [
-      Render.LayerStructStruct,
-      Render.LayerStructStruct,
-      Render.LayerStructStruct,
-      Render.LayerStructStruct
-    ],
+    layerIds: SharedStructs.LayerStructStruct[],
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -370,19 +378,15 @@ export interface Render extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
-  "tokenURI(uint256,tuple[4])"(
+  "tokenURI(uint256)"(
     tokenId: PromiseOrValue<BigNumberish>,
-    layerIds: [
-      Render.LayerStructStruct,
-      Render.LayerStructStruct,
-      Render.LayerStructStruct,
-      Render.LayerStructStruct
-    ],
     overrides?: CallOverrides
   ): Promise<string>;
 
-  "tokenURI(uint256)"(
+  "tokenURI(uint256,tuple[16],address)"(
     tokenId: PromiseOrValue<BigNumberish>,
+    layerIds: SharedStructs.LayerStructStruct[],
+    creator: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -392,15 +396,23 @@ export interface Render extends BaseContract {
   ): Promise<ContractTransaction>;
 
   callStatic: {
+    MAX_LAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
     addToken(
       _data: PromiseOrValue<BytesLike>,
       destLen: PromiseOrValue<BigNumberish>,
+      imageType: PromiseOrValue<BigNumberish>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
       name: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
     getSVGForBytes(
       data: PromiseOrValue<BytesLike>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
+      imageType: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -415,12 +427,7 @@ export interface Render extends BaseContract {
     pieces(overrides?: CallOverrides): Promise<string>;
 
     previewCollage(
-      layerIds: [
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct
-      ],
+      layerIds: SharedStructs.LayerStructStruct[],
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -441,19 +448,15 @@ export interface Render extends BaseContract {
       overrides?: CallOverrides
     ): Promise<void>;
 
-    "tokenURI(uint256,tuple[4])"(
+    "tokenURI(uint256)"(
       tokenId: PromiseOrValue<BigNumberish>,
-      layerIds: [
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct
-      ],
       overrides?: CallOverrides
     ): Promise<string>;
 
-    "tokenURI(uint256)"(
+    "tokenURI(uint256,tuple[16],address)"(
       tokenId: PromiseOrValue<BigNumberish>,
+      layerIds: SharedStructs.LayerStructStruct[],
+      creator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
 
@@ -478,15 +481,23 @@ export interface Render extends BaseContract {
   };
 
   estimateGas: {
+    MAX_LAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
     addToken(
       _data: PromiseOrValue<BytesLike>,
       destLen: PromiseOrValue<BigNumberish>,
+      imageType: PromiseOrValue<BigNumberish>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
       name: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     getSVGForBytes(
       data: PromiseOrValue<BytesLike>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
+      imageType: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -503,12 +514,7 @@ export interface Render extends BaseContract {
     pieces(overrides?: CallOverrides): Promise<BigNumber>;
 
     previewCollage(
-      layerIds: [
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct
-      ],
+      layerIds: SharedStructs.LayerStructStruct[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -531,19 +537,15 @@ export interface Render extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
-    "tokenURI(uint256,tuple[4])"(
+    "tokenURI(uint256)"(
       tokenId: PromiseOrValue<BigNumberish>,
-      layerIds: [
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct
-      ],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
-    "tokenURI(uint256)"(
+    "tokenURI(uint256,tuple[16],address)"(
       tokenId: PromiseOrValue<BigNumberish>,
+      layerIds: SharedStructs.LayerStructStruct[],
+      creator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -554,15 +556,23 @@ export interface Render extends BaseContract {
   };
 
   populateTransaction: {
+    MAX_LAYERS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     addToken(
       _data: PromiseOrValue<BytesLike>,
       destLen: PromiseOrValue<BigNumberish>,
+      imageType: PromiseOrValue<BigNumberish>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
       name: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     getSVGForBytes(
       data: PromiseOrValue<BytesLike>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
+      imageType: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -579,12 +589,7 @@ export interface Render extends BaseContract {
     pieces(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     previewCollage(
-      layerIds: [
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct
-      ],
+      layerIds: SharedStructs.LayerStructStruct[],
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -607,19 +612,15 @@ export interface Render extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
-    "tokenURI(uint256,tuple[4])"(
+    "tokenURI(uint256)"(
       tokenId: PromiseOrValue<BigNumberish>,
-      layerIds: [
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct,
-        Render.LayerStructStruct
-      ],
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
-    "tokenURI(uint256)"(
+    "tokenURI(uint256,tuple[16],address)"(
       tokenId: PromiseOrValue<BigNumberish>,
+      layerIds: SharedStructs.LayerStructStruct[],
+      creator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 

@@ -21,24 +21,26 @@ import type {
   PromiseOrValue,
 } from "../../common";
 
-export declare namespace ERC721G {
+export declare namespace SharedStructs {
   export type LayerStructStruct = {
-    layerId: PromiseOrValue<BigNumberish>;
+    scale: PromiseOrValue<BigNumberish>;
     xOffset: PromiseOrValue<BigNumberish>;
     yOffset: PromiseOrValue<BigNumberish>;
+    layerId: PromiseOrValue<BigNumberish>;
   };
 
-  export type LayerStructStructOutput = [number, number, number] & {
-    layerId: number;
+  export type LayerStructStructOutput = [number, number, number, number] & {
+    scale: number;
     xOffset: number;
     yOffset: number;
+    layerId: number;
   };
 }
 
 export interface IRenderInterface extends utils.Interface {
   functions: {
-    "previewCollage(tuple[4])": FunctionFragment;
-    "tokenURI(uint256,tuple[4])": FunctionFragment;
+    "previewCollage(tuple[16])": FunctionFragment;
+    "tokenURI(uint256,tuple[16],address)": FunctionFragment;
   };
 
   getFunction(
@@ -47,25 +49,14 @@ export interface IRenderInterface extends utils.Interface {
 
   encodeFunctionData(
     functionFragment: "previewCollage",
-    values: [
-      [
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct
-      ]
-    ]
+    values: [SharedStructs.LayerStructStruct[]]
   ): string;
   encodeFunctionData(
     functionFragment: "tokenURI",
     values: [
       PromiseOrValue<BigNumberish>,
-      [
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct
-      ]
+      SharedStructs.LayerStructStruct[],
+      PromiseOrValue<string>
     ]
   ): string;
 
@@ -106,67 +97,40 @@ export interface IRender extends BaseContract {
 
   functions: {
     previewCollage(
-      layerIds: [
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct
-      ],
+      layerIds: SharedStructs.LayerStructStruct[],
       overrides?: CallOverrides
     ): Promise<[string]>;
 
     tokenURI(
       tokenId: PromiseOrValue<BigNumberish>,
-      layerIds: [
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct
-      ],
+      layerIds: SharedStructs.LayerStructStruct[],
+      creator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<[string]>;
   };
 
   previewCollage(
-    layerIds: [
-      ERC721G.LayerStructStruct,
-      ERC721G.LayerStructStruct,
-      ERC721G.LayerStructStruct,
-      ERC721G.LayerStructStruct
-    ],
+    layerIds: SharedStructs.LayerStructStruct[],
     overrides?: CallOverrides
   ): Promise<string>;
 
   tokenURI(
     tokenId: PromiseOrValue<BigNumberish>,
-    layerIds: [
-      ERC721G.LayerStructStruct,
-      ERC721G.LayerStructStruct,
-      ERC721G.LayerStructStruct,
-      ERC721G.LayerStructStruct
-    ],
+    layerIds: SharedStructs.LayerStructStruct[],
+    creator: PromiseOrValue<string>,
     overrides?: CallOverrides
   ): Promise<string>;
 
   callStatic: {
     previewCollage(
-      layerIds: [
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct
-      ],
+      layerIds: SharedStructs.LayerStructStruct[],
       overrides?: CallOverrides
     ): Promise<string>;
 
     tokenURI(
       tokenId: PromiseOrValue<BigNumberish>,
-      layerIds: [
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct
-      ],
+      layerIds: SharedStructs.LayerStructStruct[],
+      creator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<string>;
   };
@@ -175,46 +139,28 @@ export interface IRender extends BaseContract {
 
   estimateGas: {
     previewCollage(
-      layerIds: [
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct
-      ],
+      layerIds: SharedStructs.LayerStructStruct[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     tokenURI(
       tokenId: PromiseOrValue<BigNumberish>,
-      layerIds: [
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct
-      ],
+      layerIds: SharedStructs.LayerStructStruct[],
+      creator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
   };
 
   populateTransaction: {
     previewCollage(
-      layerIds: [
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct
-      ],
+      layerIds: SharedStructs.LayerStructStruct[],
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     tokenURI(
       tokenId: PromiseOrValue<BigNumberish>,
-      layerIds: [
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct,
-        ERC721G.LayerStructStruct
-      ],
+      layerIds: SharedStructs.LayerStructStruct[],
+      creator: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
   };

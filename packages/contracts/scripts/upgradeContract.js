@@ -69,23 +69,23 @@ async function pngToData(img, animal) {
 };
 
 async function main() {
-  Pieces = await ethers.getContractFactory("Pieces");
+ // Pieces = await ethers.getContractFactory("Pieces");
 //   pieces = await upgrades.deployProxy(Pieces)//, {gasPrice: 1000000000});
-await upgrades.upgradeProxy("0xBd6797973E270dCa15755F5F96D196ed2aba7F95", Pieces);
+//await upgrades.upgradeProxy("0xBd6797973E270dCa15755F5F96D196ed2aba7F95", Pieces);
   
  //await pieces.deployed();
 //   await sleep(20000);
 
-    Collage = await ethers.getContractFactory("Collage");
-    await upgrades.upgradeProxy("0xB972051bBa0821f9b4DBcCf0c37a959759963EA7", Collage);
+    // Collage = await ethers.getContractFactory("Collage");
+    // await upgrades.upgradeProxy("0xB972051bBa0821f9b4DBcCf0c37a959759963EA7", Collage);
  
 //   collage = await upgrades.deployProxy(Collage)//, {gasPrice: 1000000000});
 //   await collage.deployed();
 //   await sleep(20000);
 
-  // Render = await ethers.getContractFactory("Render");
+   Render = await ethers.getContractFactory("Render");
   //render = await upgrades.deployProxy(Render)//, {gasPrice: 1000000000});
-  // await upgrades.upgradeProxy("0xb99a163B302604c8A24b1D27F81Be71d40Ce7Ad8", Render);
+   await upgrades.upgradeProxy("0xe74dc33470a3b8353b05e9e3368c2fAeca1ebC79", Render);
   //await render.deployed();
   //await sleep(20000);
 

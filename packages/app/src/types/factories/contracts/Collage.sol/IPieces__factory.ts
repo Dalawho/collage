@@ -36,9 +36,9 @@ const _abi = [
   {
     inputs: [
       {
-        internalType: "uint8[4]",
+        internalType: "uint16[16]",
         name: "layerIds",
-        type: "uint8[4]",
+        type: "uint16[16]",
       },
     ],
     name: "getPriceAndBurn",

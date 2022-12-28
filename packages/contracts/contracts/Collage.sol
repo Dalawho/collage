@@ -8,13 +8,13 @@ import "./ERC721G.sol";
 //import "hardhat/console.sol";
 
 interface IRender {
-     function tokenURI(uint256 tokenId, ERC721G.LayerStruct[8] memory layerIds) external view returns (string memory); 
-    function previewCollage(ERC721G.LayerStruct[8] memory layerIds) external view returns(string memory);
+     function tokenURI(uint256 tokenId, ERC721G.LayerStruct[16] memory layerIds, address creator) external view returns (string memory); 
+    function previewCollage(ERC721G.LayerStruct[16] memory layerIds) external view returns(string memory);
 }
 
 interface IPieces {
     function burn( address account, uint256 id, uint256 value) external;
-    function getPriceAndBurn(uint8[8] calldata layerIds) external returns (uint256 totalPrice);
+    function getPriceAndBurn(uint16[16] calldata layerIds) external returns (uint256 totalPrice);
 }
 
 contract Collage is ERC721G, OwnableUpgradeable {
@@ -32,8 +32,8 @@ contract Collage is ERC721G, OwnableUpgradeable {
 
     IRender public render;
     IPieces public pieces;
-    uint256 public constant MAX_LAYERS = 8;
     uint256 public COLLAGE_PRICE;
+
 
     function initialize() initializer public {
         __ERC721G_init("Collage", "CLG", 1, 30);
@@ -57,7 +57,7 @@ contract Collage is ERC721G, OwnableUpgradeable {
         emit MetadataUpdate(tokenId);
     }
 
-    function mintAndSet(uint8[MAX_LAYERS] calldata layerIds, uint8[MAX_LAYERS] calldata scales, uint8[MAX_LAYERS] calldata xOffsets, uint8[MAX_LAYERS] calldata yOffsets) public payable {
+    function mintAndSet(uint16[MAX_LAYERS] calldata layerIds, uint8[MAX_LAYERS] calldata scales, uint8[MAX_LAYERS] calldata xOffsets, uint8[MAX_LAYERS] calldata yOffsets) public payable {
         if(totalSupply() + 1 > maxSupply) revert MaxSupplyReached();
         //if(ERC721G._balanceData[msg.sender].mintedAmount + amount_ > maxPerWallet) revert maxMintsPerWallet();
         //check mint amount
@@ -68,7 +68,7 @@ contract Collage is ERC721G, OwnableUpgradeable {
         _mintAndSet(msg.sender, 1, layerIds, scales, xOffsets, yOffsets);
     }
 
-    function mintAndBuy(uint8[MAX_LAYERS] calldata layerIds, uint8[MAX_LAYERS] calldata scales, uint8[MAX_LAYERS] calldata xOffsets, uint8[MAX_LAYERS] calldata yOffsets) public payable {
+    function mintAndBuy(uint16[MAX_LAYERS] calldata layerIds, uint8[MAX_LAYERS] calldata scales, uint8[MAX_LAYERS] calldata xOffsets, uint8[MAX_LAYERS] calldata yOffsets) public payable {
         if(totalSupply() + 1 > maxSupply) revert MaxSupplyReached();
         //if(ERC721G._balanceData[msg.sender].mintedAmount + amount_ > maxPerWallet) revert maxMintsPerWallet();
         //check mint amount
@@ -97,7 +97,7 @@ contract Collage is ERC721G, OwnableUpgradeable {
     ////////////////////////  TokenURI /////////////////////////////////
 
     function tokenURI(uint256 tokenId) override public view returns (string memory) { 
-        return render.tokenURI(tokenId, tokenInfo[tokenId].layers);
+        return render.tokenURI(tokenId, tokenInfo[tokenId].layers, tokenInfo[tokenId].creator);
     }
 
     function previewTokenCollage(uint256 tokenId, uint8 layerNr, uint8 scale, uint8 xOffset, uint8 yOffset, uint8 pieceId) public view returns (string memory) { 

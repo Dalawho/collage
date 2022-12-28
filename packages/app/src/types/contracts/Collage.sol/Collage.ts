@@ -29,54 +29,20 @@ import type {
 } from "../../common";
 
 export declare namespace ERC721G {
-  export type LayerStructStruct = {
-    layerId: PromiseOrValue<BigNumberish>;
-    xOffset: PromiseOrValue<BigNumberish>;
-    yOffset: PromiseOrValue<BigNumberish>;
-  };
+  export type OwnerStructStruct = { owner: PromiseOrValue<string> };
 
-  export type LayerStructStructOutput = [number, number, number] & {
-    layerId: number;
-    xOffset: number;
-    yOffset: number;
-  };
-
-  export type OwnerStructStruct = {
-    owner: PromiseOrValue<string>;
-    layers: [
-      ERC721G.LayerStructStruct,
-      ERC721G.LayerStructStruct,
-      ERC721G.LayerStructStruct,
-      ERC721G.LayerStructStruct
-    ];
-  };
-
-  export type OwnerStructStructOutput = [
-    string,
-    [
-      ERC721G.LayerStructStructOutput,
-      ERC721G.LayerStructStructOutput,
-      ERC721G.LayerStructStructOutput,
-      ERC721G.LayerStructStructOutput
-    ]
-  ] & {
-    owner: string;
-    layers: [
-      ERC721G.LayerStructStructOutput,
-      ERC721G.LayerStructStructOutput,
-      ERC721G.LayerStructStructOutput,
-      ERC721G.LayerStructStructOutput
-    ];
-  };
+  export type OwnerStructStructOutput = [string] & { owner: string };
 }
 
 export interface CollageInterface extends utils.Interface {
   functions: {
+    "COLLAGE_PRICE()": FunctionFragment;
+    "MAX_LAYERS()": FunctionFragment;
     "_balanceData(address)": FunctionFragment;
     "_getTokenDataOf(uint256)": FunctionFragment;
     "_tokenData(uint256)": FunctionFragment;
     "_trueOwnerOf(uint256)": FunctionFragment;
-    "addLayer(uint256,uint8,uint8,uint8,uint8)": FunctionFragment;
+    "addLayer(uint256,uint8,uint8,uint8,uint8,uint16)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
     "getApproved(uint256)": FunctionFragment;
@@ -85,26 +51,29 @@ export interface CollageInterface extends utils.Interface {
     "maxBatchSize()": FunctionFragment;
     "maxSupply()": FunctionFragment;
     "mint()": FunctionFragment;
-    "mintAndBuy(uint8[4],uint8[4],uint8[4])": FunctionFragment;
-    "mintAndSet(uint8[4],uint8[4],uint8[4])": FunctionFragment;
+    "mintAndBuy(uint16[16],uint8[16],uint8[16],uint8[16])": FunctionFragment;
+    "mintAndSet(uint16[16],uint8[16],uint8[16],uint8[16])": FunctionFragment;
     "mintIndex(uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "owner()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
     "pieces()": FunctionFragment;
-    "previewCollage(uint8[4],uint8[4],uint8[4])": FunctionFragment;
-    "previewTokenCollage(uint256,uint8,uint8,uint8,uint8)": FunctionFragment;
+    "previewCollage(uint16[16],uint8[16],uint8[16],uint8[16])": FunctionFragment;
+    "previewTokenCollage(uint256,uint8,uint8,uint8,uint8,uint8)": FunctionFragment;
     "render()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "royaltyReciever(uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
+    "setCollagePrice(uint256)": FunctionFragment;
     "setPieces(address)": FunctionFragment;
     "setRender(address)": FunctionFragment;
     "startTokenId()": FunctionFragment;
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenIndex()": FunctionFragment;
+    "tokenInfo(uint256)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
     "totalBalanceOf(address)": FunctionFragment;
     "totalMinted(address)": FunctionFragment;
@@ -116,6 +85,8 @@ export interface CollageInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "COLLAGE_PRICE"
+      | "MAX_LAYERS"
       | "_balanceData"
       | "_getTokenDataOf"
       | "_tokenData"
@@ -140,15 +111,18 @@ export interface CollageInterface extends utils.Interface {
       | "previewTokenCollage"
       | "render"
       | "renounceOwnership"
+      | "royaltyReciever"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
+      | "setCollagePrice"
       | "setPieces"
       | "setRender"
       | "startTokenId"
       | "supportsInterface"
       | "symbol"
       | "tokenIndex"
+      | "tokenInfo"
       | "tokenURI"
       | "totalBalanceOf"
       | "totalMinted"
@@ -158,6 +132,14 @@ export interface CollageInterface extends utils.Interface {
       | "walletOfOwner"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "COLLAGE_PRICE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "MAX_LAYERS",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "_balanceData",
     values: [PromiseOrValue<string>]
@@ -177,6 +159,7 @@ export interface CollageInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "addLayer",
     values: [
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
@@ -213,47 +196,19 @@ export interface CollageInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "mintAndBuy",
     values: [
-      [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ]
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[]
     ]
   ): string;
   encodeFunctionData(
     functionFragment: "mintAndSet",
     values: [
-      [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ]
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[]
     ]
   ): string;
   encodeFunctionData(
@@ -270,29 +225,16 @@ export interface CollageInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "previewCollage",
     values: [
-      [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ]
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[],
+      PromiseOrValue<BigNumberish>[]
     ]
   ): string;
   encodeFunctionData(
     functionFragment: "previewTokenCollage",
     values: [
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
@@ -304,6 +246,10 @@ export interface CollageInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "renounceOwnership",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "royaltyReciever",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
@@ -327,6 +273,10 @@ export interface CollageInterface extends utils.Interface {
     values: [PromiseOrValue<string>, PromiseOrValue<boolean>]
   ): string;
   encodeFunctionData(
+    functionFragment: "setCollagePrice",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "setPieces",
     values: [PromiseOrValue<string>]
   ): string;
@@ -346,6 +296,10 @@ export interface CollageInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "tokenIndex",
     values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "tokenInfo",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "tokenURI",
@@ -380,6 +334,11 @@ export interface CollageInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
 
+  decodeFunctionResult(
+    functionFragment: "COLLAGE_PRICE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "MAX_LAYERS", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "_balanceData",
     data: BytesLike
@@ -432,6 +391,10 @@ export interface CollageInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "royaltyReciever",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
   ): Result;
@@ -441,6 +404,10 @@ export interface CollageInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "setApprovalForAll",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setCollagePrice",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "setPieces", data: BytesLike): Result;
@@ -455,6 +422,7 @@ export interface CollageInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "tokenIndex", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "tokenInfo", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalBalanceOf",
@@ -590,6 +558,10 @@ export interface Collage extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    COLLAGE_PRICE(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    MAX_LAYERS(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     _balanceData(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -619,9 +591,10 @@ export interface Collage extends BaseContract {
     addLayer(
       tokenId: PromiseOrValue<BigNumberish>,
       layer: PromiseOrValue<BigNumberish>,
-      layerId: PromiseOrValue<BigNumberish>,
+      scale: PromiseOrValue<BigNumberish>,
       xOffset: PromiseOrValue<BigNumberish>,
       yOffset: PromiseOrValue<BigNumberish>,
+      layerId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -660,46 +633,18 @@ export interface Collage extends BaseContract {
     ): Promise<ContractTransaction>;
 
     mintAndBuy(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      xOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      yOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
+      scales: PromiseOrValue<BigNumberish>[],
+      xOffsets: PromiseOrValue<BigNumberish>[],
+      yOffsets: PromiseOrValue<BigNumberish>[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     mintAndSet(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      xOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      yOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
+      scales: PromiseOrValue<BigNumberish>[],
+      xOffsets: PromiseOrValue<BigNumberish>[],
+      yOffsets: PromiseOrValue<BigNumberish>[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -720,33 +665,20 @@ export interface Collage extends BaseContract {
     pieces(overrides?: CallOverrides): Promise<[string]>;
 
     previewCollage(
-      pieceIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      xOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      yOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      pieceIds: PromiseOrValue<BigNumberish>[],
+      scale: PromiseOrValue<BigNumberish>[],
+      xOffsets: PromiseOrValue<BigNumberish>[],
+      yOffsets: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<[string]>;
 
     previewTokenCollage(
       tokenId: PromiseOrValue<BigNumberish>,
       layerNr: PromiseOrValue<BigNumberish>,
-      pieceId: PromiseOrValue<BigNumberish>,
+      scale: PromiseOrValue<BigNumberish>,
       xOffset: PromiseOrValue<BigNumberish>,
       yOffset: PromiseOrValue<BigNumberish>,
+      pieceId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
 
@@ -755,6 +687,11 @@ export interface Collage extends BaseContract {
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
+
+    royaltyReciever(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
 
     "safeTransferFrom(address,address,uint256)"(
       from_: PromiseOrValue<string>,
@@ -774,6 +711,11 @@ export interface Collage extends BaseContract {
     setApprovalForAll(
       operator_: PromiseOrValue<string>,
       approved_: PromiseOrValue<boolean>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setCollagePrice(
+      _newCollagePrice: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -797,6 +739,11 @@ export interface Collage extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
     tokenIndex(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    tokenInfo(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string] & { creator: string }>;
 
     tokenURI(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -833,6 +780,10 @@ export interface Collage extends BaseContract {
     ): Promise<[BigNumber[]]>;
   };
 
+  COLLAGE_PRICE(overrides?: CallOverrides): Promise<BigNumber>;
+
+  MAX_LAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
   _balanceData(
     arg0: PromiseOrValue<string>,
     overrides?: CallOverrides
@@ -862,9 +813,10 @@ export interface Collage extends BaseContract {
   addLayer(
     tokenId: PromiseOrValue<BigNumberish>,
     layer: PromiseOrValue<BigNumberish>,
-    layerId: PromiseOrValue<BigNumberish>,
+    scale: PromiseOrValue<BigNumberish>,
     xOffset: PromiseOrValue<BigNumberish>,
     yOffset: PromiseOrValue<BigNumberish>,
+    layerId: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -903,46 +855,18 @@ export interface Collage extends BaseContract {
   ): Promise<ContractTransaction>;
 
   mintAndBuy(
-    layerIds: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ],
-    xOffsets: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ],
-    yOffsets: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ],
+    layerIds: PromiseOrValue<BigNumberish>[],
+    scales: PromiseOrValue<BigNumberish>[],
+    xOffsets: PromiseOrValue<BigNumberish>[],
+    yOffsets: PromiseOrValue<BigNumberish>[],
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   mintAndSet(
-    layerIds: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ],
-    xOffsets: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ],
-    yOffsets: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ],
+    layerIds: PromiseOrValue<BigNumberish>[],
+    scales: PromiseOrValue<BigNumberish>[],
+    xOffsets: PromiseOrValue<BigNumberish>[],
+    yOffsets: PromiseOrValue<BigNumberish>[],
     overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -963,33 +887,20 @@ export interface Collage extends BaseContract {
   pieces(overrides?: CallOverrides): Promise<string>;
 
   previewCollage(
-    pieceIds: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ],
-    xOffsets: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ],
-    yOffsets: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ],
+    pieceIds: PromiseOrValue<BigNumberish>[],
+    scale: PromiseOrValue<BigNumberish>[],
+    xOffsets: PromiseOrValue<BigNumberish>[],
+    yOffsets: PromiseOrValue<BigNumberish>[],
     overrides?: CallOverrides
   ): Promise<string>;
 
   previewTokenCollage(
     tokenId: PromiseOrValue<BigNumberish>,
     layerNr: PromiseOrValue<BigNumberish>,
-    pieceId: PromiseOrValue<BigNumberish>,
+    scale: PromiseOrValue<BigNumberish>,
     xOffset: PromiseOrValue<BigNumberish>,
     yOffset: PromiseOrValue<BigNumberish>,
+    pieceId: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<string>;
 
@@ -998,6 +909,11 @@ export interface Collage extends BaseContract {
   renounceOwnership(
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
+
+  royaltyReciever(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   "safeTransferFrom(address,address,uint256)"(
     from_: PromiseOrValue<string>,
@@ -1017,6 +933,11 @@ export interface Collage extends BaseContract {
   setApprovalForAll(
     operator_: PromiseOrValue<string>,
     approved_: PromiseOrValue<boolean>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setCollagePrice(
+    _newCollagePrice: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1040,6 +961,11 @@ export interface Collage extends BaseContract {
   symbol(overrides?: CallOverrides): Promise<string>;
 
   tokenIndex(overrides?: CallOverrides): Promise<BigNumber>;
+
+  tokenInfo(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
 
   tokenURI(
     tokenId: PromiseOrValue<BigNumberish>,
@@ -1076,6 +1002,10 @@ export interface Collage extends BaseContract {
   ): Promise<BigNumber[]>;
 
   callStatic: {
+    COLLAGE_PRICE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    MAX_LAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
     _balanceData(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1105,9 +1035,10 @@ export interface Collage extends BaseContract {
     addLayer(
       tokenId: PromiseOrValue<BigNumberish>,
       layer: PromiseOrValue<BigNumberish>,
-      layerId: PromiseOrValue<BigNumberish>,
+      scale: PromiseOrValue<BigNumberish>,
       xOffset: PromiseOrValue<BigNumberish>,
       yOffset: PromiseOrValue<BigNumberish>,
+      layerId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1142,46 +1073,18 @@ export interface Collage extends BaseContract {
     mint(overrides?: CallOverrides): Promise<void>;
 
     mintAndBuy(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      xOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      yOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
+      scales: PromiseOrValue<BigNumberish>[],
+      xOffsets: PromiseOrValue<BigNumberish>[],
+      yOffsets: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
     mintAndSet(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      xOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      yOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
+      scales: PromiseOrValue<BigNumberish>[],
+      xOffsets: PromiseOrValue<BigNumberish>[],
+      yOffsets: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1202,39 +1105,31 @@ export interface Collage extends BaseContract {
     pieces(overrides?: CallOverrides): Promise<string>;
 
     previewCollage(
-      pieceIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      xOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      yOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      pieceIds: PromiseOrValue<BigNumberish>[],
+      scale: PromiseOrValue<BigNumberish>[],
+      xOffsets: PromiseOrValue<BigNumberish>[],
+      yOffsets: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<string>;
 
     previewTokenCollage(
       tokenId: PromiseOrValue<BigNumberish>,
       layerNr: PromiseOrValue<BigNumberish>,
-      pieceId: PromiseOrValue<BigNumberish>,
+      scale: PromiseOrValue<BigNumberish>,
       xOffset: PromiseOrValue<BigNumberish>,
       yOffset: PromiseOrValue<BigNumberish>,
+      pieceId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
 
     render(overrides?: CallOverrides): Promise<string>;
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
+
+    royaltyReciever(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     "safeTransferFrom(address,address,uint256)"(
       from_: PromiseOrValue<string>,
@@ -1254,6 +1149,11 @@ export interface Collage extends BaseContract {
     setApprovalForAll(
       operator_: PromiseOrValue<string>,
       approved_: PromiseOrValue<boolean>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setCollagePrice(
+      _newCollagePrice: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1277,6 +1177,11 @@ export interface Collage extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<string>;
 
     tokenIndex(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenInfo(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     tokenURI(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -1364,6 +1269,10 @@ export interface Collage extends BaseContract {
   };
 
   estimateGas: {
+    COLLAGE_PRICE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    MAX_LAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
     _balanceData(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1387,9 +1296,10 @@ export interface Collage extends BaseContract {
     addLayer(
       tokenId: PromiseOrValue<BigNumberish>,
       layer: PromiseOrValue<BigNumberish>,
-      layerId: PromiseOrValue<BigNumberish>,
+      scale: PromiseOrValue<BigNumberish>,
       xOffset: PromiseOrValue<BigNumberish>,
       yOffset: PromiseOrValue<BigNumberish>,
+      layerId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1428,46 +1338,18 @@ export interface Collage extends BaseContract {
     ): Promise<BigNumber>;
 
     mintAndBuy(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      xOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      yOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
+      scales: PromiseOrValue<BigNumberish>[],
+      xOffsets: PromiseOrValue<BigNumberish>[],
+      yOffsets: PromiseOrValue<BigNumberish>[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     mintAndSet(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      xOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      yOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
+      scales: PromiseOrValue<BigNumberish>[],
+      xOffsets: PromiseOrValue<BigNumberish>[],
+      yOffsets: PromiseOrValue<BigNumberish>[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1488,33 +1370,20 @@ export interface Collage extends BaseContract {
     pieces(overrides?: CallOverrides): Promise<BigNumber>;
 
     previewCollage(
-      pieceIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      xOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      yOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      pieceIds: PromiseOrValue<BigNumberish>[],
+      scale: PromiseOrValue<BigNumberish>[],
+      xOffsets: PromiseOrValue<BigNumberish>[],
+      yOffsets: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     previewTokenCollage(
       tokenId: PromiseOrValue<BigNumberish>,
       layerNr: PromiseOrValue<BigNumberish>,
-      pieceId: PromiseOrValue<BigNumberish>,
+      scale: PromiseOrValue<BigNumberish>,
       xOffset: PromiseOrValue<BigNumberish>,
       yOffset: PromiseOrValue<BigNumberish>,
+      pieceId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -1522,6 +1391,11 @@ export interface Collage extends BaseContract {
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    royaltyReciever(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     "safeTransferFrom(address,address,uint256)"(
@@ -1545,6 +1419,11 @@ export interface Collage extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    setCollagePrice(
+      _newCollagePrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
     setPieces(
       _newPieces: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1565,6 +1444,11 @@ export interface Collage extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
 
     tokenIndex(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenInfo(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
 
     tokenURI(
       tokenId: PromiseOrValue<BigNumberish>,
@@ -1602,6 +1486,10 @@ export interface Collage extends BaseContract {
   };
 
   populateTransaction: {
+    COLLAGE_PRICE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    MAX_LAYERS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     _balanceData(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -1625,9 +1513,10 @@ export interface Collage extends BaseContract {
     addLayer(
       tokenId: PromiseOrValue<BigNumberish>,
       layer: PromiseOrValue<BigNumberish>,
-      layerId: PromiseOrValue<BigNumberish>,
+      scale: PromiseOrValue<BigNumberish>,
       xOffset: PromiseOrValue<BigNumberish>,
       yOffset: PromiseOrValue<BigNumberish>,
+      layerId: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1666,46 +1555,18 @@ export interface Collage extends BaseContract {
     ): Promise<PopulatedTransaction>;
 
     mintAndBuy(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      xOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      yOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
+      scales: PromiseOrValue<BigNumberish>[],
+      xOffsets: PromiseOrValue<BigNumberish>[],
+      yOffsets: PromiseOrValue<BigNumberish>[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     mintAndSet(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      xOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      yOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
+      scales: PromiseOrValue<BigNumberish>[],
+      xOffsets: PromiseOrValue<BigNumberish>[],
+      yOffsets: PromiseOrValue<BigNumberish>[],
       overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1726,33 +1587,20 @@ export interface Collage extends BaseContract {
     pieces(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     previewCollage(
-      pieceIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      xOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
-      yOffsets: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      pieceIds: PromiseOrValue<BigNumberish>[],
+      scale: PromiseOrValue<BigNumberish>[],
+      xOffsets: PromiseOrValue<BigNumberish>[],
+      yOffsets: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     previewTokenCollage(
       tokenId: PromiseOrValue<BigNumberish>,
       layerNr: PromiseOrValue<BigNumberish>,
-      pieceId: PromiseOrValue<BigNumberish>,
+      scale: PromiseOrValue<BigNumberish>,
       xOffset: PromiseOrValue<BigNumberish>,
       yOffset: PromiseOrValue<BigNumberish>,
+      pieceId: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
@@ -1760,6 +1608,11 @@ export interface Collage extends BaseContract {
 
     renounceOwnership(
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    royaltyReciever(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     "safeTransferFrom(address,address,uint256)"(
@@ -1783,6 +1636,11 @@ export interface Collage extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    setCollagePrice(
+      _newCollagePrice: PromiseOrValue<BigNumberish>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
     setPieces(
       _newPieces: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
@@ -1803,6 +1661,11 @@ export interface Collage extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     tokenIndex(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tokenInfo(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     tokenURI(
       tokenId: PromiseOrValue<BigNumberish>,

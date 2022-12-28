@@ -14,9 +14,9 @@ import { Collage__factory } from "../types";
 
 const BNM:NextPage = () => {
     
-    const [locations, setLocations] = useState<Locations[]>([{x:0, y:0},{x:0, y:0},{x:0, y:0},{x:0, y:0} ]);
+    const [locations, setLocations] = useState<Locations[]>(Array.from({length: 16}, () => ({x: 0, y: 0, scale: 1})));
     const [animalSVG, setAnimalSVG] = useState<string | null>(null);
-    const [pieceIds, setPieceIds] = useState([0,0,0,0]);
+    const [pieceIds, setPieceIds] = useState(Array(16).fill(0));
     const [price, setPrice] = useState(0);
 
     interface SelectTrait {
@@ -24,6 +24,7 @@ const BNM:NextPage = () => {
         value: number;
       }
     interface Locations {
+        scale: number;
         x: number;
         y: number;
     }
@@ -44,11 +45,13 @@ const BNM:NextPage = () => {
     const provider = new ethers.providers.AlchemyProvider("goerli", process.env.NEXT_PUBLIC_ALCHEMY_API_KEY);
     const collageContract = new ethers.Contract(contractAddresses.collage, Collage__factory.abi, provider);
 
+    const layerNr = Array.from({length: 16}, (_, index) => index + 1)
+    
     useEffect( () => {
       const callData = async () => {
         //previewCollage(uint256 tokenId, uint8 layerNr, uint8 pieceId, uint8 xOffset, uint8 yOffset)
-        if(pieceIds[0] != 0 || pieceIds[1] != 0 || pieceIds[2] != 0 || pieceIds[3] != 0 ) {
-        const data = await collageContract.previewCollage( pieceIds, [locations[0].x, locations[1].x, locations[2].x, locations[3].x], [locations[0].y, locations[1].y, locations[2].y, locations[3].y] );
+        if(pieceIds.some(element => element !== 0)) {
+        const data = await collageContract.previewCollage( pieceIds, locations.map(object => object.scale), locations.map(object => object.x), locations.map(object => object.y) );
         setAnimalSVG(data);
         } else {
             setAnimalSVG(null);
@@ -84,7 +87,7 @@ const BNM:NextPage = () => {
               {animalSVG ? parse(animalSVG) : "No Layers added yet."}
               <div>
                 <h1>Set location for</h1>
-              {[1,2,3,4].map( (layerNr: number) => (
+              {layerNr.map( (layerNr: number) => (
                   <div key={layerNr}>
                   <LocationForm loc={locations[layerNr-1]} layerNr={layerNr} onChange={(coord:string,e:string) => handleLocationChange(coord, Number(e), layerNr-1)} />
                   </div>

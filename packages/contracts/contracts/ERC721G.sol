@@ -1,8 +1,9 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
+import "./sharedStructs.sol";
 
-abstract contract ERC721G is Initializable {
+abstract contract ERC721G is Initializable, SharedStructs {
 
     // Standard ERC721 Events
     event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
@@ -20,6 +21,9 @@ abstract contract ERC721G is Initializable {
 
     uint256 public startTokenId; // Bytes Storage for the starting TokenId // removed immuntable
     uint256 public maxBatchSize;    // removed immuntable
+
+
+    uint256 public constant MAX_LAYERS = 16;
 
     /** @dev instructions:
      *  name_ sets the token name
@@ -54,14 +58,7 @@ abstract contract ERC721G is Initializable {
 
     struct TokenInfoStruct {
         address creator;
-        LayerStruct[8] layers; //could change this into seperate layers... 
-    }
-
-    struct LayerStruct {
-        uint8 scale;
-        uint8 xOffset;
-        uint8 yOffset;
-        uint16 layerId;
+        LayerStruct[MAX_LAYERS] layers; //could change this into seperate layers... 
     }
 
     struct BalanceStruct {
@@ -209,7 +206,7 @@ abstract contract ERC721G is Initializable {
         tokenIndex = _endId;
     }
 
-    function _mintAndSet(address to_, uint256 amount_, uint8[8] calldata layerIds, uint8[8] calldata scales, uint8[8] calldata xOffsets, uint8[8] calldata yOffsets) internal virtual {
+    function _mintAndSet(address to_, uint256 amount_, uint16[MAX_LAYERS] calldata layerIds, uint8[MAX_LAYERS] calldata scales, uint8[MAX_LAYERS] calldata xOffsets, uint8[MAX_LAYERS] calldata yOffsets) internal virtual {
         // cannot mint to 0x0
         require(to_ != address(0), "ERC721G: _mintInternal to 0x0");
 
@@ -227,7 +224,7 @@ abstract contract ERC721G is Initializable {
         // _owner;
 
         //this is not great because of all the storage write, I guess to avoid this need to change the way layers are stored
-        for(uint8 i; i < 8; i++) {
+        for(uint8 i; i < MAX_LAYERS; i++) {
             if(layerIds[i] > 0) tokenInfo[_startId].layers[i] = LayerStruct(scales[i] , xOffsets[i], yOffsets[i], layerIds[i]);
         }
         _tokenData[_startId].owner = to_;

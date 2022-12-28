@@ -23,6 +23,21 @@ const _abi = [
         type: "uint16",
       },
       {
+        internalType: "uint8",
+        name: "imageType",
+        type: "uint8",
+      },
+      {
+        internalType: "uint8",
+        name: "xSize",
+        type: "uint8",
+      },
+      {
+        internalType: "uint8",
+        name: "ySize",
+        type: "uint8",
+      },
+      {
         internalType: "string",
         name: "name",
         type: "string",

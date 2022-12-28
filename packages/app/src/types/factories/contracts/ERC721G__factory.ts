@@ -96,6 +96,19 @@ const _abi = [
     type: "event",
   },
   {
+    inputs: [],
+    name: "MAX_LAYERS",
+    outputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [
       {
         internalType: "address",
@@ -140,28 +153,6 @@ const _abi = [
             internalType: "address",
             name: "owner",
             type: "address",
-          },
-          {
-            components: [
-              {
-                internalType: "uint8",
-                name: "layerId",
-                type: "uint8",
-              },
-              {
-                internalType: "uint8",
-                name: "xOffset",
-                type: "uint8",
-              },
-              {
-                internalType: "uint8",
-                name: "yOffset",
-                type: "uint8",
-              },
-            ],
-            internalType: "struct ERC721G.LayerStruct[4]",
-            name: "layers",
-            type: "tuple[4]",
           },
         ],
         internalType: "struct ERC721G.OwnerStruct",
@@ -357,6 +348,25 @@ const _abi = [
   {
     inputs: [
       {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "royaltyReciever",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
         internalType: "address",
         name: "from_",
         type: "address",
@@ -476,6 +486,25 @@ const _abi = [
         internalType: "uint256",
         name: "",
         type: "uint256",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "tokenInfo",
+    outputs: [
+      {
+        internalType: "address",
+        name: "creator",
+        type: "address",
       },
     ],
     stateMutability: "view",

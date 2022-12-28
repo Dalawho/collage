@@ -101,6 +101,10 @@ declare module "hardhat/types/runtime" {
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.IInflator__factory>;
     getContractFactory(
+      name: "IPieces",
+      signerOrOptions?: ethers.Signer | FactoryOptions
+    ): Promise<Contracts.IPieces__factory>;
+    getContractFactory(
       name: "Render",
       signerOrOptions?: ethers.Signer | FactoryOptions
     ): Promise<Contracts.Render__factory>;
@@ -223,6 +227,11 @@ declare module "hardhat/types/runtime" {
       address: string,
       signer?: ethers.Signer
     ): Promise<Contracts.IInflator>;
+    getContractAt(
+      name: "IPieces",
+      address: string,
+      signer?: ethers.Signer
+    ): Promise<Contracts.IPieces>;
     getContractAt(
       name: "Render",
       address: string,

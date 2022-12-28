@@ -4,5 +4,14 @@ export interface Artwork {
     amount: number,
     mint:number,
     compressed: Uint8Array,
-    inputLength: number
+    inputLength: number,
+    xSize: number,
+    ySize: number,
+    royaltyReciever: string,
+    mintTo: string,
+    collection: string,
+    category: string,
+    royalties: number,
+    maxPerWallet: number,
+    imageType: number
 }

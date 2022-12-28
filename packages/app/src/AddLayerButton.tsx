@@ -7,6 +7,7 @@ import { Collage__factory } from "./types";
 interface Locations {
     x: number;
     y: number;
+    scale:number;
   }
 
 export const AddLayerButton = ( {tokenId, layerNr, pieceId, locations} : {tokenId: number, layerNr: number, pieceId: number, locations:Locations } ) => {
@@ -14,9 +15,9 @@ export const AddLayerButton = ( {tokenId, layerNr, pieceId, locations} : {tokenI
   const { config } = usePrepareContractWrite({
     addressOrName: contractAddresses.collage,
     contractInterface: Collage__factory.abi,
-    //addLayer(uint256 tokenId, uint8 layer, uint8 layerId, uint8 xOffset, uint8 yOffset)
+    //addLayer(uint256 tokenId, uint8 layer, uint8 scale, uint8 xOffset, uint8 yOffset, uint16 layerId)
     functionName: 'addLayer',
-    args: [tokenId, layerNr, pieceId, locations.x, locations.y]
+    args: [tokenId, layerNr, pieceId, locations.scale, locations.x, locations.y]
   })
   const { data, isLoading, isSuccess , write } = useContractWrite(config);
   console.log(config)

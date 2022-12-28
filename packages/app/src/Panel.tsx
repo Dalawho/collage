@@ -31,6 +31,7 @@ const Panel = ({ id, picture, description, onClick }: PanelProps) => {
     }
   }
 
+  const layerNr = Array.from({length: 16}, (_, index) => index + 1)
 
   return (
     <div onClick={handleClick} className="rounded-lg border-slate-900 border-4 m-1" >
@@ -50,10 +51,12 @@ const Panel = ({ id, picture, description, onClick }: PanelProps) => {
         >
           <p>Select a layer:</p>
           <div className='space-x-2'>
-          <button onClick={() => handleSelect(1)} className="border-2 rounded-lg border-zinc-600 mx-auto px-1 my-auto">Layer 1</button>
-          <button onClick={() => handleSelect(2)} className="border-2 rounded-lg border-zinc-600 mx-auto px-1 my-auto">Layer 2</button>
-          <button onClick={() => handleSelect(3)} className="border-2 rounded-lg border-zinc-600 mx-auto px-1 my-auto">Layer 3</button>
-          <button onClick={() => handleSelect(4)} className="border-2 rounded-lg border-zinc-600 mx-auto px-1 my-auto">Layer 4</button>
+          {
+            layerNr.map(layer => (
+              <button key={layer} onClick={() => handleSelect(layer)} className="border-2 rounded-lg border-zinc-600 mx-auto px-1 my-auto">
+                Layer {layer}
+              </button>
+            ))}
           </div>
         </div>
       )}

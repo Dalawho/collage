@@ -15,7 +15,7 @@ import { Collage__factory } from "../types";
 
 const Create:NextPage = () => {
     
-  const [locations, setLocations] = useState({x:0, y:0});
+  const [locations, setLocations] = useState({scale: 1, x:0, y:0});
   const [animalSVG, setAnimalSVG] = useState<string | null>(null);
   const [tokenId, setTokenId] = useState<null | number>();
   const [pieceId, setPieceId] = useState<null | number>();
@@ -60,7 +60,7 @@ const Create:NextPage = () => {
       const callData = async () => {
         //previewCollage(uint256 tokenId, uint8 layerNr, uint8 pieceId, uint8 xOffset, uint8 yOffset)
         if(tokenId && (layerNr || layerNr == 0) && pieceId) {
-        const data = await collageContract.previewTokenCollage( tokenId, layerNr, pieceId, locations.x, locations.y );
+        const data = await collageContract.previewTokenCollage( tokenId, layerNr, locations.scale, locations.x, locations.y, pieceId );
         setAnimalSVG(data);
       } else {
         if(tokenId) {

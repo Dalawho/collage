@@ -28,49 +28,14 @@ import type {
 } from "../common";
 
 export declare namespace ERC721G {
-  export type LayerStructStruct = {
-    layerId: PromiseOrValue<BigNumberish>;
-    xOffset: PromiseOrValue<BigNumberish>;
-    yOffset: PromiseOrValue<BigNumberish>;
-  };
+  export type OwnerStructStruct = { owner: PromiseOrValue<string> };
 
-  export type LayerStructStructOutput = [number, number, number] & {
-    layerId: number;
-    xOffset: number;
-    yOffset: number;
-  };
-
-  export type OwnerStructStruct = {
-    owner: PromiseOrValue<string>;
-    layers: [
-      ERC721G.LayerStructStruct,
-      ERC721G.LayerStructStruct,
-      ERC721G.LayerStructStruct,
-      ERC721G.LayerStructStruct
-    ];
-  };
-
-  export type OwnerStructStructOutput = [
-    string,
-    [
-      ERC721G.LayerStructStructOutput,
-      ERC721G.LayerStructStructOutput,
-      ERC721G.LayerStructStructOutput,
-      ERC721G.LayerStructStructOutput
-    ]
-  ] & {
-    owner: string;
-    layers: [
-      ERC721G.LayerStructStructOutput,
-      ERC721G.LayerStructStructOutput,
-      ERC721G.LayerStructStructOutput,
-      ERC721G.LayerStructStructOutput
-    ];
-  };
+  export type OwnerStructStructOutput = [string] & { owner: string };
 }
 
 export interface ERC721GInterface extends utils.Interface {
   functions: {
+    "MAX_LAYERS()": FunctionFragment;
     "_balanceData(address)": FunctionFragment;
     "_getTokenDataOf(uint256)": FunctionFragment;
     "_tokenData(uint256)": FunctionFragment;
@@ -83,6 +48,7 @@ export interface ERC721GInterface extends utils.Interface {
     "mintIndex(uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "ownerOf(uint256)": FunctionFragment;
+    "royaltyReciever(uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
@@ -90,6 +56,7 @@ export interface ERC721GInterface extends utils.Interface {
     "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "tokenIndex()": FunctionFragment;
+    "tokenInfo(uint256)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
     "totalBalanceOf(address)": FunctionFragment;
     "totalMinted(address)": FunctionFragment;
@@ -100,6 +67,7 @@ export interface ERC721GInterface extends utils.Interface {
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "MAX_LAYERS"
       | "_balanceData"
       | "_getTokenDataOf"
       | "_tokenData"
@@ -112,6 +80,7 @@ export interface ERC721GInterface extends utils.Interface {
       | "mintIndex"
       | "name"
       | "ownerOf"
+      | "royaltyReciever"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
@@ -119,6 +88,7 @@ export interface ERC721GInterface extends utils.Interface {
       | "supportsInterface"
       | "symbol"
       | "tokenIndex"
+      | "tokenInfo"
       | "tokenURI"
       | "totalBalanceOf"
       | "totalMinted"
@@ -127,6 +97,10 @@ export interface ERC721GInterface extends utils.Interface {
       | "walletOfOwner"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "MAX_LAYERS",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "_balanceData",
     values: [PromiseOrValue<string>]
@@ -173,6 +147,10 @@ export interface ERC721GInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "royaltyReciever",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     values: [
       PromiseOrValue<string>,
@@ -207,6 +185,10 @@ export interface ERC721GInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "tokenInfo",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "tokenURI",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
@@ -235,6 +217,7 @@ export interface ERC721GInterface extends utils.Interface {
     values: [PromiseOrValue<string>]
   ): string;
 
+  decodeFunctionResult(functionFragment: "MAX_LAYERS", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "_balanceData",
     data: BytesLike
@@ -266,6 +249,10 @@ export interface ERC721GInterface extends utils.Interface {
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "ownerOf", data: BytesLike): Result;
   decodeFunctionResult(
+    functionFragment: "royaltyReciever",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
   ): Result;
@@ -287,6 +274,7 @@ export interface ERC721GInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "tokenIndex", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "tokenInfo", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "tokenURI", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalBalanceOf",
@@ -392,6 +380,8 @@ export interface ERC721G extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    MAX_LAYERS(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     _balanceData(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -454,6 +444,11 @@ export interface ERC721G extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[string]>;
 
+    royaltyReciever(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     "safeTransferFrom(address,address,uint256)"(
       from_: PromiseOrValue<string>,
       to_: PromiseOrValue<string>,
@@ -486,6 +481,11 @@ export interface ERC721G extends BaseContract {
 
     tokenIndex(overrides?: CallOverrides): Promise<[BigNumber]>;
 
+    tokenInfo(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string] & { creator: string }>;
+
     tokenURI(
       tokenId_: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -515,6 +515,8 @@ export interface ERC721G extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[BigNumber[]]>;
   };
+
+  MAX_LAYERS(overrides?: CallOverrides): Promise<BigNumber>;
 
   _balanceData(
     arg0: PromiseOrValue<string>,
@@ -578,6 +580,11 @@ export interface ERC721G extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  royaltyReciever(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   "safeTransferFrom(address,address,uint256)"(
     from_: PromiseOrValue<string>,
     to_: PromiseOrValue<string>,
@@ -610,6 +617,11 @@ export interface ERC721G extends BaseContract {
 
   tokenIndex(overrides?: CallOverrides): Promise<BigNumber>;
 
+  tokenInfo(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   tokenURI(
     tokenId_: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
@@ -640,6 +652,8 @@ export interface ERC721G extends BaseContract {
   ): Promise<BigNumber[]>;
 
   callStatic: {
+    MAX_LAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
     _balanceData(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -702,6 +716,11 @@ export interface ERC721G extends BaseContract {
       overrides?: CallOverrides
     ): Promise<string>;
 
+    royaltyReciever(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     "safeTransferFrom(address,address,uint256)"(
       from_: PromiseOrValue<string>,
       to_: PromiseOrValue<string>,
@@ -733,6 +752,11 @@ export interface ERC721G extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<string>;
 
     tokenIndex(overrides?: CallOverrides): Promise<BigNumber>;
+
+    tokenInfo(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
 
     tokenURI(
       tokenId_: PromiseOrValue<BigNumberish>,
@@ -803,6 +827,8 @@ export interface ERC721G extends BaseContract {
   };
 
   estimateGas: {
+    MAX_LAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
     _balanceData(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -859,6 +885,11 @@ export interface ERC721G extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    royaltyReciever(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     "safeTransferFrom(address,address,uint256)"(
       from_: PromiseOrValue<string>,
       to_: PromiseOrValue<string>,
@@ -891,6 +922,11 @@ export interface ERC721G extends BaseContract {
 
     tokenIndex(overrides?: CallOverrides): Promise<BigNumber>;
 
+    tokenInfo(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     tokenURI(
       tokenId_: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
@@ -922,6 +958,8 @@ export interface ERC721G extends BaseContract {
   };
 
   populateTransaction: {
+    MAX_LAYERS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     _balanceData(
       arg0: PromiseOrValue<string>,
       overrides?: CallOverrides
@@ -978,6 +1016,11 @@ export interface ERC721G extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    royaltyReciever(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     "safeTransferFrom(address,address,uint256)"(
       from_: PromiseOrValue<string>,
       to_: PromiseOrValue<string>,
@@ -1009,6 +1052,11 @@ export interface ERC721G extends BaseContract {
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     tokenIndex(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    tokenInfo(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
 
     tokenURI(
       tokenId_: PromiseOrValue<BigNumberish>,

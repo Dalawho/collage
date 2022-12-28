@@ -12,7 +12,7 @@ import {
 import { EthereumProviders } from "../EthereumProviders";
 
 export const graphClient = createGraphClient({
-  url: "https://api.thegraph.com/subgraphs/name/dalawho/collage",  
+  url: "https://api.thegraph.com/subgraphs/name/dalawho/newcollage",  
 });
 
 const MyApp = ({ Component, pageProps }: AppProps) => {

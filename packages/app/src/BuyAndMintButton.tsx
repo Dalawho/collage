@@ -8,6 +8,7 @@ import { Collage__factory } from "./types";
 interface Locations {
     x: number;
     y: number;
+    scale: number;
   }
 
 export const BuyAndMintButton = ( {pieceIds, locations, price} : {pieceIds: number[], locations: Locations[], price: number } ) => {
@@ -16,11 +17,11 @@ export const BuyAndMintButton = ( {pieceIds, locations, price} : {pieceIds: numb
     addressOrName: contractAddresses.collage,
     contractInterface: Collage__factory.abi,
     functionName: 'mintAndBuy',
-    args: [pieceIds, [locations[0].x, locations[1].x, locations[2].x, locations[3].x], [locations[0].y, locations[1].y, locations[2].y, locations[3].y]],
-    overrides: {value: price.toString()}
+    args: [pieceIds, locations.map(object => object.scale), locations.map(object => object.x), locations.map(object => object.y)],
+    overrides: {value: (price+30000000000000000).toString()}
   })
   const { data, error, isLoading, isSuccess , write } = useContractWrite(config);
-  //console.log(config)
+  console.log(price)
   const {isSuccess: txSuccess} = useWaitForTransaction({hash: data?.hash});
   //    {txSuccess && <div>{artName} submitted</div>}
   return (

@@ -25,7 +25,7 @@ import type {
 
 export interface IRenderInterface extends utils.Interface {
   functions: {
-    "addToken(bytes,uint16,string)": FunctionFragment;
+    "addToken(bytes,uint16,uint8,uint8,uint8,string)": FunctionFragment;
     "tokenURI(uint256)": FunctionFragment;
   };
 
@@ -37,6 +37,9 @@ export interface IRenderInterface extends utils.Interface {
     functionFragment: "addToken",
     values: [
       PromiseOrValue<BytesLike>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<string>
     ]
@@ -82,6 +85,9 @@ export interface IRender extends BaseContract {
     addToken(
       _data: PromiseOrValue<BytesLike>,
       destLen: PromiseOrValue<BigNumberish>,
+      imageType: PromiseOrValue<BigNumberish>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
       name: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
@@ -95,6 +101,9 @@ export interface IRender extends BaseContract {
   addToken(
     _data: PromiseOrValue<BytesLike>,
     destLen: PromiseOrValue<BigNumberish>,
+    imageType: PromiseOrValue<BigNumberish>,
+    xSize: PromiseOrValue<BigNumberish>,
+    ySize: PromiseOrValue<BigNumberish>,
     name: PromiseOrValue<string>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
@@ -108,6 +117,9 @@ export interface IRender extends BaseContract {
     addToken(
       _data: PromiseOrValue<BytesLike>,
       destLen: PromiseOrValue<BigNumberish>,
+      imageType: PromiseOrValue<BigNumberish>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
       name: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
@@ -124,6 +136,9 @@ export interface IRender extends BaseContract {
     addToken(
       _data: PromiseOrValue<BytesLike>,
       destLen: PromiseOrValue<BigNumberish>,
+      imageType: PromiseOrValue<BigNumberish>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
       name: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
@@ -138,6 +153,9 @@ export interface IRender extends BaseContract {
     addToken(
       _data: PromiseOrValue<BytesLike>,
       destLen: PromiseOrValue<BigNumberish>,
+      imageType: PromiseOrValue<BigNumberish>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
       name: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;

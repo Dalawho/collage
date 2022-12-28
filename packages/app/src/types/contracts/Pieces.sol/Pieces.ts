@@ -28,17 +28,47 @@ import type {
   PromiseOrValue,
 } from "../../common";
 
+export declare namespace SharedStructs {
+  export type LayerInfoStruct = {
+    creator: PromiseOrValue<string>;
+    maxSupply: PromiseOrValue<BigNumberish>;
+    supplyMinted: PromiseOrValue<BigNumberish>;
+    royalties: PromiseOrValue<BigNumberish>;
+    maxPerWallet: PromiseOrValue<BigNumberish>;
+    price: PromiseOrValue<BigNumberish>;
+  };
+
+  export type LayerInfoStructOutput = [
+    string,
+    number,
+    number,
+    number,
+    number,
+    BigNumber
+  ] & {
+    creator: string;
+    maxSupply: number;
+    supplyMinted: number;
+    royalties: number;
+    maxPerWallet: number;
+    price: BigNumber;
+  };
+}
+
 export interface PiecesInterface extends utils.Interface {
   functions: {
+    "ADD_ARTWORK_PRICE()": FunctionFragment;
+    "MAX_LAYERS()": FunctionFragment;
     "balanceOf(address,uint256)": FunctionFragment;
     "balanceOfBatch(address[],uint256[])": FunctionFragment;
     "burn(address,uint256,uint256)": FunctionFragment;
     "burnBatch(address,uint256[],uint256[])": FunctionFragment;
     "burnerAllowed()": FunctionFragment;
-    "createToken(uint8,uint80,uint8,bytes,uint16,string)": FunctionFragment;
+    "createToken((address,uint8,uint8,uint8,uint8,uint64),bytes,uint16,uint8,uint8,uint8,string,address,address,string,string)": FunctionFragment;
     "exists(uint256)": FunctionFragment;
-    "getPrice(uint8[4])": FunctionFragment;
-    "getPriceAndBurn(uint8[4])": FunctionFragment;
+    "getLayerData(uint256)": FunctionFragment;
+    "getPrice(uint8[16])": FunctionFragment;
+    "getPriceAndBurn(uint16[16])": FunctionFragment;
     "initialize()": FunctionFragment;
     "isApprovedForAll(address,address)": FunctionFragment;
     "layers(uint256)": FunctionFragment;
@@ -46,8 +76,11 @@ export interface PiecesInterface extends utils.Interface {
     "owner()": FunctionFragment;
     "render()": FunctionFragment;
     "renounceOwnership()": FunctionFragment;
+    "royaltyInfo(uint256,uint256)": FunctionFragment;
+    "royaltyReciever(uint256)": FunctionFragment;
     "safeBatchTransferFrom(address,address,uint256[],uint256[],bytes)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,uint256,bytes)": FunctionFragment;
+    "setAddArtworkPrice(uint256)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
     "setBurner(address)": FunctionFragment;
     "setRender(address)": FunctionFragment;
@@ -57,10 +90,13 @@ export interface PiecesInterface extends utils.Interface {
     "totalSupply(uint256)": FunctionFragment;
     "transferOwnership(address)": FunctionFragment;
     "uri(uint256)": FunctionFragment;
+    "withdraw()": FunctionFragment;
   };
 
   getFunction(
     nameOrSignatureOrTopic:
+      | "ADD_ARTWORK_PRICE"
+      | "MAX_LAYERS"
       | "balanceOf"
       | "balanceOfBatch"
       | "burn"
@@ -68,6 +104,7 @@ export interface PiecesInterface extends utils.Interface {
       | "burnerAllowed"
       | "createToken"
       | "exists"
+      | "getLayerData"
       | "getPrice"
       | "getPriceAndBurn"
       | "initialize"
@@ -77,8 +114,11 @@ export interface PiecesInterface extends utils.Interface {
       | "owner"
       | "render"
       | "renounceOwnership"
+      | "royaltyInfo"
+      | "royaltyReciever"
       | "safeBatchTransferFrom"
       | "safeTransferFrom"
+      | "setAddArtworkPrice"
       | "setApprovalForAll"
       | "setBurner"
       | "setRender"
@@ -88,8 +128,17 @@ export interface PiecesInterface extends utils.Interface {
       | "totalSupply"
       | "transferOwnership"
       | "uri"
+      | "withdraw"
   ): FunctionFragment;
 
+  encodeFunctionData(
+    functionFragment: "ADD_ARTWORK_PRICE",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "MAX_LAYERS",
+    values?: undefined
+  ): string;
   encodeFunctionData(
     functionFragment: "balanceOf",
     values: [PromiseOrValue<string>, PromiseOrValue<BigNumberish>]
@@ -121,11 +170,16 @@ export interface PiecesInterface extends utils.Interface {
   encodeFunctionData(
     functionFragment: "createToken",
     values: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
+      SharedStructs.LayerInfoStruct,
       PromiseOrValue<BytesLike>,
       PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<BigNumberish>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
+      PromiseOrValue<string>,
       PromiseOrValue<string>
     ]
   ): string;
@@ -134,26 +188,16 @@ export interface PiecesInterface extends utils.Interface {
     values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
+    functionFragment: "getLayerData",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "getPrice",
-    values: [
-      [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ]
-    ]
+    values: [PromiseOrValue<BigNumberish>[]]
   ): string;
   encodeFunctionData(
     functionFragment: "getPriceAndBurn",
-    values: [
-      [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ]
-    ]
+    values: [PromiseOrValue<BigNumberish>[]]
   ): string;
   encodeFunctionData(
     functionFragment: "initialize",
@@ -183,6 +227,14 @@ export interface PiecesInterface extends utils.Interface {
     values?: undefined
   ): string;
   encodeFunctionData(
+    functionFragment: "royaltyInfo",
+    values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "royaltyReciever",
+    values: [PromiseOrValue<BigNumberish>]
+  ): string;
+  encodeFunctionData(
     functionFragment: "safeBatchTransferFrom",
     values: [
       PromiseOrValue<string>,
@@ -201,6 +253,10 @@ export interface PiecesInterface extends utils.Interface {
       PromiseOrValue<BigNumberish>,
       PromiseOrValue<BytesLike>
     ]
+  ): string;
+  encodeFunctionData(
+    functionFragment: "setAddArtworkPrice",
+    values: [PromiseOrValue<BigNumberish>]
   ): string;
   encodeFunctionData(
     functionFragment: "setApprovalForAll",
@@ -238,7 +294,13 @@ export interface PiecesInterface extends utils.Interface {
     functionFragment: "uri",
     values: [PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "withdraw", values?: undefined): string;
 
+  decodeFunctionResult(
+    functionFragment: "ADD_ARTWORK_PRICE",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(functionFragment: "MAX_LAYERS", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "balanceOfBatch",
@@ -255,6 +317,10 @@ export interface PiecesInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "exists", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "getLayerData",
+    data: BytesLike
+  ): Result;
   decodeFunctionResult(functionFragment: "getPrice", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "getPriceAndBurn",
@@ -274,11 +340,23 @@ export interface PiecesInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(
+    functionFragment: "royaltyInfo",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "royaltyReciever",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "safeBatchTransferFrom",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "setAddArtworkPrice",
     data: BytesLike
   ): Result;
   decodeFunctionResult(
@@ -302,12 +380,14 @@ export interface PiecesInterface extends utils.Interface {
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "uri", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "withdraw", data: BytesLike): Result;
 
   events: {
     "ApprovalForAll(address,address,bool)": EventFragment;
-    "ArtworkAdded(uint256,address,string,uint80,uint16)": EventFragment;
+    "ArtworkAdded(uint256,string,tuple,string,string)": EventFragment;
     "Initialized(uint8)": EventFragment;
     "OwnershipTransferred(address,address)": EventFragment;
+    "TokenBurned(uint256)": EventFragment;
     "TransferBatch(address,address,address,uint256[],uint256[])": EventFragment;
     "TransferSingle(address,address,address,uint256,uint256)": EventFragment;
     "URI(string,uint256)": EventFragment;
@@ -317,6 +397,7 @@ export interface PiecesInterface extends utils.Interface {
   getEvent(nameOrSignatureOrTopic: "ArtworkAdded"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Initialized"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "TokenBurned"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferBatch"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "TransferSingle"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "URI"): EventFragment;
@@ -336,13 +417,13 @@ export type ApprovalForAllEventFilter = TypedEventFilter<ApprovalForAllEvent>;
 
 export interface ArtworkAddedEventObject {
   id: BigNumber;
-  creator: string;
   name: string;
-  price: BigNumber;
-  maxSupply: number;
+  layer: SharedStructs.LayerInfoStructOutput;
+  collection: string;
+  category: string;
 }
 export type ArtworkAddedEvent = TypedEvent<
-  [BigNumber, string, string, BigNumber, number],
+  [BigNumber, string, SharedStructs.LayerInfoStructOutput, string, string],
   ArtworkAddedEventObject
 >;
 
@@ -366,6 +447,13 @@ export type OwnershipTransferredEvent = TypedEvent<
 
 export type OwnershipTransferredEventFilter =
   TypedEventFilter<OwnershipTransferredEvent>;
+
+export interface TokenBurnedEventObject {
+  id: BigNumber;
+}
+export type TokenBurnedEvent = TypedEvent<[BigNumber], TokenBurnedEventObject>;
+
+export type TokenBurnedEventFilter = TypedEventFilter<TokenBurnedEvent>;
 
 export interface TransferBatchEventObject {
   operator: string;
@@ -430,6 +518,10 @@ export interface Pieces extends BaseContract {
   removeListener: OnEvent<this>;
 
   functions: {
+    ADD_ARTWORK_PRICE(overrides?: CallOverrides): Promise<[BigNumber]>;
+
+    MAX_LAYERS(overrides?: CallOverrides): Promise<[BigNumber]>;
+
     balanceOf(
       account: PromiseOrValue<string>,
       id: PromiseOrValue<BigNumberish>,
@@ -459,13 +551,18 @@ export interface Pieces extends BaseContract {
     burnerAllowed(overrides?: CallOverrides): Promise<[string]>;
 
     createToken(
-      maxSupply: PromiseOrValue<BigNumberish>,
-      price: PromiseOrValue<BigNumberish>,
-      mintAmount: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+      _layer: SharedStructs.LayerInfoStruct,
+      _data: PromiseOrValue<BytesLike>,
       destLen: PromiseOrValue<BigNumberish>,
-      name: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      imageType: PromiseOrValue<BigNumberish>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
+      _name: PromiseOrValue<string>,
+      _royaltyReciever: PromiseOrValue<string>,
+      _mintTo: PromiseOrValue<string>,
+      _collection: PromiseOrValue<string>,
+      _category: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
     exists(
@@ -473,23 +570,18 @@ export interface Pieces extends BaseContract {
       overrides?: CallOverrides
     ): Promise<[boolean]>;
 
+    getLayerData(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[SharedStructs.LayerInfoStructOutput, string]>;
+
     getPrice(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<[BigNumber] & { totalPrice: BigNumber }>;
 
     getPriceAndBurn(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -507,10 +599,12 @@ export interface Pieces extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [string, number, number, BigNumber] & {
+      [string, number, number, number, number, BigNumber] & {
         creator: string;
         maxSupply: number;
         supplyMinted: number;
+        royalties: number;
+        maxPerWallet: number;
         price: BigNumber;
       }
     >;
@@ -531,6 +625,19 @@ export interface Pieces extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    royaltyInfo(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _salePrice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
+    >;
+
+    royaltyReciever(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[string]>;
+
     safeBatchTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -546,6 +653,11 @@ export interface Pieces extends BaseContract {
       id: PromiseOrValue<BigNumberish>,
       amount: PromiseOrValue<BigNumberish>,
       data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
+
+    setAddArtworkPrice(
+      newPrice: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -594,7 +706,15 @@ export interface Pieces extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<[string]>;
+
+    withdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<ContractTransaction>;
   };
+
+  ADD_ARTWORK_PRICE(overrides?: CallOverrides): Promise<BigNumber>;
+
+  MAX_LAYERS(overrides?: CallOverrides): Promise<BigNumber>;
 
   balanceOf(
     account: PromiseOrValue<string>,
@@ -625,13 +745,18 @@ export interface Pieces extends BaseContract {
   burnerAllowed(overrides?: CallOverrides): Promise<string>;
 
   createToken(
-    maxSupply: PromiseOrValue<BigNumberish>,
-    price: PromiseOrValue<BigNumberish>,
-    mintAmount: PromiseOrValue<BigNumberish>,
-    data: PromiseOrValue<BytesLike>,
+    _layer: SharedStructs.LayerInfoStruct,
+    _data: PromiseOrValue<BytesLike>,
     destLen: PromiseOrValue<BigNumberish>,
-    name: PromiseOrValue<string>,
-    overrides?: Overrides & { from?: PromiseOrValue<string> }
+    imageType: PromiseOrValue<BigNumberish>,
+    xSize: PromiseOrValue<BigNumberish>,
+    ySize: PromiseOrValue<BigNumberish>,
+    _name: PromiseOrValue<string>,
+    _royaltyReciever: PromiseOrValue<string>,
+    _mintTo: PromiseOrValue<string>,
+    _collection: PromiseOrValue<string>,
+    _category: PromiseOrValue<string>,
+    overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
   exists(
@@ -639,23 +764,18 @@ export interface Pieces extends BaseContract {
     overrides?: CallOverrides
   ): Promise<boolean>;
 
+  getLayerData(
+    tokenId: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<[SharedStructs.LayerInfoStructOutput, string]>;
+
   getPrice(
-    layerIds: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ],
+    layerIds: PromiseOrValue<BigNumberish>[],
     overrides?: CallOverrides
   ): Promise<BigNumber>;
 
   getPriceAndBurn(
-    layerIds: [
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>
-    ],
+    layerIds: PromiseOrValue<BigNumberish>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -673,10 +793,12 @@ export interface Pieces extends BaseContract {
     arg0: PromiseOrValue<BigNumberish>,
     overrides?: CallOverrides
   ): Promise<
-    [string, number, number, BigNumber] & {
+    [string, number, number, number, number, BigNumber] & {
       creator: string;
       maxSupply: number;
       supplyMinted: number;
+      royalties: number;
+      maxPerWallet: number;
       price: BigNumber;
     }
   >;
@@ -697,6 +819,19 @@ export interface Pieces extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  royaltyInfo(
+    _tokenId: PromiseOrValue<BigNumberish>,
+    _salePrice: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<
+    [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
+  >;
+
+  royaltyReciever(
+    arg0: PromiseOrValue<BigNumberish>,
+    overrides?: CallOverrides
+  ): Promise<string>;
+
   safeBatchTransferFrom(
     from: PromiseOrValue<string>,
     to: PromiseOrValue<string>,
@@ -712,6 +847,11 @@ export interface Pieces extends BaseContract {
     id: PromiseOrValue<BigNumberish>,
     amount: PromiseOrValue<BigNumberish>,
     data: PromiseOrValue<BytesLike>,
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
+  setAddArtworkPrice(
+    newPrice: PromiseOrValue<BigNumberish>,
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -761,7 +901,15 @@ export interface Pieces extends BaseContract {
     overrides?: CallOverrides
   ): Promise<string>;
 
+  withdraw(
+    overrides?: Overrides & { from?: PromiseOrValue<string> }
+  ): Promise<ContractTransaction>;
+
   callStatic: {
+    ADD_ARTWORK_PRICE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    MAX_LAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
     balanceOf(
       account: PromiseOrValue<string>,
       id: PromiseOrValue<BigNumberish>,
@@ -791,12 +939,17 @@ export interface Pieces extends BaseContract {
     burnerAllowed(overrides?: CallOverrides): Promise<string>;
 
     createToken(
-      maxSupply: PromiseOrValue<BigNumberish>,
-      price: PromiseOrValue<BigNumberish>,
-      mintAmount: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+      _layer: SharedStructs.LayerInfoStruct,
+      _data: PromiseOrValue<BytesLike>,
       destLen: PromiseOrValue<BigNumberish>,
-      name: PromiseOrValue<string>,
+      imageType: PromiseOrValue<BigNumberish>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
+      _name: PromiseOrValue<string>,
+      _royaltyReciever: PromiseOrValue<string>,
+      _mintTo: PromiseOrValue<string>,
+      _collection: PromiseOrValue<string>,
+      _category: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -805,23 +958,18 @@ export interface Pieces extends BaseContract {
       overrides?: CallOverrides
     ): Promise<boolean>;
 
+    getLayerData(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<[SharedStructs.LayerInfoStructOutput, string]>;
+
     getPrice(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getPriceAndBurn(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
@@ -837,10 +985,12 @@ export interface Pieces extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<
-      [string, number, number, BigNumber] & {
+      [string, number, number, number, number, BigNumber] & {
         creator: string;
         maxSupply: number;
         supplyMinted: number;
+        royalties: number;
+        maxPerWallet: number;
         price: BigNumber;
       }
     >;
@@ -859,6 +1009,19 @@ export interface Pieces extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
+    royaltyInfo(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _salePrice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<
+      [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
+    >;
+
+    royaltyReciever(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<string>;
+
     safeBatchTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -874,6 +1037,11 @@ export interface Pieces extends BaseContract {
       id: PromiseOrValue<BigNumberish>,
       amount: PromiseOrValue<BigNumberish>,
       data: PromiseOrValue<BytesLike>,
+      overrides?: CallOverrides
+    ): Promise<void>;
+
+    setAddArtworkPrice(
+      newPrice: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -922,6 +1090,8 @@ export interface Pieces extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<string>;
+
+    withdraw(overrides?: CallOverrides): Promise<void>;
   };
 
   filters: {
@@ -936,19 +1106,19 @@ export interface Pieces extends BaseContract {
       approved?: null
     ): ApprovalForAllEventFilter;
 
-    "ArtworkAdded(uint256,address,string,uint80,uint16)"(
+    "ArtworkAdded(uint256,string,tuple,string,string)"(
       id?: PromiseOrValue<BigNumberish> | null,
-      creator?: PromiseOrValue<string> | null,
       name?: null,
-      price?: null,
-      maxSupply?: null
+      layer?: null,
+      collection?: null,
+      category?: null
     ): ArtworkAddedEventFilter;
     ArtworkAdded(
       id?: PromiseOrValue<BigNumberish> | null,
-      creator?: PromiseOrValue<string> | null,
       name?: null,
-      price?: null,
-      maxSupply?: null
+      layer?: null,
+      collection?: null,
+      category?: null
     ): ArtworkAddedEventFilter;
 
     "Initialized(uint8)"(version?: null): InitializedEventFilter;
@@ -962,6 +1132,13 @@ export interface Pieces extends BaseContract {
       previousOwner?: PromiseOrValue<string> | null,
       newOwner?: PromiseOrValue<string> | null
     ): OwnershipTransferredEventFilter;
+
+    "TokenBurned(uint256)"(
+      id?: PromiseOrValue<BigNumberish> | null
+    ): TokenBurnedEventFilter;
+    TokenBurned(
+      id?: PromiseOrValue<BigNumberish> | null
+    ): TokenBurnedEventFilter;
 
     "TransferBatch(address,address,address,uint256[],uint256[])"(
       operator?: PromiseOrValue<string> | null,
@@ -1001,6 +1178,10 @@ export interface Pieces extends BaseContract {
   };
 
   estimateGas: {
+    ADD_ARTWORK_PRICE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    MAX_LAYERS(overrides?: CallOverrides): Promise<BigNumber>;
+
     balanceOf(
       account: PromiseOrValue<string>,
       id: PromiseOrValue<BigNumberish>,
@@ -1030,13 +1211,18 @@ export interface Pieces extends BaseContract {
     burnerAllowed(overrides?: CallOverrides): Promise<BigNumber>;
 
     createToken(
-      maxSupply: PromiseOrValue<BigNumberish>,
-      price: PromiseOrValue<BigNumberish>,
-      mintAmount: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+      _layer: SharedStructs.LayerInfoStruct,
+      _data: PromiseOrValue<BytesLike>,
       destLen: PromiseOrValue<BigNumberish>,
-      name: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      imageType: PromiseOrValue<BigNumberish>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
+      _name: PromiseOrValue<string>,
+      _royaltyReciever: PromiseOrValue<string>,
+      _mintTo: PromiseOrValue<string>,
+      _collection: PromiseOrValue<string>,
+      _category: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
     exists(
@@ -1044,23 +1230,18 @@ export interface Pieces extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    getLayerData(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     getPrice(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
     getPriceAndBurn(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1095,6 +1276,17 @@ export interface Pieces extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    royaltyInfo(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _salePrice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
+    royaltyReciever(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<BigNumber>;
+
     safeBatchTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -1110,6 +1302,11 @@ export interface Pieces extends BaseContract {
       id: PromiseOrValue<BigNumberish>,
       amount: PromiseOrValue<BigNumberish>,
       data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
+
+    setAddArtworkPrice(
+      newPrice: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1158,9 +1355,17 @@ export interface Pieces extends BaseContract {
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<BigNumber>;
+
+    withdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    ADD_ARTWORK_PRICE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    MAX_LAYERS(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
     balanceOf(
       account: PromiseOrValue<string>,
       id: PromiseOrValue<BigNumberish>,
@@ -1190,13 +1395,18 @@ export interface Pieces extends BaseContract {
     burnerAllowed(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     createToken(
-      maxSupply: PromiseOrValue<BigNumberish>,
-      price: PromiseOrValue<BigNumberish>,
-      mintAmount: PromiseOrValue<BigNumberish>,
-      data: PromiseOrValue<BytesLike>,
+      _layer: SharedStructs.LayerInfoStruct,
+      _data: PromiseOrValue<BytesLike>,
       destLen: PromiseOrValue<BigNumberish>,
-      name: PromiseOrValue<string>,
-      overrides?: Overrides & { from?: PromiseOrValue<string> }
+      imageType: PromiseOrValue<BigNumberish>,
+      xSize: PromiseOrValue<BigNumberish>,
+      ySize: PromiseOrValue<BigNumberish>,
+      _name: PromiseOrValue<string>,
+      _royaltyReciever: PromiseOrValue<string>,
+      _mintTo: PromiseOrValue<string>,
+      _collection: PromiseOrValue<string>,
+      _category: PromiseOrValue<string>,
+      overrides?: PayableOverrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
     exists(
@@ -1204,23 +1414,18 @@ export interface Pieces extends BaseContract {
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
+    getLayerData(
+      tokenId: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     getPrice(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     getPriceAndBurn(
-      layerIds: [
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>,
-        PromiseOrValue<BigNumberish>
-      ],
+      layerIds: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1255,6 +1460,17 @@ export interface Pieces extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
+    royaltyInfo(
+      _tokenId: PromiseOrValue<BigNumberish>,
+      _salePrice: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    royaltyReciever(
+      arg0: PromiseOrValue<BigNumberish>,
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
     safeBatchTransferFrom(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -1270,6 +1486,11 @@ export interface Pieces extends BaseContract {
       id: PromiseOrValue<BigNumberish>,
       amount: PromiseOrValue<BigNumberish>,
       data: PromiseOrValue<BytesLike>,
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    setAddArtworkPrice(
+      newPrice: PromiseOrValue<BigNumberish>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
@@ -1317,6 +1538,10 @@ export interface Pieces extends BaseContract {
     uri(
       arg0: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    withdraw(
+      overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
   };
 }

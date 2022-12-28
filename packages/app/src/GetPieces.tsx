@@ -41,7 +41,7 @@ const GetPieces = ()  => {
   // );
     const getImageFromTokenURI = (tokenURI: string) => {
         if(tokenURI.length > 20) {
-        const processed = JSON.parse(tokenURI.slice(22));
+        const processed = JSON.parse(tokenURI.slice(22).replaceAll("\\", ""));
         const base64Image = processed.image.replace("data:image/svg+xml;base64,", "");
         const imageResp = new Buffer(base64Image, "base64");
         return(imageResp.toString().replace(/width="\d+"/, 'width="90%"').replace(/height="\d+"/, 'height="90%"'));
