@@ -508,6 +508,11 @@ export enum _SubgraphErrorPolicy_ {
   Deny = 'deny'
 }
 
+export type CollagesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CollagesQuery = { readonly __typename?: 'Query', readonly collageTokens: ReadonlyArray<{ readonly __typename?: 'CollageToken', readonly id: string, readonly tokenURI: string }> };
+
 export type CollageOwnersQueryVariables = Exact<{
   owner: Scalars['Bytes'];
 }>;
@@ -528,6 +533,18 @@ export type PiecesQueryVariables = Exact<{ [key: string]: never; }>;
 export type PiecesQuery = { readonly __typename?: 'Query', readonly pieces: ReadonlyArray<{ readonly __typename?: 'Piece', readonly id: string, readonly tokenURI: string, readonly price: any, readonly name: string }> };
 
 
+export const CollagesDocument = gql`
+    query Collages {
+  collageTokens(first: 100) {
+    id
+    tokenURI
+  }
+}
+    `;
+
+export function useCollagesQuery(options?: Omit<Urql.UseQueryArgs<CollagesQueryVariables>, 'query'>) {
+  return Urql.useQuery<CollagesQuery, CollagesQueryVariables>({ query: CollagesDocument, ...options });
+};
 export const CollageOwnersDocument = gql`
     query CollageOwners($owner: Bytes!) {
   collageTokens(where: {owner: $owner}, first: 100) {

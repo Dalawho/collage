@@ -18,7 +18,7 @@ export const BuyAndMintButton = ( {pieceIds, locations, price} : {pieceIds: numb
     contractInterface: Collage__factory.abi,
     functionName: 'mintAndBuy',
     args: [pieceIds, locations.map(object => object.scale), locations.map(object => object.x), locations.map(object => object.y)],
-    overrides: {value: (price+30000000000000000).toString()}
+    overrides: {value: (price + 30000000000000000).toString()}
   })
   const { data, error, isLoading, isSuccess , write } = useContractWrite(config);
   console.log(price)

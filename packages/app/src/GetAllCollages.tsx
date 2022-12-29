@@ -1,26 +1,23 @@
 import { gql } from "urql";
 import { useAccount } from "wagmi";
 
-import { useCollageOwnersQuery } from "../codegen/subgraph";
+import { useCollagesQuery } from "../codegen/subgraph";
 import { useIsMounted } from "./useIsMounted";
 
 gql`
-  query CollageOwners($owner: Bytes!) {
-    collageTokens(where: { owner: $owner }, first: 100) {
+  query Collages {
+    collageTokens(first: 100) {
       id
       tokenURI
     }
   }
 `;
 
-export const GetCollages = ()  => {
+export const GetAllCollages = ()  => {
   const { address } = useAccount();
 
-  const [query] = useCollageOwnersQuery({
-    pause: !address,
-    variables: {
-      owner: address?.toLowerCase(),
-    },
+  const [query] = useCollagesQuery({
+    pause: !address
   });
 
   // Temporarily workaround hydration issues where server-rendered markup
@@ -50,7 +47,9 @@ export const GetCollages = ()  => {
     return(imageResp.toString().replace(/width="\d+"/, 'width="90%"').replace(/height="\d+"/, 'height="90%"'));
   }
   return("no Image found");
-}
-
-  return(query.data?.collageTokens.map((item, index) => { return {value: parseInt(item.id), label: `${item.id}`, tokenURI: getImageFromTokenURI(item.tokenURI)}}).sort( (a,b) => a.value - b.value ));
+    }
+    console.log(query);
+const returnData = query.data?.collageTokens.map((item, index) => { return {value: parseInt(item.id), label: `${item.id}`, tokenURI: getImageFromTokenURI(item.tokenURI)}}).sort( (a,b) => a.value - b.value );
+  console.log(returnData);
+  return(returnData);
 };

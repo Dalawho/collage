@@ -22,6 +22,9 @@ export const Nav = ( {width} : {width: number}) => {
                 <li className="hover:text-amber-600">
                     <Link href='/Create'>Change Layer</Link>
                 </li>
+                <li className="hover:text-amber-600">
+                    <Link href='/Gallery'>Gallery</Link>
+                </li>
             </ul>
             <div className="text-2xl sm:text-2xl">
             <ConnectButton showBalance={false} accountStatus="address"/>
