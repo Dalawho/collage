@@ -10,6 +10,7 @@ interface SharedStructs {
         uint8 ySize;
         string name;
     }
+    //move everything into sstore
 
     struct LayerStruct {
         uint8 scale;
