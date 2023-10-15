@@ -1,0 +1,33 @@
+type Piece @entity {
+  id: ID!
+  tokenBalances: [OwnerPiece!]! @derivedFrom(field: "piece")
+  tokenURI: String!
+  name: String!
+  price: BigInt!
+  maxSupply: BigInt!
+  minted: BigInt!
+  remaining: BigInt!
+  floating: BigInt!
+  creator: Bytes!
+  collection: String!
+  category: String!
+  maxPerWallet: BigInt!
+}
+
+type Owner @entity {
+  id: Bytes!
+  token: [OwnerPiece!] @derivedFrom(field: "owner")
+}
+
+type OwnerPiece @entity {
+  id: ID! # Set to `Owner.id.concat(Piece.id)`
+  owner: Owner!
+  piece: Piece!
+  amount: BigInt!
+}
+
+type CollageToken @entity {
+  id: ID!
+  owner: Bytes!
+  tokenURI: String!
+}

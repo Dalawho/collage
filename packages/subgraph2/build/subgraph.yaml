@@ -1,0 +1,52 @@
+specVersion: 0.0.4
+schema:
+  file: schema.graphql
+dataSources:
+  - kind: ethereum
+    name: Pieces
+    network: goerli
+    source:
+      address: "0xA70d9Bb255DFaf0D173AAe2DC2fB60b3Eba4a96E"
+      abi: Pieces
+      startBlock: 8275000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - PiecesTokens
+        - Owners
+      abis:
+        - name: Pieces
+          file: Pieces/abis/Pieces.json
+      eventHandlers:
+        - event: ArtworkAdded(indexed
+            uint256,string,(address,uint8,uint8,uint8,uint8,uint64),string,string)
+          handler: handleArtworkAdded
+        - event: TransferBatch(indexed address,indexed address,indexed address,uint256[],uint256[])
+          handler: handleTransferBatch
+        - event: TransferSingle(indexed address,indexed address,indexed address,uint256,uint256)
+          handler: handleTransferSingle
+      file: Pieces/Pieces.wasm
+  - kind: ethereum
+    name: Collage
+    network: goerli
+    source:
+      address: "0xf774F2b05BC792237f51E5D03eBfc6C3Cc0d7bd3"
+      abi: Collage
+      startBlock: 8275000
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - CollageTokens
+      abis:
+        - name: Collage
+          file: Collage/abis/Collage.json
+      eventHandlers:
+        - event: MetadataUpdate(uint256)
+          handler: handleMetadataUpdate
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: Collage/Collage.wasm
